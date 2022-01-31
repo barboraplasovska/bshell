@@ -2,7 +2,14 @@
 
 TODO:
 
-- [ ] send structure of tokens to Barbora
-- [ ] lexical analysis
-- [ ] gui
-- [ ] website
+- [x] echo
+- [x] clear
+- [ ] exit
+- [ ] cd
+- [ ] ls
+- [ ] alias
+- [ ] cat
+- [ ] cp
+- [ ] touch
+- [ ] rm
+- [ ] mv
