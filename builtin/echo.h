@@ -1,13 +1,7 @@
 #ifndef ECHO_H
 #define ECHO_H
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdbool.h>
-
 #include "builtin.h"
-
 
 /**
 ** @brief               Builtin echo options.
@@ -23,13 +17,6 @@ typedef struct                  Options
   bool                  Eflag;
   size_t                ind;
 } Options;
-
-/**
-** @brief               Gets the number of arguments.
-** @param argv          Array of string arguments.
-** @return              Returns the number of arguments.
-*/
-size_t getArgc(char **argv);
 
 /**
 ** @brief               Gets the options

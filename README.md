@@ -5,8 +5,8 @@ TODO:
 - [x] echo
 - [x] clear
 - [ ] exit
-- [ ] cd
-- [ ] ls
+- [x] cd // should be fine ?
+- [x] ls
 - [ ] alias
 - [ ] cat
 - [ ] cp
