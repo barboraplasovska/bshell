@@ -13,3 +13,7 @@ TODO:
 - [ ] touch
 - [ ] rm
 - [ ] mv
+
+
+- [ ] add flags -e and -E echo
+
