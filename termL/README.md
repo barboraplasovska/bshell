@@ -6,3 +6,5 @@ to build:
     ./run
 
 it requires GTK+/GTK2/GTK3 and gcc
+
+## and gtksourceview-pkgbuild
