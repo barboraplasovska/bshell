@@ -85,7 +85,7 @@ int eprintWord(char* arg, BuiltinFd *builtinFd)
             {
                 if (isEscaped(arg[i+1]))
                 {
-                    if (printEscaped(arg[i+1]) == -1)
+                    if (printEscaped(arg[i+1], builtinFd) == -1)
                     {
                         fflush(builtinFd->out);
                         return -1;
@@ -118,14 +118,14 @@ int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
     size_t i;
     for (i = opt.ind; i < argc-1; i++)
     {
-        if (eprintWord(argv[i]) == -1)
+        if (eprintWord(argv[i], builtinFd) == -1)
             return -1;
         fprintf(builtinFd->out, " ");
     }
 
     if (argv[i])
     {
-        if (eprintWord(argv[i]) == -1)
+        if (eprintWord(argv[i], builtinFd) == -1)
             return -1;
     }
 
@@ -148,7 +148,7 @@ int echo(char** argv, BuiltinFd *builtinFd)
     
     getOptions(argv, &opt, argc);
 
-    if (eprintAll(argv, argc, opt) == -1)
+    if (eprintAll(argv, argc, opt, builtinFd) == -1)
         return -1;
 
     if (opt.nflag == false)

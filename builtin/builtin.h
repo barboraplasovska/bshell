@@ -7,6 +7,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <dirent.h> 
+#include<fcntl.h>
 //#include <sys/types.h>
 
 #define BUFFER_SIZE 32
