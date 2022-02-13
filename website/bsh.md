@@ -21,7 +21,7 @@ Choosing such a project is the most suitable choice because it would help our te
 
 The shell is made using c. With gcc compilor. Gtk-3 and Gtksourceview-4 libraries. 
 
-## Members of the team
+# Members of the team
 
 + Barbora Plašovská:
 
@@ -43,17 +43,19 @@ After that, they will work together with Enrique in order to perfect the parsing
 He is in charge of the GUI part and the project website which will track the whole project’s progress.
 The GUI part consists of our own terminal window done using the GTK library while having the same functionalities as an ordinary terminal window.
 
-![Barbora Plašovská](https://photos.cri.epita.fr/thumb/barbora.plasovska "Barbora Plašovská")
-![Enrique Tarabay](https://photos.cri.epita.fr/thumb/enrique.tarabay "Enrique Tarabay")
-![Charbel Abboud](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Ffacebook-no-profile-picture-icon-26.jpg&f=1&nofb=1 "Charbel Abboud")
-![Loic Mahatsangy JY](https://photos.cri.epita.fr/thumb/loic-mahatsangy.jy "Loic Mahatsangy JY")
+<div class="team-image">
+<img src="https://photos.cri.epita.fr/thumb/barbora.plasovska" alt="Barbora Plašovská"/>
+<img src="https://photos.cri.epita.fr/thumb/enrique.tarabay" alt="Enrique Tarabay"/>
+<img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fvectorified.com%2Fimages%2Ffacebook-no-profile-picture-icon-26.jpg&f=1&nofb=1 " alt="Charbel Abboud"/>
+<img src="https://photos.cri.epita.fr/thumb/loic-mahatsangy.jy" alt="Loic Mahatsangy JY"/>
 
+</div>
 
-## Contact
+# Contact
 
-+ Website: [https://bsh-nan.com](https://bsh-nan.com)
++ Website: [https://locinone.github.io/bsh-nan-website/](https://locinone.github.io/bsh-nan-website/)
 + Github: [https://github.com/barboraplasovska/bshell](https://github.com/barboraplasovska/bshell) 
 
-## Institution
+# Institution
 
 + EPITA (the school of engineers in computer intelligence) - 2022

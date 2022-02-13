@@ -246,3 +246,17 @@ dl dd:last-of-type {
 dl:hover dd:last-of-type {
 	display: block;
 }
+
+.team-image p {
+	/*border: 1px solid red;*/
+	width: 100%;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+}
+
+.team-image img{
+	/*border: 1px solid blue;*/
+	width: auto;
+	height: 200px;
+}
