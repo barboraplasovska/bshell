@@ -1,0 +1,10 @@
+iname: Make html from .md
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: docker://pandoc/core:2.9
+        with:
+          args: "bsh.md -s -c style.css --toc -o bsh.html" 
+
