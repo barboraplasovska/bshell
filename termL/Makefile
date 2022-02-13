@@ -1,10 +1,10 @@
 CC= gcc
 
-CFLAGS= `pkg-config --cflags gtk+-3.0` -Wall -O3 
+CFLAGS= `pkg-config --cflags gtk+-3.0` -Wall -O3 `pkg-config --cflags --libs gtksourceview-4`
 CPPLAGS= 
 LDFLAGS= 
 
-LDLIBS= `pkg-config --libs gtk+-3.0` 
+LDLIBS= `pkg-config --libs gtk+-3.0` `pkg-config --cflags --libs gtksourceview-4`
 
 SRC = $(wildcard *.c)
 OBJ = $(SRC:.c=.o)

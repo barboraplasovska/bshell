@@ -1,4 +1,4 @@
-//LDLIBS = `pkg-config gtk+-2.0`
+//LDLIBS = `pkg-config gtk+-2.0` /
 
 #define _XOPEN_SOURCE 600
 #include<gtk/gtk.h>
@@ -6,8 +6,7 @@
 //#include<gtksourceview-3.0/gtksourceview/gtksourceview.h>
 //#include<gtksourceview-3.0/gtksourceview/gtksourcelanguage.h>
 //#include<gtksourceview-3.0/gtksourceview/gtksourcelanguagemanager.h>
-
-#include<gtksourceview-3.0/gtksourceview/gtksource.h>
+#include<gtksourceview-4/gtksourceview/gtksource.h>
 
 #include<stdlib.h>
 #include<fcntl.h>
@@ -135,6 +134,7 @@ int main(int argc, char *argv[])
     
     atexit(ttyReset);
     
+    //GtkSourceBuffer *buffer;
     GtkSourceBuffer *buffer;
     GtkWidget *scrollwin;    
     
@@ -179,7 +179,7 @@ gboolean read_masterFd(GIOChannel *channel, GIOCondition condition,gpointer data
     buf[numRead] = '\0';
     printf("RECIEVING FROM PTY %s\n",buf);           
     GtkTextBuffer *buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txtInput)); gtk_text_buffer_append_output(buffer,buf,-1);  
-    }
+}
 
 static gboolean txtinput_key_press_event(GtkWidget *widget,GdkEventKey *event)
 {
