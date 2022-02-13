@@ -156,13 +156,13 @@ int main(int argc, char *argv[])
     gtk_window_set_title(GTK_WINDOW(window),"Terminal");
     g_signal_connect(G_OBJECT(txtInput),"key-press-event",G_CALLBACK(txtinput_key_press_event),NULL);
     g_signal_connect(G_OBJECT(window),"destroy",G_CALLBACK(destroy),NULL);
-    g_signal_connect(G_OBJECT(window),"delete_event",G_CALLBACK(delete_event),NULL);
+    //g_signal_connect(G_OBJECT(window),"delete_event",G_CALLBACK(delete_event),NULL);
     gtk_widget_show_all(window);      
 
     gtk_main();  
     
     return 0;
-    }
+}
 
 void gtk_text_buffer_append_output(GtkTextBuffer *buffer, char *text, int len)
 {

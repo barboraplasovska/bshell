@@ -7,4 +7,4 @@ to build:
 
 it requires GTK+/GTK2/GTK3 and gcc
 
-## and gtksourceview-pkgbuild
+## and gtksourceview-pkgbuild for gtksourceview-4
