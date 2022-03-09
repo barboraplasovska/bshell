@@ -8,6 +8,9 @@
 
 #include "parser.h"
 
+const char *operators_list[2] = {"&&" , "||"};
+
+
 size_t mystrlen(const char *s1)
 {
     size_t i = 0;
@@ -62,20 +65,20 @@ void pointer_copy(char *source, char *destination, size_t length)
     *destination = '\0';
 }
 
-char** add_string_to_array(char **src, char *element, size_t array_size)
+char** add_string_to_array(char **src, /*char *element*/ size_t array_size)
 {
     size_t i = 0;
-    size_t src_index= 0;
+    size_t src_index= 1;
     char **res = (char **) malloc(array_size * sizeof(char*));
     size_t size = get_array_size(src);
-    for (; i < size; i++,src_index++)
+    for (; i < size - 1; i++,src_index++)
     {
         if (src_index == 1)
             src_index += 1; //so skip the command
         size_t test = mystrlen(src[src_index]);
         res[i]= malloc((test+1) * sizeof(char));//mystrlen(*src[i]));
-        size_t test2 = mystrlen(res[i]);
-        size_t j= 0;
+        //size_t test2 = mystrlen(res[i]);
+        //size_t j= 0;
         strcpy(res[i],src[src_index]);
         /*while(j < mystrlen(src[i]))
         {
@@ -85,7 +88,7 @@ char** add_string_to_array(char **src, char *element, size_t array_size)
         //pointer_copy(*src[i],res[i],mystrlen(*src[i]));
         */
     }
-    res[array_size + 1] = NULL;
+    res[array_size] = NULL;
     return res;
 }
 
@@ -239,6 +242,7 @@ int is_command(char *param, struct command *cur_cmd)
         *cur_cmd = command_list[i];
         return 1;
     }
+    return 0;
 }
 
 
@@ -248,7 +252,7 @@ int is_operator(char *param)
     for(; i < OPSIZE;i++)
     {
         //int k = strcmp(param,operators_list[i]); only used it for debugging
-        if (mystrcmp(param,operators_list[i]))
+        if (mystrcmp(param,(operators_list[i])))
                 break;
     }
     return (i < OPSIZE);
@@ -256,7 +260,7 @@ int is_operator(char *param)
 
 int valid_option(struct Token *token, struct command current_command)
 {
-    size_t i = 0;
+    int i = 0;
     if (mystrcmp(token->param,"-"))
         return 1;
     for(; i < current_command.nb_options; i++)
@@ -291,6 +295,7 @@ int valid_input(struct Token *token)
             printf("%s not a valid option for %s\n",token->param,current_command.param);
         }
         if (token->next->type == type_command)
+        {
             if (token->type != type_operators)
             {
                 err = 0;
@@ -298,6 +303,7 @@ int valid_input(struct Token *token)
             }
             else
                 current_command = token->next->current_command;
+        }
         token = token->next;
     }
     return err;
