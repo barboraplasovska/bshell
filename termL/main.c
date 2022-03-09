@@ -128,7 +128,8 @@ int main(int argc, char *argv[])
     childPid = ptyFork(&masterFd, slaveName, MAX_SNAME, &ttyOrig, &ws);    
     if (childPid == 0) 
     {        
-        shell = "/bin/bash";  // ----> change to bshell
+        shell = "./bin/bash";  // ----> change to bshell
+        //shell = "./a.out";
         execlp(shell, shell, (char *) NULL);        
         }    
     
