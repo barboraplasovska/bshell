@@ -1,5 +1,5 @@
 #include "echo.h"
-
+#include "builtin.h"
 /**
 ** @brief               Gets the options
 ** @param argv          Array of string arguments.
@@ -93,13 +93,13 @@ int eprintWord(char* arg, BuiltinFd *builtinFd)
                 }
                 else
                 {
-                    fprintf(builtinFd->out, "%c", arg[i+1]);
+                    fprintf(builtinFd->out, "%c", arg[i]);//+1]);
                 }
                 i++;
             }
         }
         else
-            fprintf(builtinFd->out, "%c", arg[i+1]);
+            fprintf(builtinFd->out, "%c", arg[i]);//i+1]);
     }
     fflush(builtinFd->out);
     return 0;
@@ -116,7 +116,7 @@ int eprintWord(char* arg, BuiltinFd *builtinFd)
 int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
 {
     size_t i;
-    for (i = opt.ind; i < argc-1; i++)
+    for (i = opt.ind ; i < argc-1; i++)
     {
         if (eprintWord(argv[i], builtinFd) == -1)
             return -1;
@@ -145,7 +145,6 @@ int echo(char** argv, BuiltinFd *builtinFd)
     opt.ind = 0;
 
     size_t argc = getArgc(argv);
-    
     getOptions(argv, &opt, argc);
 
     if (eprintAll(argv, argc, opt, builtinFd) == -1)
@@ -157,3 +156,21 @@ int echo(char** argv, BuiltinFd *builtinFd)
     fflush(builtinFd->out);
     return 0;
 }
+
+int main(int argc, char **argv)
+{
+    if (argc){}
+    struct builtinFd *terminal = NULL;
+    terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
+    terminal->in = stdin;//STDIN_FILENO;
+    terminal->out = stdout;//(FILE *) STDOUT_FILENO;
+    terminal->err = stderr;//(FILE *) STDERR_FILENO;
+    terminal->inNo =  STDIN_FILENO;
+    terminal->outNo = STDOUT_FILENO;
+    terminal->errNo = STDOUT_FILENO;
+    printf("this is argv[0] %s\n",argv[0]);
+    echo(argv,terminal);
+    free(terminal);
+}
+
+

@@ -45,3 +45,19 @@ int ls(char** argv, BuiltinFd *builtinFd)
     
     return 0;
 }
+
+int main(int argc, char **argv)
+{
+    if(argc){}
+    struct builtinFd *terminal = NULL;
+    terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
+    terminal->in = stdin;
+    terminal->out = stdout;
+    terminal->err = stderr;
+    terminal->inNo =  STDIN_FILENO;
+    terminal->outNo = STDOUT_FILENO;
+    terminal->errNo = STDOUT_FILENO;
+    //printf("this is argv[0] : %s\n",argv[0]);
+    ls(argv,terminal);
+    free(terminal);
+}

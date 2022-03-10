@@ -11,3 +11,17 @@ int clear(BuiltinFd *builtinFd)
     fflush(NULL);
     return 0;
 }
+
+int main()
+{
+    struct builtinFd *terminal = NULL;
+    terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
+    terminal->in = stdin;//STDIN_FILENO;
+    terminal->out = stdout;//(FILE *) STDOUT_FILENO;
+    terminal->err = stderr;//(FILE *) STDERR_FILENO;
+    terminal->inNo =  STDIN_FILENO;
+    terminal->outNo = STDOUT_FILENO;
+    terminal->errNo = STDOUT_FILENO;
+    clear(terminal);
+    free(terminal);
+}
