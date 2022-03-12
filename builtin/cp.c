@@ -58,14 +58,14 @@ int cp(char** argv, BuiltinFd *builtinFd)
         
         exit_code = stat(argv[1], &path_stat);
 
-        int param2type = = -1;  //1->file; 2->directory
+        int param2type = -1;  //1->file; 2->directory
         if (S_ISREG(path_stat.st_mode)) 
         {
-            param2Type = 1;
+            param2type = 1;
         } 
         else if (S_ISDIR(path_stat.st_mode)) 
         {
-            param2Type = 2;
+            param2type = 2;
         }
 
         if(argv[2] == NULL)  //if we don't have a third argument
@@ -134,7 +134,7 @@ int cp(char** argv, BuiltinFd *builtinFd)
 
         if(!S_ISDIR(path_stat.st_mode))
         {
-            fprintf(builtinFd->err, "cp: target '" + argv[argc - 1] + "' is not a directory");
+            fprintf(builtinFd->err, "cp: target '%s' is not a directory", argv[argc - 1]);
         }
         
         /*
@@ -145,9 +145,9 @@ int cp(char** argv, BuiltinFd *builtinFd)
         for(int i = 2; i < argc - 1; i++)
         {
             //if file doesnt exist: cp: cannot stat 'testdir1': No such file or directory
-            if ((access(argv[i], "F_OK") != 0)
+            if (access(argv[i], "F_OK") != 0)
             {
-                printf(builtinFd->err, "cp: cannot stat '" + argv[i]) + "': No such file or directory");
+                printf(builtinFd->err, "cp: cannot stat '%s': No such file or directory", argv[i]);
             }
 
             exit_code = stat(argv[i], &path_stat);
@@ -173,7 +173,7 @@ int cp(char** argv, BuiltinFd *builtinFd)
             }
             else if(S_ISDIR(path_stat.st_mode)) // if directory and exists
             {
-                printf(builtinFd->err, "cp: -r not specified; omitting directory '" + argv[i]) + "'");
+                printf(builtinFd->err, "cp: -r not specified; omitting directory '%s'", argv[i]);
             }
         }
 
