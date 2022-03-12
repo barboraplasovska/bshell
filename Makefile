@@ -1,6 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c99 -O1
 LDLIBS = -fsanitize=address
+LDLFLAGS = -D_XOPEN_SOURCE
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)

@@ -77,7 +77,7 @@ int cp(char** argv, BuiltinFd *builtinFd)
             if(param1Type == 1 && param2type == 1)  //file and file
             {
                 FILE *source, *target;
-                source = fopen(source_file, "r");
+                source = fopen(argv[0], "r");
 
                 if (source == NULL)
                 {

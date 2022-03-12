@@ -1,6 +1,5 @@
 #include "cd.h"
 #define _GNU_SOURCE
-#define D_XOPEN_SOURCE 700
 
 /**
 ** @brief               cd main function.
