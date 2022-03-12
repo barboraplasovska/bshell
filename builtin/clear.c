@@ -7,7 +7,7 @@
 */
 int clear(BuiltinFd *builtinFd)
 {
-    fprintf(builtinFd->out, "'[H'[J");
+    fprintf(builtinFd->out, "\e[1;1H\e[2J");
     fflush(NULL);
     return 0;
 }
