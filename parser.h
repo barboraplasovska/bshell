@@ -31,12 +31,14 @@ struct Token {
     struct command current_command;
 };
 
+/*
 static const struct command ls = { "ls", {"a","h"}, "./ls", 1 , 2};
-
 static const struct command cat = { "cat", {"e","h"}, "./cat", 1 , 2};
 static const struct command cd = { "cd", {"L","e"}, "./cd", 0 , 2};
 static const struct command echo = { "echo", {"n","e","E"}, "./echo", -1 ,3};
 static const struct command clear = { "clear", {"n","e","E"}, "./clear", -1 ,3};
+
+static const struct command command_list[CMDSIZE] = {ls, cd, echo, cat, clear};*/
 
 
 size_t get_array_size(char **args);
@@ -47,7 +49,7 @@ char** add_string_to_array(char **src, /*char *element,*/ size_t array_size);
 
 char *get_string(char**args);
 
-static const struct command command_list[CMDSIZE] = {ls, cd, echo, cat, clear};
+
 
 //const char *operators_list[2] = {"&&" , "||"};
 

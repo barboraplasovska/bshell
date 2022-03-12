@@ -4,7 +4,7 @@ LDLIBS = -fsanitize=address
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
-MAIN = test.o
+MAIN = tests.o
 
 
 EXEC = test ls echo cat clear

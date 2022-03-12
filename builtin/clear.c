@@ -2,11 +2,16 @@
 
 /**
 ** @brief               Clear main function.
+** @param argv          Array of string arguments.
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of success, else -1.
 */
-int clear(BuiltinFd *builtinFd)
+int clear(char** argv, BuiltinFd *builtinFd)
 {
+    if (argv[0] != NULL)
+    {
+        fprintf(builtinFd->err, "clear: too many arguments");
+    }
     fprintf(builtinFd->out, "\e[1;1H\e[2J");
     fflush(NULL);
     return 0;

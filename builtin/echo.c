@@ -8,8 +8,8 @@
 */
 void getOptions(char** argv, Options* opt, size_t argc)
 {
-    size_t i, j = 1;
-    for (i = 1; i < argc; i++)
+    size_t i, j = 0;//1 
+    for (i = 0; i < argc; i++) //1
     {
         if (argv[i][0] == '-')
         {
@@ -17,6 +17,10 @@ void getOptions(char** argv, Options* opt, size_t argc)
             while (argv[i][j] == 'n')
             {
                 if (argv[i][j] == 'n')
+                    opt->nflag = true;
+                if (argv[i][j] == 'e')
+                    opt->nflag = true;
+                if (argv[i][j] == 'E')
                     opt->nflag = true;
 
                 j++;
@@ -116,17 +120,28 @@ int eprintWord(char* arg, BuiltinFd *builtinFd)
 int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
 {
     size_t i;
-    for (i = opt.ind ; i < argc-1; i++)
-    {
-        if (eprintWord(argv[i], builtinFd) == -1)
-            return -1;
-        fprintf(builtinFd->out, " ");
-    }
 
-    if (argv[i])
+    if (opt.eflag == false)
     {
-        if (eprintWord(argv[i], builtinFd) == -1)
-            return -1;
+        for (i = optind; i < argc - 1; i++)
+            fprintf(builtinFd->out, "%s ", argv[i]);
+        if (argv[i])
+            fprintf(builtinFd->out, "%s", argv[i]);
+    }
+    else
+    {
+        for (i = opt.ind ; i < argc-1; i++)
+        {
+            if (eprintWord(argv[i], builtinFd) == -1)
+                return -1;
+            fprintf(builtinFd->out, " ");
+        }
+
+        if (argv[i])
+        {
+            if (eprintWord(argv[i], builtinFd) == -1)
+                return -1;
+        }
     }
 
     return 0;
