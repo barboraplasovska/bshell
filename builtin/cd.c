@@ -1,4 +1,5 @@
 #include "cd.h"
+#define __GNU_SOURCE
 
 /**
 ** @brief               cd main function.
