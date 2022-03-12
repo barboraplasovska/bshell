@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "ls.h"
 
 /**
@@ -36,10 +37,10 @@ int ls(char** argv, BuiltinFd *builtinFd)
 
     for (int i = err-1; i >= 0; i--)
     {
-        if (i-1 >= 0)
-            fprintf(builtinFd->out, "%s ", namelist[i]);
-        else
-            fprintf(builtinFd->out, "%s ", namelist[i]);
+        //if (i-1 >= 0)
+            fprintf(builtinFd->out, "%s ", namelist[i]->d_name);
+        //else
+            //fprintf(builtinFd->out, "%s ", namelist[i]);
     }
     free(namelist);
     

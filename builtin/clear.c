@@ -17,8 +17,9 @@ int clear(char** argv, BuiltinFd *builtinFd)
     return 0;
 }
 
-int main()
+int main(int argc, char **argv)
 {
+    if (argc){}
     struct builtinFd *terminal = NULL;
     terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
     terminal->in = stdin;//STDIN_FILENO;
@@ -27,6 +28,6 @@ int main()
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    clear(terminal);
+    clear(argv, terminal);
     free(terminal);
 }
