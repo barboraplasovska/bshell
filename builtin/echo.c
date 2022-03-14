@@ -141,7 +141,7 @@ int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
         {
             if (eprintWord(argv[i], builtinFd) == -1)
                 return -1;
-        }
+        e
     }
 
     return 0;
@@ -153,7 +153,7 @@ int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of success, else -1.
 */
-int echo(char** argv, BuiltinFd *builtinFd)
+int echo(char** argv, BultinFd *builtinFd)
 {
     struct Options opt;
     opt.nflag = false;

@@ -29,7 +29,7 @@ cd:
 cp:
 	$(CC) $(CFLAGS) -o $@ ./builtin/cp.c
 mv:
-	$(CC) $(CFLAGS) -o $@ ./builtin/mv.c
+	$(CC) $(CFLAGS) -o $@ ./builtin/mv.c ./builtin/builtin.c
 touch:
 	$(CC) $(CFLAGS) -o $@ ./builtin/touch.c
 

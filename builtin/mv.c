@@ -97,10 +97,9 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd)
 
             }
         }
-        
     }
 
-
+    return 0;
 }
 
 int mv2(char** argv, BuiltinFd *builtinFd)
@@ -178,6 +177,8 @@ int mv2(char** argv, BuiltinFd *builtinFd)
             }
         }
     }
+
+    return 0;
 }
 
 /**

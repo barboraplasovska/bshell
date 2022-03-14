@@ -36,8 +36,17 @@ int createFile(char* source, char* target, BuiltinFd *builtinFd)
 */
 int cp(char** argv, BuiltinFd *builtinFd)
 {
-    if (argv[0] == NULL || argv[1] == NULL)  //if cp has less than 2 arguments
+    if (argv[0] == NULL)
     {
+        fprintf(builtinFd->err, "cp: missing file operand\n");
+        fprintf(builtinFd->err, "Try 'cp --help' for more information.\n");
+        return -1;
+    }
+    else if (argv[1] == NULL)
+    {
+        fprintf(builtinFd->err,
+                "cp: missing destination file operand after '%s'\n", argv[0]);
+        fprintf(builtinFd->err, "Try 'cp --help' for more information.\n");
         return -1;
     }
     else
@@ -46,16 +55,22 @@ int cp(char** argv, BuiltinFd *builtinFd)
         struct stat path_stat;
         int exit_code = stat(argv[0], &path_stat);
 
-        int param1Type = -1;  //1->file; 2->directory
+        int param1type = -1;  //1->file; 2->directory
         if (S_ISREG(path_stat.st_mode)) 
         {
-            param1Type = 1;
+            param1type = 1;
         } 
         else if (S_ISDIR(path_stat.st_mode)) 
         {
-            param1Type = 2;
+            param1type = 2;
         }
-        
+        else
+        {
+            fprintf(builtinFd->err,
+                    "cp: cannot stat '%s': No such file or directory\n",
+                    argv[0]);
+        }
+
         exit_code = stat(argv[1], &path_stat);
 
         int param2type = -1;  //1->file; 2->directory
@@ -68,28 +83,35 @@ int cp(char** argv, BuiltinFd *builtinFd)
             param2type = 2;
         }
 
+        fprintf(builtinFd->err, "We have: %i, and: %i\n", param1type, param2type);
+
         if(argv[2] == NULL)  //if we don't have a third argument
         {
             //case: 2 params
             // copy source text (file)->destination text(file)
             // copy source (file)->destination(directory)
 
-            if(param1Type == 1 && param2type == 1)  //file and file
+            if(param1type == 1 && param2type == 1)
             {
+                //file1 and file2 where file2 already exists
+                //file1 and file2 where file2 doesnt exist
                 FILE *source, *target;
                 source = fopen(argv[0], "r");
 
+                fprintf(builtinFd->err, "test!!\n");
+
                 if (source == NULL)
                 {
-                    //error
+                    // failed to open file eventhough it exists! permissions..
                     return -1;
                 }
 
-                target = fopen(target, "w");
+                target = fopen(argv[1], "w");
 
                 if(target == NULL)
                 {
-                    //error
+                    fprintf(builtinFd->err, "test..\n");
+                    //failed to open file2 eventhough it exists! permissions..
                     return -1;
                 }
 
@@ -101,42 +123,26 @@ int cp(char** argv, BuiltinFd *builtinFd)
                 fclose(source);
                 fclose(target);
 
+                return 0;
             }
-            else if (param1Type == 1 && param2type == 2)  //file and directory
+            else if (param1type == 1 && param2type == 2)  //file and directory
             {
-                //do mv here
+                //move file1 into dirfile2
                 char *newPath = malloc (strlen(argv[0] + strlen(argv[1] + 2)));
                 strcat(newPath, argv[0]);
                 strcat(newPath, "/");
                 strcat(newPath, argv[1]);
                 if (createFile(argv[0], newPath, builtinFd) != 0)
                 {
+                    //failed to createfile! permissions..
                     return -1;
                 }
+
+                return 0;
             }
-            else
-            {
-                //error
-                return -1;
-            }
-        }
-
-        int argc = 2;
-
-        for(; argv[argc] != NULL; argc++) { }
-
-        exit_code = stat(argv[argc - 1], &path_stat);
-
-        if(exit_code == -1)
-        {
-            //printf(" Error occoured attempting to stat %s\n", filename);
-        }
-
-        if(!S_ISDIR(path_stat.st_mode))
-        {
-            fprintf(builtinFd->err, "cp: target '%s' is not a directory", argv[argc - 1]);
         }
         
+        //FIX 
         /*
         case: > 2 params
         multiple source files -> destination(directory)
@@ -145,9 +151,10 @@ int cp(char** argv, BuiltinFd *builtinFd)
         for(int i = 2; i < argc - 1; i++)
         {
             //if file doesnt exist: cp: cannot stat 'testdir1': No such file or directory
-            if (access(argv[i], "F_OK") != 0)
+            //if (access(argv[i], "F_OK") != 0)
+            if (!opendir(argv[i]))
             {
-                printf(builtinFd->err, "cp: cannot stat '%s': No such file or directory", argv[i]);
+                fprintf(builtinFd->err, "cp: cannot stat '%s': No such file or directory", argv[i]);
             }
 
             exit_code = stat(argv[i], &path_stat);
@@ -173,9 +180,12 @@ int cp(char** argv, BuiltinFd *builtinFd)
             }
             else if(S_ISDIR(path_stat.st_mode)) // if directory and exists
             {
-                printf(builtinFd->err, "cp: -r not specified; omitting directory '%s'", argv[i]);
+                fprintf(builtinFd->err, "cp: -r not specified; omitting directory '%s'", argv[i]);
             }
         }
+
+        fflush(builtinFd->err);
+        fflush(builtinFd->out);
 
         return 0;
     }
@@ -194,4 +204,5 @@ int main(int argc, char **argv)
     terminal->errNo = STDOUT_FILENO;
     cp(argv,terminal);
     free(terminal);
+    return 0;
 }
