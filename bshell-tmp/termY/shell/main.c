@@ -101,20 +101,20 @@ void print_prompt(void){
 }
 
 void loop(void){
-    char *line;
+    //char *line;
     char **args;
     int status = 1;
 
     do{
         print_prompt();
-        line = lsh_read_line();
-        args = lsh_split_line(line);
-        char *input = get_string(args);
+        
+        char *input = lsh_read_line();
+        args = lsh_split_line(input);
         struct Token *token = getParameters(input);  
         int valid = valid_input(token);
-
+        status = valid;
         if (valid){ //do not consider ./main -> to fix
-            args[0] = token->next->current_command.executable;
+            //args[0] = token->next->current_command.executable;
             size_t byte_size = get_array_byte_size(args);
             char **res = add_string_to_array(args,byte_size);
             execute(res,token->next->current_command);
