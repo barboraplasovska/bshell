@@ -1,14 +1,14 @@
-#ifndef CD_H
-#define CD_H
+#ifndef TOUCH_H
+#define TOUCH_H
 
 #include "builtin.h"
 
 /**
-** @brief               cd main function.
+** @brief               touch main function.
 ** @param argv          Array of string arguments.
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int cd(char** argv, BuiltinFd *builtinFd);
+int touch(char** argv, BuiltinFd *builtinFd);
 
 #endif

@@ -20,6 +20,7 @@ int ls(char** argv, BuiltinFd *builtinFd)
 
         if (err == -1)
         {
+            perror("error because : ");
             fprintf(builtinFd->err, "ls: Directory cannot be opened for reading.");
             return 1;
         }

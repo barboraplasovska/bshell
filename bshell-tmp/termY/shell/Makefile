@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -O1 `pkg-config --cflags vte-2.91` -g 
-LDLIBS = -fsanitize=address `pkg-config --cflags vte-2.91` `pkg-config --libs vte-2.91`
+CFLAGS = -Wall -Wextra -Werror -std=c99 -O1 -g #`pkg-config --cflags vte-2.91` -g 
+LDLIBS = -fsanitize=address #`pkg-config --cflags vte-2.91` `pkg-config --libs vte-2.91`
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)

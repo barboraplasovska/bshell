@@ -1,5 +1,5 @@
 #include "cd.h"
-#include "builtin.h"
+#include <errno.h>
 /**
 ** @brief               cat main function.
 ** @param argv          Array of string arguments.
@@ -20,7 +20,7 @@ int cat(char** argv, BuiltinFd *builtinFd)
         f = open(argv[1], O_RDONLY);
         if(f == -1)
         {
-            fprintf(builtinFd->err, "cat: error: cannot open file");
+            fprintf(builtinFd->err, "cat: error: cannot open file %i",errno);
             return -1;
         }
         while((count = read(f, buffer, sizeof(buffer))) > 0)

@@ -2,18 +2,24 @@
 
 /**
 ** @brief               Clear main function.
+** @param argv          Array of string arguments.
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of success, else -1.
 */
-int clear(BuiltinFd *builtinFd)
+int clear(char** argv, BuiltinFd *builtinFd)
 {
-    fprintf(builtinFd->out, "'[H'[J");
+    if (argv[0] != NULL)
+    {
+        fprintf(builtinFd->err, "clear: too many arguments");
+    }
+    fprintf(builtinFd->out, "\e[1;1H\e[2J");
     fflush(NULL);
     return 0;
 }
 
-int main()
+int main(int argc, char **argv)
 {
+    if (argc){}
     struct builtinFd *terminal = NULL;
     terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
     terminal->in = stdin;//STDIN_FILENO;
@@ -22,6 +28,6 @@ int main()
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    clear(terminal);
+    clear(argv, terminal);
     free(terminal);
 }

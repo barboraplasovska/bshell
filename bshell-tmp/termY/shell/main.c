@@ -20,7 +20,7 @@ char *lsh_read_line(void)
 
     // If we hit EOF, replace it with a null character and return.
     if (c == EOF || c == '\n') {
-      buffer[position] = '\0';
+      buffer[position] = '\n';
       return buffer;
     } else {
       buffer[position] = c;
@@ -109,8 +109,8 @@ void loop(void){
         print_prompt();
         
         char *input = lsh_read_line();
-        args = lsh_split_line(input);
         struct Token *token = getParameters(input);  
+        args = lsh_split_line(input);
         int valid = valid_input(token);
         status = valid;
         if (valid){ //do not consider ./main -> to fix

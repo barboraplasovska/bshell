@@ -7,10 +7,13 @@
 #include <string.h>
 #include <stdbool.h>
 #include <dirent.h> 
-#include<fcntl.h>
+#include <fcntl.h>
+//#include <iostream.h>
+#include <sys/stat.h>
+#include <errno.h>
 //#include <sys/types.h>
 
-#define BUFFER_SIZE 322
+#define BUFFER_SIZE 100
 
 /**
 ** @brief               Builtin files.

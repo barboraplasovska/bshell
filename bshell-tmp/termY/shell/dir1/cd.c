@@ -1,6 +1,5 @@
-#define _GNU_SOURCE
-
 #include "cd.h"
+#define _GNU_SOURCE
 
 /**
 ** @brief               cd main function.

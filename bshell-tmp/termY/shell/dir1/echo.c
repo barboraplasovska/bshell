@@ -8,15 +8,19 @@
 */
 void getOptions(char** argv, Options* opt, size_t argc)
 {
-    size_t i, j = 1;
-    for (i = 1; i < argc; i++)
+    size_t i, j = 0;//1 
+    for (i = 0; i < argc; i++) //1
     {
         if (argv[i][0] == '-')
         {
             j = 1;
-            while (argv[i][j] == 'n')
+            while (argv[i][j] == 'e' || argv[i][j] == 'n' || argv[i][j] == 'E')
             {
                 if (argv[i][j] == 'n')
+                    opt->nflag = true;
+                if (argv[i][j] == 'e')
+                    opt->nflag = true;
+                if (argv[i][j] == 'E')
                     opt->nflag = true;
 
                 j++;
@@ -116,17 +120,28 @@ int eprintWord(char* arg, BuiltinFd *builtinFd)
 int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
 {
     size_t i;
-    for (i = opt.ind ; i < argc-1; i++)
-    {
-        if (eprintWord(argv[i], builtinFd) == -1)
-            return -1;
-        fprintf(builtinFd->out, " ");
-    }
 
-    if (argv[i])
+    if (opt.eflag == false)
     {
-        if (eprintWord(argv[i], builtinFd) == -1)
-            return -1;
+        for (i = opt.ind; i < argc - 1; i++)
+            fprintf(builtinFd->out, "%s ", argv[i]);
+        if (argv[i])
+            fprintf(builtinFd->out, "%s", argv[i]);
+    }
+    else
+    {
+        for (i = opt.ind ; i < argc-1; i++)
+        {
+            if (eprintWord(argv[i], builtinFd) == -1)
+                return -1;
+            fprintf(builtinFd->out, " ");
+        }
+
+        if (argv[i])
+        {
+            if (eprintWord(argv[i], builtinFd) == -1)
+                return -1;
+        }
     }
 
     return 0;
@@ -145,10 +160,13 @@ int echo(char** argv, BuiltinFd *builtinFd)
     opt.ind = 0;
 
     size_t argc = getArgc(argv);
-    getOptions(argv, &opt, argc);
+    if (argc != 0)
+    {
+        getOptions(argv, &opt, argc);
 
-    if (eprintAll(argv, argc, opt, builtinFd) == -1)
-        return -1;
+        if (eprintAll(argv, argc, opt, builtinFd) == -1)
+            return -1;
+    }
 
     if (opt.nflag == false)
         fprintf(builtinFd->out, "\n");
@@ -168,7 +186,8 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    printf("this is argv[0] %s\n",argv[0]);
     echo(argv,terminal);
     free(terminal);
 }
+
+
