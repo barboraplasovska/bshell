@@ -2,6 +2,7 @@
 #define TOUCH_H
 
 #include "builtin.h"
+#include <unistd.h>
 
 /**
 ** @brief               touch main function.

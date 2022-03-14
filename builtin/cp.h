@@ -9,6 +9,6 @@
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int cp(char** argv, BuiltinFd *builtinFd);
+int cp(char** argv, int argc, BuiltinFd *builtinFd);
 
 #endif

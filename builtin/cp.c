@@ -34,15 +34,15 @@ int createFile(char* source, char* target, BuiltinFd *builtinFd)
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int cp(char** argv, BuiltinFd *builtinFd)
+int cp(char** argv, int argc, BuiltinFd *builtinFd)
 {
-    if (argv[0] == NULL)
+    if (argc == 0)
     {
         fprintf(builtinFd->err, "cp: missing file operand\n");
         fprintf(builtinFd->err, "Try 'cp --help' for more information.\n");
         return -1;
     }
-    else if (argv[1] == NULL)
+    else if (argc == 1)
     {
         fprintf(builtinFd->err,
                 "cp: missing destination file operand after '%s'\n", argv[0]);
@@ -83,9 +83,14 @@ int cp(char** argv, BuiltinFd *builtinFd)
             param2type = 2;
         }
 
-        fprintf(builtinFd->err, "We have: %i, and: %i\n", param1type, param2type);
+        //fprintf(builtinFd->err, "We have: %i, and: %i\n", param1type, param2type);
 
-        if(argv[2] == NULL)  //if we don't have a third argument
+        //if (argv[2])
+        //{
+        //    fprintf(builtinFd->err,"it thinks there is third arg: %s\n", argv[2]);
+        //}
+
+        if(argc == 2)  //if we don't have a third argument
         {
             //case: 2 params
             // copy source text (file)->destination text(file)
@@ -93,12 +98,13 @@ int cp(char** argv, BuiltinFd *builtinFd)
 
             if(param1type == 1 && param2type == 1)
             {
+                //fprintf(builtinFd->err, "should create\n");
                 //file1 and file2 where file2 already exists
                 //file1 and file2 where file2 doesnt exist
                 FILE *source, *target;
                 source = fopen(argv[0], "r");
 
-                fprintf(builtinFd->err, "test!!\n");
+                //fprintf(builtinFd->err, "test!!\n");
 
                 if (source == NULL)
                 {
@@ -119,7 +125,7 @@ int cp(char** argv, BuiltinFd *builtinFd)
 
                 while((c = fgetc(source)) != EOF)
                     fputc(c, target);
-                
+
                 fclose(source);
                 fclose(target);
 
@@ -128,6 +134,7 @@ int cp(char** argv, BuiltinFd *builtinFd)
             else if (param1type == 1 && param2type == 2)  //file and directory
             {
                 //move file1 into dirfile2
+                // THIS IS THE MOVE FUNCTION TO MOVE INTO FOLDER
                 char *newPath = malloc (strlen(argv[0] + strlen(argv[1] + 2)));
                 strcat(newPath, argv[0]);
                 strcat(newPath, "/");
@@ -138,40 +145,41 @@ int cp(char** argv, BuiltinFd *builtinFd)
                     return -1;
                 }
 
+                free(newPath);
+
                 return 0;
             }
         }
         
-        //FIX 
         /*
         case: > 2 params
         multiple source files -> destination(directory)
         exception: if among the source files there exists a directory, it still copies but says that directory is omitted with name
         */
 
-	// fix this
-	int argc = 2;
-	// fix this
-
-        for(int i = 2; i < argc - 1; i++)
+        for(int i = 0; i < argc - 1; i++)
         {
             //if file doesnt exist: cp: cannot stat 'testdir1': No such file or directory
             //if (access(argv[i], "F_OK") != 0)
-            if (!opendir(argv[i]))
-            {
-                fprintf(builtinFd->err, "cp: cannot stat '%s': No such file or directory", argv[i]);
-            }
+            //if (!opendir(argv[i]))
+            // {
+            //    fprintf(builtinFd->err, "cp: cannot stat '%s': No such file or directory", argv[i]);
+            //}
 
             exit_code = stat(argv[i], &path_stat);
 
             if(exit_code == -1)
             {
-                //printf(" Error occoured attempting to stat %s\n", filename);
+                fprintf(builtinFd->err, "cp: cannot stat '%s': No such file or directory", argv[i]);
+                continue;
             }
 
             if(S_ISREG(path_stat.st_mode))  //if is regular file
             {
                 // move into destination directory
+                //THIS IS THE MOVE FUNCTION TO MOVE INTO FOLDER
+                //
+                fprintf(builtinFd->err, "should move into folder!\n");
 
                 char *newPath = malloc (strlen(argv[i] + strlen(argv[argc-1] + 2)));
                 strcat(newPath, argv[i]);
@@ -182,8 +190,10 @@ int cp(char** argv, BuiltinFd *builtinFd)
                     return -1;
                 }
 
+                free(newPath);
+
             }
-            else if(S_ISDIR(path_stat.st_mode)) // if directory and exists
+            else if(S_ISDIR(path_stat.st_mode)) // if directory
             {
                 fprintf(builtinFd->err, "cp: -r not specified; omitting directory '%s'", argv[i]);
             }
@@ -198,7 +208,6 @@ int cp(char** argv, BuiltinFd *builtinFd)
 
 int main(int argc, char **argv)
 {
-    if (argc){}
     struct builtinFd *terminal = NULL;
     terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
     terminal->in = stdin;//STDIN_FILENO;
@@ -207,7 +216,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    cp(argv,terminal);
+    cp(argv, argc, terminal);
     free(terminal);
     return 0;
 }

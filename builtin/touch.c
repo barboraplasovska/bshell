@@ -18,18 +18,25 @@ int touch(char** argv, BuiltinFd *builtinFd)
         FILE *fp;
         for(int i = 0; argv[i] != NULL; i++)
         {
-            if (access(argv[i], "F_OK") != 0)  //if file doesn't exist
+            // TODO: create a clone if the name is a directory but the clone as a file
+            if (access(argv[i], F_OK) == -1)  //if it doesn't exist
             {
+                fprintf(builtinFd->err, "it doesntexist\n");
                 fp = fopen(argv[i], "r");
 
                 if  (fp == NULL)
                 {
+                    fprintf(builtinFd->err, "Failed to create file\n");
                     //global variable errno is the error number
                     return -1;
                 }
 
-                fclose(fp);
-            }       //else it does nothing as it should
+               // fclose(fp);
+            }
+            else
+            {
+
+            }
         }
     }
     return 0;
