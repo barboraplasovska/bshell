@@ -25,7 +25,7 @@ cat:
 clear:
 	$(CC) $(CFLAGS) -o $@ ./builtin/clear.c
 cd:
-	$(CC) $(CFLAGS) $(LDLFLAGS) -o $@ ./builtin/cd.c
+	$(CC) $(CFLAGS) $(LDLFLAGS) -o $@ ./builtin/cd.c ./builtin/builtin.c
 cp:
 	$(CC) $(CFLAGS) -o $@ ./builtin/cp.c
 mv:

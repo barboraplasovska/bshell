@@ -9,7 +9,7 @@
 */
 int cd(char** argv, BuiltinFd *builtinFd)
 {
-    //char *currDir;
+    char *newPath;
     char *homeDir;
     char *dir;
     
@@ -19,18 +19,23 @@ int cd(char** argv, BuiltinFd *builtinFd)
     if (argv[0] == NULL)
         dir = homeDir;
     else
-        dir = argv[1];
-
-    //getcwd(currDir, BUFFER_SIZE);
-    
-    if (chdir(dir) == 0)
     {
-        setenv("PWD", dir, 1);
-        return 0;
+	newPath = argv[0];
+	//dir = getcwd(dir, BUFFER_SIZE);
+        dir = getenv("PWD");
+        strcat(dir, "/");
+        strcat(dir, newPath);
     }
-    
-    fprintf(builtinFd->err, "cd: %s: No such file or directory\n", argv[0]);
-    return 1;
+    //fprintf(builtinFd->out, "new path: %s\n", dir);
+    int err = 0;
+    if ((err = chdir(dir)) != 0)
+    {
+	fprintf(builtinFd->err, "cd: %d error\n", errno);
+        fprintf(builtinFd->err, "cd: %s: No such file or directory\n", argv[0]);
+	return 1;
+    }
+    //setenv("PWD", dir, 1);
+    return 0;
 }
 
 int main(int argc, char **argv)

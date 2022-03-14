@@ -13,7 +13,7 @@
 #include <errno.h>
 //#include <sys/types.h>
 
-#define BUFFER_SIZE 32
+#define BUFFER_SIZE 256
 
 /**
 ** @brief               Builtin files.
