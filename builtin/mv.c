@@ -55,7 +55,7 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd)
     int err = stat(argv[argc-1], &path_stat1);
     if (err == -1)
     {
-        fprintf(builtinFd->err, "mv: Error while stat.");
+        fprintf(builtinFd->err, "mv: Error while stat (1).");
         return -1;
     }
 
@@ -71,7 +71,7 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd)
             err = stat(argv[i], &path_stat1);
             if (err == -1)
             {
-                fprintf(builtinFd->err, "mv: Error while stat.");
+                fprintf(builtinFd->err, "mv: Error while stat (2).");
                 return -1;
             }
             char *newPath = malloc (strlen(argv[0] + strlen(argv[1] + 2)));
@@ -108,7 +108,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
     int err = stat(argv[0], &path_stat1);
     if (err == -1)
     {
-        fprintf(builtinFd->err, "mv: Error while stat.");
+        fprintf(builtinFd->err, "mv: Error while stat (3).");
         return -1;
     }
         
@@ -116,7 +116,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
     err = stat(argv[1], &path_stat2);
     if (err == -1)
     {
-        fprintf(builtinFd->err, "mv: Error while stat.");
+        fprintf(builtinFd->err, "mv: Error while stat (4).");
         return -1;
     }
 
@@ -176,6 +176,14 @@ int mv2(char** argv, BuiltinFd *builtinFd)
                 return -1;
             }
         }
+    }
+    else
+    {
+	if (rename(argv[0], argv[1]) != 0)
+	{
+	     fprintf(builtinFd->err, "mv: rename error");
+	     return -1;
+	}
     }
 
     return 0;

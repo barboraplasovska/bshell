@@ -148,6 +148,11 @@ int cp(char** argv, BuiltinFd *builtinFd)
         multiple source files -> destination(directory)
         exception: if among the source files there exists a directory, it still copies but says that directory is omitted with name
         */
+
+	// fix this
+	int argc = 2;
+	// fix this
+
         for(int i = 2; i < argc - 1; i++)
         {
             //if file doesnt exist: cp: cannot stat 'testdir1': No such file or directory
