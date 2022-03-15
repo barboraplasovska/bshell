@@ -15,12 +15,17 @@ int ls(char** argv, BuiltinFd *builtinFd)
     if (argv[0] == NULL)
     {
         char currDir[BUFFER_SIZE];
-        getcwd(currDir, BUFFER_SIZE);
+        char *t = getcwd(currDir, BUFFER_SIZE);
+	if (!t)
+	{
+	    fprintf(builtinFd->err, "Error getting current directory\n");
+	    return 1;
+	}
         err = scandir(currDir, &namelist, NULL, alphasort);
-
         if (err == -1)
         {
-            fprintf(builtinFd->err, "ls: Directory cannot be opened for reading.");
+            fprintf(builtinFd->err,
+	    	"ls: Directory cannot be opened for reading.");
             return 1;
         }
     }
@@ -30,7 +35,8 @@ int ls(char** argv, BuiltinFd *builtinFd)
 
         if (err == -1)
         {
-            fprintf(builtinFd->err, "ls: %s: No such file or directory\n", argv[0]);
+            fprintf(builtinFd->err,
+	    	"ls: %s: No such file or directory\n", argv[0]);
             return 1;
         }
     }
@@ -42,6 +48,7 @@ int ls(char** argv, BuiltinFd *builtinFd)
         //else
             //fprintf(builtinFd->out, "%s ", namelist[i]);
     }
+    fprintf(builtinFd->out, "\n");
     free(namelist);
     
     return 0;
