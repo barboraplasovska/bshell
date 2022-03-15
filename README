@@ -1,2 +1,4 @@
 Bshell
 
+The parser and commands part can be compiled by typing the command "make" or 
+"make all" into the teminal.
