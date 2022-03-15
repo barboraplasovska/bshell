@@ -1,4 +1,4 @@
-#include "procstatus.h"
+#include "procStatus.h"
 #define _GNU_SOURCE
 
 /**

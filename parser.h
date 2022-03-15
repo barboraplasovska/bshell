@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define CMDSIZE 5
+#define CMDSIZE 8
 #define OPSIZE 2
 
 enum type
@@ -42,8 +42,8 @@ static const struct command touch = { "touch", {}, "./touch", -1 ,0};
 static const struct command mv = {"mv", {}, "./mv", -1, 0};
 
 
-static const struct command command_list[CMDSIZE] = {ls, cd, echo, cat, clear,
-     cp, touch, mv};
+static const struct command command_list[CMDSIZE] =
+{ls, cd, echo, cat, clear,cp, touch, mv};
 
 
 

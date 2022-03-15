@@ -12,7 +12,7 @@ EXEC = main ls echo cat clear cd cp mv touch procstatus
 all: $(EXEC)
 
 
-test: $(MAIN) $(OBJ)
+main: $(MAIN) $(OBJ)
 	$(CC) -g -o $@ $^
 
 #BUILTIN
@@ -35,7 +35,7 @@ touch:
 
 #EXTERNAL
 procstatus:
-	$(CC) $(CFLAGS) -o $@ ./external/procstatus.c
+	$(CC) $(CFLAGS) -o $@ ./external/procStatus.c
 
 $(OBJ): %.o: %.c $(HEADERS)
 
