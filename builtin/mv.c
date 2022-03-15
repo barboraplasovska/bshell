@@ -27,20 +27,13 @@ int createFile(char* source, char* target, BuiltinFd *builtinFd)
    FILE *sourceF;
    FILE *targetF;
 
-   sourceF = fopen(source, "r"); //r
+   sourceF = fopen(source, "r");
    if (sourceF == NULL)
    {
       fprintf(builtinFd->err, "mv: %s\n", strerror(errno));
       return -1;
    }
    targetF = fopen(target, "w+");
-   /*if (targetF == NULL) 
-   {
-      fclose(sourceF);
-      fprintf(builtinFd->err, "path: %s\n", target);
-      fprintf(builtinFd->err, "mv: %s\n", strerror(errno));
-      return -1;
-   }*/
 
    while ((ch = fgetc(sourceF)) != EOF)
       fputc(ch, targetF);
@@ -82,13 +75,11 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd)
                 return -1;
             }
 
-            fprintf(builtinFd->err, "argv[argc-1] = %s\n",argv[argc-1]);
-            fprintf(builtinFd->err, "argv[i] = %s\n",argv[i]);
-            newPath = calloc (strlen(argv[i]) + strlen(argv[argc-1]) + 2,1);
-                strcat(newPath, argv[argc-1]);
-                strcat(newPath, "/");
-                strcat(newPath, argv[i]);
-            fprintf(builtinFd->err, "path:'%s'\n", newPath);
+            newPath = calloc (strlen(argv[i]) + strlen(argv[argc-1]) + 2, 1);
+            strcat(newPath, argv[argc-1]);
+            strcat(newPath, "/");
+            strcat(newPath, argv[i]);
+
             if (S_ISDIR(path_stat1.st_mode))
             {
                 if (rename(argv[i], newPath) != 0)
@@ -108,11 +99,11 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd)
                 }
 
 		
-	        if (remove(argv[i]) != 0)
-	        {
-		    free(newPath);
-		    return -1;
-	        }
+	            if (remove(argv[i]) != 0)
+	            {
+		            free(newPath);
+		            return -1;
+	            }
             }
 	    free(newPath);
         }
@@ -173,12 +164,13 @@ int mv2(char** argv, BuiltinFd *builtinFd)
                 if (rename(argv[0], newPath) != 0)
                 {
                     fprintf(builtinFd->err, "mv: rename error");
+                    free(newPath);
                     return -1;
                 }
 
-
-	    if (remove(argv[0]) != 0)
-		return -1;
+                free(newPath);
+	            if (remove(argv[0]) != 0)
+		            return -1;
             }
         }
     }
@@ -194,12 +186,14 @@ int mv2(char** argv, BuiltinFd *builtinFd)
             // move argv[0] to argv[1]
             if (createFile(argv[0], newPath, builtinFd) != 0)
             {
+                free(newPath);
                 return -1;
             }
 
-	    if (remove(argv[0]) != 0)
-		return -1;
+            free(newPath);
 
+	        if (remove(argv[0]) != 0)
+		        return -1;
         }
         else if (S_ISREG(path_stat2.st_mode))
         {
@@ -212,11 +206,11 @@ int mv2(char** argv, BuiltinFd *builtinFd)
     }
     else
     {
-	if (rename(argv[0], argv[1]) != 0)
-	{
-	     fprintf(builtinFd->err, "mv: rename error");
-	     return -1;
-	}
+	    if (rename(argv[0], argv[1]) != 0)
+	    {
+	        fprintf(builtinFd->err, "mv: rename error");
+	        return -1;
+	    }
     }
 
     return 0;
