@@ -21,21 +21,16 @@ int touch(char** argv, BuiltinFd *builtinFd)
             // TODO: create a clone if the name is a directory but the clone as a file
             if (access(argv[i], F_OK) == -1)  //if it doesn't exist
             {
-                fprintf(builtinFd->err, "it doesntexist\n");
-                fp = fopen(argv[i], "r");
+                fp = fopen(argv[i], "w");
 
                 if  (fp == NULL)
                 {
-                    fprintf(builtinFd->err, "Failed to create file\n");
+                    fprintf(builtinFd->err, "Touch: Failed to create file\n");
                     //global variable errno is the error number
                     return -1;
                 }
 
-               // fclose(fp);
-            }
-            else
-            {
-
+                fclose(fp);
             }
         }
     }
