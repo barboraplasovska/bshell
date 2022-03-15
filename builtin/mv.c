@@ -1,6 +1,6 @@
 #include "mv.h"
 
-bool isDirEmpty(char *dirname) 
+bool isDirEmpty(char *dirname)
 {
   int n = 0;
   struct dirent *d;
@@ -24,21 +24,23 @@ bool isDirEmpty(char *dirname)
 int createFile(char* source, char* target, BuiltinFd *builtinFd)
 {
    char ch;
-   FILE *sourceF, *targetF;
+   FILE *sourceF;
+   FILE *targetF;
 
-   sourceF = fopen(source, "r");
-   if (sourceF == NULL) 
+   sourceF = fopen(source, "r"); //r
+   if (sourceF == NULL)
    {
-      fprintf(builtinFd->err, "mv: error opening source file");
+      fprintf(builtinFd->err, "mv: %s\n", strerror(errno));
       return -1;
    }
-   targetF = fopen(target, "w");
-   if (targetF == NULL) 
+   targetF = fopen(target, "w+");
+   /*if (targetF == NULL) 
    {
       fclose(sourceF);
-      fprintf(builtinFd->err, "mv: error opening source file");
+      fprintf(builtinFd->err, "path: %s\n", target);
+      fprintf(builtinFd->err, "mv: %s\n", strerror(errno));
       return -1;
-   }
+   }*/
 
    while ((ch = fgetc(sourceF)) != EOF)
       fputc(ch, targetF);
@@ -55,47 +57,64 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd)
     int err = stat(argv[argc-1], &path_stat1);
     if (err == -1)
     {
-        fprintf(builtinFd->err, "mv: Error while stat (1).");
+        fprintf(builtinFd->err, "mv: Error while stat (1).\n");
         return -1;
     }
 
     if (!(S_ISDIR(path_stat1.st_mode)))
     {
-        fprintf(builtinFd->err, "mv: %s is not a directory", argv[argc-1]);
+        fprintf(builtinFd->err, "mv: %s: is not a directory\n", argv[argc-1]);
         return -1;
     }
     else
     {
+	char *newPath;
+
         for (size_t i = 0; i < argc-1; i++)
         {
             err = stat(argv[i], &path_stat1);
             if (err == -1)
             {
-                fprintf(builtinFd->err, "mv: Error while stat (2).");
+                fprintf(builtinFd->err,
+                        "mv: %s: file or directory doesn't exist.\n",
+                          argv[i]);
+
                 return -1;
             }
-            char *newPath = malloc (strlen(argv[0] + strlen(argv[1] + 2)));
-                strcat(newPath, argv[0]);
-                strcat(newPath, "/");
-                strcat(newPath, argv[1]);
 
+            fprintf(builtinFd->err, "argv[argc-1] = %s\n",argv[argc-1]);
+            fprintf(builtinFd->err, "argv[i] = %s\n",argv[i]);
+            newPath = calloc (strlen(argv[i]) + strlen(argv[argc-1]) + 2,1);
+                strcat(newPath, argv[argc-1]);
+                strcat(newPath, "/");
+                strcat(newPath, argv[i]);
+            fprintf(builtinFd->err, "path:'%s'\n", newPath);
             if (S_ISDIR(path_stat1.st_mode))
             {
-                if (rename(argv[0], newPath) != 0)
+                if (rename(argv[i], newPath) != 0)
                 {
                     fprintf(builtinFd->err, "mv: rename error");
+                    free(newPath);
                     return -1;
                 }
             }
             else
             {
                 // moving file to a directory
-                if (createFile(argv[0], newPath, builtinFd) != 0)
+                if (createFile(argv[i], newPath, builtinFd) != 0)
                 {
+                    free(newPath);
                     return -1;
                 }
 
+		
+	        if (remove(argv[i]) != 0)
+	        {
+		    free(newPath);
+		    return -1;
+	        }
             }
+	    free(newPath);
         }
     }
 
@@ -111,13 +130,19 @@ int mv2(char** argv, BuiltinFd *builtinFd)
         fprintf(builtinFd->err, "mv: Error while stat (3).");
         return -1;
     }
-        
+
     struct stat path_stat2;
     err = stat(argv[1], &path_stat2);
     if (err == -1)
     {
-        fprintf(builtinFd->err, "mv: Error while stat (4).");
-        return -1;
+        // second arg doesnt exist
+        if (rename(argv[0], argv[1]) != 0)
+        {
+             fprintf(builtinFd->err, "mv: rename error");
+             return -1;
+        }
+
+        return 0;
     }
 
     if (S_ISDIR(path_stat1.st_mode))
@@ -140,9 +165,9 @@ int mv2(char** argv, BuiltinFd *builtinFd)
             else
             {
                 char *newPath = malloc (strlen(argv[0] + strlen(argv[1] + 2)));
-                strcat(newPath, argv[0]);
-                strcat(newPath, "/");
                 strcat(newPath, argv[1]);
+                strcat(newPath, "/");
+                strcat(newPath, argv[0]);
 
 
                 if (rename(argv[0], newPath) != 0)
@@ -150,6 +175,10 @@ int mv2(char** argv, BuiltinFd *builtinFd)
                     fprintf(builtinFd->err, "mv: rename error");
                     return -1;
                 }
+
+
+	    if (remove(argv[0]) != 0)
+		return -1;
             }
         }
     }
@@ -158,15 +187,19 @@ int mv2(char** argv, BuiltinFd *builtinFd)
         if (S_ISDIR(path_stat2.st_mode))
         {
             char *newPath = malloc (strlen(argv[0] + strlen(argv[1] + 2)));
-            strcat(newPath, argv[0]);
-            strcat(newPath, "/");
             strcat(newPath, argv[1]);
+            strcat(newPath, "/");
+            strcat(newPath, argv[0]);
 
             // move argv[0] to argv[1]
             if (createFile(argv[0], newPath, builtinFd) != 0)
             {
                 return -1;
             }
+
+	    if (remove(argv[0]) != 0)
+		return -1;
+
         }
         else if (S_ISREG(path_stat2.st_mode))
         {
@@ -226,6 +259,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    mv(argv,terminal);
+    mv(argv,terminal);  //argv+1 to debug
     free(terminal);
+    return 0;
 }

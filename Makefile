@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -O1
+CFLAGS = -Wall -Wextra -Werror -std=c99 -O1 -g
 LDLIBS = -fsanitize=address
 LDLFLAGS = -D_XOPEN_SOURCE=700
 

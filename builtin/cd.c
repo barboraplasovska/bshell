@@ -30,11 +30,10 @@ int cd(char** argv, BuiltinFd *builtinFd)
     int err = 0;
     if ((err = chdir(dir)) != 0)
     {
-	fprintf(builtinFd->err, "cd: %d error\n", errno);
-        fprintf(builtinFd->err, "cd: %s: No such file or directory\n", argv[0]);
+	fprintf(builtinFd->err, "cd: %s\n", strerror(errno));
 	return 1;
     }
-    //setenv("PWD", dir, 1);
+    setenv("PWD", dir, 1);
     return 0;
 }
 
@@ -50,6 +49,8 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
+    fprintf(terminal->out, "cd: current directory: %s\n", getenv("PWD"));
     cd(argv,terminal);
+    fprintf(terminal->out, "cd: current directory: %s\n", getenv("PWD"));
     free(terminal);
 }
