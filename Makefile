@@ -8,14 +8,14 @@ HEADERS = $(wildcard *.h)
 MAIN = tests.o
 
 
-EXEC = test ls echo cat clear cd cp mv touch
+EXEC = test ls echo cat clear cd cp mv touch procstatus
 all: $(EXEC)
 
 
 test: $(MAIN) $(OBJ)
 	$(CC) -g -o $@ $^
 
-#COMMANDS
+#BUILTIN
 ls:
 	$(CC) $(CFLAGS) -o $@ ./builtin/ls.c
 echo:
@@ -32,6 +32,10 @@ mv:
 	$(CC) $(CFLAGS) -o $@ ./builtin/mv.c ./builtin/builtin.c
 touch:
 	$(CC) $(CFLAGS) -o $@ ./builtin/touch.c
+
+#EXTERNAL
+procstatus:
+	$(CC) $(CFLAGS) -o $@ ./external/procstatus.c
 
 $(OBJ): %.o: %.c $(HEADERS)
 
