@@ -10,6 +10,7 @@
 
 const char *operators_list[2] = {"&&" , "||"};
 
+
 size_t mystrlen(const char *s1)
 {
     size_t i = 0;
@@ -70,10 +71,15 @@ char** add_string_to_array(char **src, /*char *element*/ size_t array_size)
     size_t src_index= 1;
     char **res = (char **) malloc(array_size * sizeof(char*));
     size_t size = get_array_size(src);
-    for (; i < size - 1; i++,src_index++)
+    if (size <= 0)
     {
-        if (src_index == 1)
-            src_index += 1; //so skip the command
+        res[array_size] =NULL;
+        return res;
+    };
+    for (; i < size; i++,src_index++)
+    {
+        //if (src_index == 1)
+        //    src_index += 1; //so skip the command
         size_t test = mystrlen(src[src_index]);
         res[i]= malloc((test+1) * sizeof(char));//mystrlen(*src[i]));
         //size_t test2 = mystrlen(res[i]);
@@ -95,6 +101,7 @@ char** add_string_to_array(char **src, /*char *element*/ size_t array_size)
 char *get_string(char **args)
 {
     size_t i = 1;
+    //size_t i = 0;
     char *tmp = malloc(255);
     size_t skip = 0;
     for(; args[i]; i++)
