@@ -6,13 +6,17 @@ LDLFLAGS = -D_XOPEN_SOURCE=700
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 MAIN = main.o
+TEST = test.o
 
 
-EXEC = main ls echo cat clear cd cp mv touch procstatus
+EXEC = main test ls echo cat clear cd cp mv touch procstatus
 all: $(EXEC)
 
 
 main: $(MAIN) $(OBJ)
+	$(CC) -g -o $@ $^
+
+test: $(TEST) $(OBJ)
 	$(CC) -g -o $@ $^
 
 #BUILTIN
@@ -40,6 +44,6 @@ procstatus:
 $(OBJ): %.o: %.c $(HEADERS)
 
 clean:
-	$(RM) main *.o
+	$(RM) main test *.o
 	$(RM) ./builtin/main ./builtin/*.o
 	$(RM) $(EXEC)
