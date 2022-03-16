@@ -111,7 +111,6 @@ void loop(void){
         char *input = lsh_read_line();
         struct Token *token = getParameters(input);  
         args = lsh_split_line(input);
-        execvp(args[0],args);
         int valid = valid_input(token);
         status = valid;
         if (valid){ //do not consider ./main -> to fix
