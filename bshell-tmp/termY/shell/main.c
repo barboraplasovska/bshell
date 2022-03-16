@@ -111,10 +111,11 @@ void loop(void){
         char *input = lsh_read_line();
         struct Token *token = getParameters(input);  
         args = lsh_split_line(input);
+        execvp(args[0],args);
         int valid = valid_input(token);
         status = valid;
         if (valid){ //do not consider ./main -> to fix
-            //args[0] = token->next->current_command.executable;
+            args[0] = token->next->current_command.executable;
             size_t byte_size = get_array_byte_size(args);
             char **res = add_string_to_array(args,byte_size);
             execute(res,token->next->current_command);

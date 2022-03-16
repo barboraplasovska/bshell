@@ -1,8 +1,5 @@
 #include <vte/vte.h>
-
-const GdkRGBA *white; 
-gboolean r = gdk_rgba_parse(white,"#ffff"); 
-
+#include <err.h>
 static void child_ready(VteTerminal *terminal, GPid pid, GError *error, gpointer user_data)
 {
     if (!terminal) return;
@@ -11,13 +8,22 @@ static void child_ready(VteTerminal *terminal, GPid pid, GError *error, gpointer
 
 int main(int argc, char *argv[])
 {
-    if (argc > 2)
-        return 0;
+    /*if ((argc > 2)||argc == 1)
+        return 0;*/
     GtkWidget *window, *terminal;
 
     /* Initialise GTK, the window and the terminal */
     gtk_init(&argc, &argv);
     terminal = vte_terminal_new();
+    /*if (strcmp(argv[1],"white")){
+        GdkRGBA *white;
+        gboolean r = gdk_rgba_parse(white,"rgb(143,206,0");
+        if (r == 0 ){
+            err(-3,"color error");
+        }
+        vte_terminal_set_color_foreground(VTE_TERMINAL(terminal),white); 
+        //vte_terminal_set_colors(VTE_TERMINAL(terminal),white,white,NULL,0);
+    }*/
     window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(window), "NaN ~ S4");
 
@@ -38,11 +44,6 @@ int main(int argc, char *argv[])
         NULL,         /* cancellable */
         child_ready,  /* callback */
         NULL);        /* user_data */
-    
-    if (strcmp(argv[1],"white")){
-        
-        vte_terminal_set_colors(VTE_TERMINAL(terminal),NULL,NULL,NULL,0);
-    }
     /* Connect some signals */
     g_signal_connect(window, "delete-event", gtk_main_quit, NULL);
     g_signal_connect(terminal, "child-exited", gtk_main_quit, NULL);
