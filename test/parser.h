@@ -31,17 +31,17 @@ struct Token {
     struct command current_command;
 };
 
-static const struct command ls = { "ls", {"a","h"}, "./ls", 1 , 2};
-static const struct command cat = { "cat", {"e","h"}, "./cat", 1 , 2};
-static const struct command cd = { "cd", {"L","e"}, "./cd", 0 , 2};
+static const struct command ls = { "ls", {}, "./ls", -1 , 0};
+static const struct command cat = { "cat", {}, "./cat", -1 , 0};
+static const struct command cd = { "cd", {}, "./cd", -1 , 0};
 static const struct command echo = { "echo", {"n","e","E"}, "./echo", -1 ,3};
-static const struct command clear = { "clear", {"n","e","E"}, "./clear", -1 ,3};
+static const struct command clear = { "clear", {}, "./clear", 0 ,0};
 
-static const struct command cp = { "cp", {}, "./cp", -1 , 0};
-static const struct command procstatus = { "procstatus", {}, "./procstatus", -1 , 0};
+static const struct command cp = { "cp", {}, "./cp", -1 , -1};
+static const struct command procstatus = { "procstatus", {}, "./procstatus", -1 , -1};
 
-static const struct command touch = { "touch", {}, "./touch", -1 ,0};
-static const struct command mv = {"mv", {}, "./mv", -1, 0};
+static const struct command touch = { "touch", {}, "./touch", -1 ,-1};
+static const struct command mv = {"mv", {}, "./mv", -1, -1};
 
 
 static const struct command command_list[CMDSIZE] =

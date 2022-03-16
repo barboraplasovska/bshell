@@ -288,19 +288,32 @@ int valid_input(struct Token *token)
         printf("command not found\n");
 
     struct command current_command = token->current_command;
-    while(token->next)
+    int nb_args = 0;
+    while(token)
     {
-        if (token->type == type_command && token->next->type == type_command)
+        if (token->type == type_command)
+        {
+            if (token->next && token->next->type == type_command)
+            {
+                err = 0;
+                printf("one command at a time\n");
+            }
+        }
+        nb_args++;
+        if (token->type == type_argument && 
+            nb_args > current_command.args_needed && current_command.args_needed != -1)
         {
             err = 0;
-            printf("one command at a time\n");
+            nb_args = -99; //temporary fix so it prints once not for every
+                           //extra argument
+            printf("too many arguments for %s\n",current_command.param);
         }
         if (token->type == type_option && !(valid_option(token,current_command)))
         {
             err = 0;
             printf("%s not a valid option for %s\n",token->param,current_command.param);
         }
-        if (token->next->type == type_command)
+        if (token->next && token->next->type == type_command)
         {
             if (token->type != type_operators)
             {

@@ -112,7 +112,7 @@ void loop(void){
         struct Token *token = getParameters(input);  
         args = lsh_split_line(input);
         int valid = valid_input(token);
-        status = valid;
+        //status = valid;
         if (valid){ //do not consider ./main -> to fix
             //args[0] = token->next->current_command.executable;
             size_t byte_size = get_array_byte_size(args);
@@ -127,5 +127,5 @@ int main(void)
 {
     loop();
 
-    return EXIT_SUCCESS;    
+    return EXIT_SUCCESS;
 }
