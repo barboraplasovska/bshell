@@ -10,6 +10,7 @@
 
 const char *operators_list[2] = {"&&" , "||"};
 
+
 size_t mystrlen(const char *s1)
 {
     size_t i = 0;
@@ -70,7 +71,6 @@ char** add_string_to_array(char **src, /*char *element*/ size_t array_size)
     size_t src_index= 1;
     char **res = (char **) malloc(array_size * sizeof(char*));
     size_t size = get_array_size(src);
-
     if (size <= 0)
     {
         res[array_size] =NULL;
@@ -80,7 +80,6 @@ char** add_string_to_array(char **src, /*char *element*/ size_t array_size)
     {
         //if (src_index == 1)
         //    src_index += 1; //so skip the command
-
         size_t test = mystrlen(src[src_index]);
         res[i]= malloc((test+1) * sizeof(char));//mystrlen(*src[i]));
         //size_t test2 = mystrlen(res[i]);
@@ -102,6 +101,7 @@ char** add_string_to_array(char **src, /*char *element*/ size_t array_size)
 char *get_string(char **args)
 {
     size_t i = 1;
+    //size_t i = 0;
     char *tmp = malloc(255);
     size_t skip = 0;
     for(; args[i]; i++)
@@ -288,34 +288,19 @@ int valid_input(struct Token *token)
         printf("command not found\n");
 
     struct command current_command = token->current_command;
-
-    int nb_args = 0;
-    while(token)
+    while(token->next)
     {
-        if (token->type == type_command)
-        {
-            if (token->next && token->next->type == type_command)
-            {
-                err = 0;
-                printf("one command at a time\n");
-            }
-        }
-        nb_args++;
-        if (token->type == type_argument && 
-            nb_args > current_command.args_needed && current_command.args_needed != -1)
+        if (token->type == type_command && token->next->type == type_command)
         {
             err = 0;
-            nb_args = -99; //temporary fix so it prints once not for every
-                           //extra argument
-            printf("too many arguments for %s\n",current_command.param);
+            printf("one command at a time\n");
         }
         if (token->type == type_option && !(valid_option(token,current_command)))
         {
             err = 0;
             printf("%s not a valid option for %s\n",token->param,current_command.param);
         }
-        if (token->next && token->next->type == type_command)
-
+        if (token->next->type == type_command)
         {
             if (token->type != type_operators)
             {
@@ -340,3 +325,4 @@ void execute(char *argv[],struct command current_command)
         execvp(current_command.executable,argv);
     }
     wait(NULL);
+}

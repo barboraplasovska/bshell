@@ -1,0 +1,34 @@
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror -std=c99 -O1 `pkg-config --cflags vte-2.91`
+LDLIBS = -fsanitize=address `pkg-config --cflags vte-2.91` `pkg-config --libs vte-2.91`
+
+OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
+HEADERS = $(wildcard *.h)
+MAIN = shell/main.o
+
+
+EXEC = term bsh ls echo cat clear
+all: $(EXEC)
+
+term: term.o
+		$(CC) $(CFLAGS) $(LDLIBS) $(OBJ) -o term
+
+bsh: $(MAIN) $(OBJ)
+		$(CC) -g -o $@ $^
+
+ls:
+	$(CC) $(CFLAGS) -o $@ ./dir1/ls.c
+echo:
+	$(CC) $(CFLAGS) -o $@ ./dir1/echo.c ./dir1/builtin.c
+cat:
+	$(CC) $(CFLAGS) -o $@ ./dir1/cat.c
+clear:
+	$(CC) $(CFLAGS) -o $@ ./dir1/clear.c
+
+$(OBJ): shell/%.o: shell/%.c $(HEADERS)
+
+clean:
+	$(RM) bsh *.o shell/*.o
+	$(RM) ./dir1/main ./dir1/*.o
+	$(RM) $(EXEC)
+

@@ -7,12 +7,13 @@ OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 MAIN = test.o
 
-EXEC = main ls echo cat clear cd cp mv touch procstatus
+EXEC = test ls echo cat clear cd cp mv touch procstatus
 all: $(EXEC)
 
 
-main: $(MAIN) $(OBJ)
+test: $(MAIN) $(OBJ)
 	$(CC) -g -o $@ $^
+
 
 #BUILTIN
 ls:
@@ -40,5 +41,5 @@ $(OBJ): %.o: %.c $(HEADERS)
 
 clean:
 	$(RM) test *.o
-	$(RM) ./builtin/test ./builtin/*.o
+	$(RM) ./builtin/main ./builtin/*.o
 	$(RM) $(EXEC)

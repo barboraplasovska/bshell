@@ -31,11 +31,11 @@ struct Token {
     struct command current_command;
 };
 
-static const struct command ls = { "ls", {}, "./ls", -1, 0};
+static const struct command ls = { "ls", {}, "./ls", -1 , 0};
 static const struct command cat = { "cat", {}, "./cat", -1 , 0};
 static const struct command cd = { "cd", {}, "./cd", -1 , 0};
 static const struct command echo = { "echo", {"n","e","E"}, "./echo", -1 ,3};
-static const struct command clear = { "clear", {}, "./clear", 0,0};
+static const struct command clear = { "clear", {}, "./clear", 0 ,0};
 
 static const struct command cp = { "cp", {}, "./cp", -1 , -1};
 static const struct command procstatus = { "procstatus", {}, "./procstatus", -1 , -1};
@@ -46,6 +46,7 @@ static const struct command mv = {"mv", {}, "./mv", -1, -1};
 
 static const struct command command_list[CMDSIZE] =
 {ls, cd, echo, cat, clear,cp, touch, mv,procstatus};
+
 
 
 size_t get_array_size(char **args);
