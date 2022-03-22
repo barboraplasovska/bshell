@@ -48,7 +48,6 @@ static const struct command command_list[CMDSIZE] =
 {ls, cd, echo, cat, clear,cp, touch, mv,procstatus};
 
 
-
 size_t get_array_size(char **args);
 
 size_t get_array_byte_size(char **args);
