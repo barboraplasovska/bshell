@@ -25,7 +25,7 @@ size_t mystrlen(const char *s1)
 size_t get_array_size(char **args)
 {
     size_t i = 0;
-    for(;*(args+i);i++){};
+    for(;*(args+i);i++){}
     return i;
 }
 
@@ -70,19 +70,17 @@ char** add_string_to_array(char **src, char *element)
     size_t i = 0;
     size_t src_index= 0;
 
-    size_t size = 0;
-    if (src)
-        size = get_array_size(src);
-    char **res = (char **) malloc((size) * sizeof(char*));
+    size_t size = get_array_size(src);
+    char **res = (char **) malloc((size+1) * sizeof(char*));
     for (; i < size ; i++,src_index++)
     {
-        size_t test = mystrlen(src[src_index]);
-        res[i]= malloc((test) * sizeof(char));
-        strncpy(res[i],src[src_index],mystrlen(src[src_index]));
+        size_t test = strlen(src[src_index]);
+        res[i]= malloc((test+1) * sizeof(char));
+        strcpy(res[i],src[src_index]);
     }
     res[i] = element;
-    res[i+1] = '\0';
     return res;
+
 }
 
 
@@ -138,12 +136,10 @@ struct Token *getParameters(const char *command)
     initialToken = (struct Token *)malloc(sizeof(struct Token)); // used as sentinel
     initialToken->param = NULL;
     initialToken->next = NULL;
-    initialToken->instruction = NULL;
 
     struct Token *currentToken = initialToken;
 
     char *tempParamInitial;
-    currentToken->instruction = NULL;
     tempParamInitial = (char *)malloc(255);
     size_t paramLength = 0;
 
@@ -160,7 +156,6 @@ struct Token *getParameters(const char *command)
 
             struct Token *token = NULL;
             token = (struct Token *)malloc(sizeof(struct Token));
-            token->instruction = NULL;
 
             if (param[0] == '-')
             {
@@ -187,7 +182,6 @@ struct Token *getParameters(const char *command)
                     else
                         token->type = type_argument;
                 }
-            token->param = (char *) malloc(paramLength);
             token->param = param;
             currentToken->next = token;
 
@@ -295,9 +289,9 @@ int valid_input(struct Token *token)
 
     while(token)
     {
+        err = 1;
         if (token->type == type_command)
         {
-            err = 1;
             if (token->next && token->next->type == type_command)
             {
                 err = 0;
@@ -318,8 +312,8 @@ int valid_input(struct Token *token)
             }
             else
             {
-                //if(token->instruction == NULL)
-                //        token->instruction = malloc(sizeof(char**));
+                if(token->instruction == NULL)
+                        token->instruction = malloc(sizeof(char**));
                 token->instruction = add_string_to_array(token->instruction,token->param);
                 if(token->next)
                     token->next->instruction = token->instruction;
@@ -334,8 +328,8 @@ int valid_input(struct Token *token)
             }
             else
             {
-                //if(token->instruction == NULL)
-                //    token->instruction = malloc(sizeof(char**));
+                if(token->instruction == NULL)
+                    token->instruction = malloc(sizeof(char**));
 
                 token->instruction = add_string_to_array(token->instruction,token->param);
                 if (token->next)
@@ -354,10 +348,7 @@ int valid_input(struct Token *token)
         }
         if(token->type == type_operators)
         {
-            char Token_param[mystrlen(token->param) + 1];
-            strncpy(Token_param,token->param,mystrlen(token->param));
-            Token_param[mystrlen(token->param)] = '\0';
-            if(strcmp(Token_param,"|") == 0)
+            if(strcmp(token->param,"|") == 0)
             {
                     if (pthread_create(&thr,NULL,worker,(void *)token) != 0)
                     {
@@ -367,9 +358,9 @@ int valid_input(struct Token *token)
                     token= token->next;
                     continue;
             }
-            if((strcmp(Token_param,">") == 0 ) && token->next)
+            if((strcmp(token->param,">") == 0) && token->next)
             {
-                token->next->instruction = NULL;//malloc(sizeof(char**));
+                token->next->instruction = malloc(sizeof(char**));
                 token->next->instruction = add_string_to_array(token->next->instruction,token->next->param);
                 int fd;
                 fd = open(*token->next->instruction,O_APPEND | O_CREAT | O_WRONLY | O_TRUNC, 0666);
@@ -379,7 +370,7 @@ int valid_input(struct Token *token)
                         printf("rer");
 
                     close(fd);
-                    res = execvp(token->current_command.executable,token->instruction);//execute the first command
+                    execvp(token->current_command.executable,token->instruction);//execute the first command
                 }
                 wait(NULL);
                 err = 0;
@@ -391,10 +382,9 @@ int valid_input(struct Token *token)
                 pthread_cond_signal(&cond);
             }
             else
-                if (res != 0)
-                    res = -1; //because since the syntax is incorrect (err == 0) then
+                res = -1; //because since the syntax is incorrect (err == 0) then
                           //we know that res would not be 0
-            if(strcmp(Token_param,"||") == 0)
+            if(strcmp(token->param,"||") == 0)
             {
                 err = 1; //reset the err value
                 if (res == 0)
@@ -402,7 +392,7 @@ int valid_input(struct Token *token)
                      break;
                 }
             }
-            if(strcmp(Token_param,"&&") == 0)
+            if(strcmp(token->param,"&&") == 0)
             {
                 if (res != 0)
                 {
@@ -411,19 +401,12 @@ int valid_input(struct Token *token)
             }
             if(token->next)
             {
-                char Token_next_param[mystrlen(token->next->param)];
-                strncpy(Token_next_param,token->next->param,mystrlen(token->next->param));
-                Token_next_param[mystrlen(token->next->param)] = '\0';
-
-                if(token->next->type != type_command && (strcmp(Token_param,"&&") == 0))
+                if(token->next->type != type_command && (strcmp(token->param,"&&") == 0))
                 {
-                    printf("command: %s not found\n",Token_next_param);
-                    err = 0;
-                    res = 1;
-                    //break;
+                    printf("command: %s not found\n",token->next->param);
+                    break;
                 }
-                if (token->next->type == type_command)
-                    current_command = token->next->current_command;
+                current_command = token->next->current_command;
             }
             token->instruction = NULL;
         }
