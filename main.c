@@ -110,6 +110,8 @@ void loop(void){
         print_prompt();
         
         char *input = lsh_read_line();
+        if(input == NULL)
+            continue;
         struct Token *token = getParameters(input);
         //args = lsh_split_line(input);
         int valid = valid_input(token);

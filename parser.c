@@ -286,8 +286,14 @@ int valid_input(struct Token *token)
     token = token->next;
 
     if (token->type != type_command)
-        printf("command %s not found\n",token->param);
+    {
+        char Token_param[mystrlen(token->param) + 1];
+        strncpy(Token_param,token->param,mystrlen(token->param));
+        Token_param[mystrlen(token->param)] = '\0';
+        printf("command %s not found\n",Token_param);
+        return 0;
 
+    }
     struct command current_command = token->current_command;
     int nb_args = 0;
     int res = 0; //return value of the current command that's being executed
