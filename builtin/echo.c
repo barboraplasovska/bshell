@@ -157,6 +157,8 @@ int echo(char** argv, BuiltinFd *builtinFd)
 {
     struct Options opt;
     opt.nflag = false;
+    opt.eflag = false;
+    opt.Eflag = false;
     opt.ind = 0;
 
     size_t argc = getArgc(argv);
