@@ -399,7 +399,7 @@ int valid_input(struct Token *token)
 
             if(strcmp(Token_param,"||") == 0)
             {
-                if (err == 1 && res!=0)
+                if (err == 1 && res==0)
                 {
                     res = execute(token->instruction,token->current_command);
                     pthread_cond_signal(&cond);
@@ -407,7 +407,11 @@ int valid_input(struct Token *token)
                 err = 1; //reset the err value
                 if (res == 0 && current_command.executable[0] != '\0')
                 {
-                     break;
+                    token = token->next;
+                    while(token->next && token->type != type_operators)
+                        token = token->next;
+
+                    // break;
                 }
             }
             if(strcmp(Token_param,"&&") == 0 )
@@ -419,7 +423,7 @@ int valid_input(struct Token *token)
                 }
                 if (res != 0 )//|| err == 0)
                 {
-                     break;
+                    break;
                 }
             }
             if(token->next)
