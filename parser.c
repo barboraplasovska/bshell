@@ -167,7 +167,7 @@ struct Token *getParameters(const char *command)
                 token->type = type_option;
                 struct Token *p_newToken;
                 char *tmp_param = malloc(paramLength);
-                strcpy(tmp_param,param);
+                strncpy(tmp_param,param,paramLength);
                 p_newToken = seperate_options(tmp_param,token,currentToken);
                 currentToken->next = token;
                 currentToken = p_newToken;
@@ -301,6 +301,8 @@ int valid_input(struct Token *token)
     int res = 1; //return value of the current command that's being executed
     pthread_t thr;
 
+    char opts[10];
+
     while(token)
     {
         if (token->type == type_command)
@@ -341,10 +343,14 @@ int valid_input(struct Token *token)
             }
             else
             {
-
-                token->instruction = add_string_to_array(token->instruction,token->param);
                 if (token->next)
                 {
+                    strncat(opts,token->param,1);
+
+                    if (token->next->type != type_option)
+                    {
+                        token->instruction = add_string_to_array(token->instruction,opts);
+                    }
                     token->next->instruction = token->instruction;
                 }
             }
@@ -411,7 +417,7 @@ int valid_input(struct Token *token)
                     res = execute(token->instruction,token->current_command);
                     pthread_cond_signal(&cond);
                 }
-                if (res != 0 || err == 0)
+                if (res != 0 )//|| err == 0)
                 {
                      break;
                 }
