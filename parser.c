@@ -422,8 +422,12 @@ int valid_input(struct Token *token)
                             err = 0;
                         }
                     }
+                    else
+                    {
+                        if(res == 0)
+                            break;
+                    }
 
-                    // break;
                 }
             }
             if(strcmp(Token_param,"&&") == 0 )
