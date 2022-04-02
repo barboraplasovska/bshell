@@ -457,6 +457,7 @@ int valid_input(struct Token *token)
                 if (token->next->type == type_command)
                     current_command = token->next->current_command;
             }
+            token->current_command.executable[0]= '\0';
             token->instruction = NULL;
         }
         if (!token->next && token->type != type_operators && current_command.executable[0] != '\0')
