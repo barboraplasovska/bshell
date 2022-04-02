@@ -293,7 +293,7 @@ int valid_input(struct Token *token)
         char Token_param[mystrlen(token->param) + 1];
         strncpy(Token_param,token->param,mystrlen(token->param));
         Token_param[mystrlen(token->param)] = '\0';
-        printf("command %s not found\n",Token_param);
+        printf("%s: command not found\n",Token_param);
         err = 0;
         current_command.args_needed = -1;
     }
@@ -410,9 +410,18 @@ int valid_input(struct Token *token)
                     token = token->next;
                     while(token->next && token->type != type_operators)
                         token = token->next;
+
                     if(token->next)
-                        if (token->next->type != type_command)
+                    {
+
+                        if(token->next->type != type_command)
+                        {
+                            strncpy(Token_param,token->param,mystrlen(token->param));
+                            Token_param[mystrlen(token->param)] = '\0';
+                            current_command.executable[0] = '\0';
                             err = 0;
+                        }
+                    }
 
                     // break;
                 }
@@ -435,18 +444,22 @@ int valid_input(struct Token *token)
                 strncpy(Token_next_param,token->next->param,mystrlen(token->next->param));
                 Token_next_param[mystrlen(token->next->param)] = '\0';
 
-                if(token->next->type != type_command && (strcmp(Token_param,"&&") == 0))
+                if(token->next->type != type_command)
                 {
-                    printf("command: %s not found\n",Token_next_param);
-                    err = 0;
-                    res = 1;
+                    if(strcmp(Token_param,">") != 0)
+                        printf("%s: command not found\n",Token_next_param);
+                    if (strcmp(Token_param,"&&") == 0)
+                    {
+                        err = 0;
+                        res = 1;
+                    }
                 }
                 if (token->next->type == type_command)
                     current_command = token->next->current_command;
             }
             token->instruction = NULL;
         }
-        if (!token->next && token->type != type_operators)
+        if (!token->next && token->type != type_operators && current_command.executable[0] != '\0')
         {
             if (err == 1)
             {
