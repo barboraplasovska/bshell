@@ -410,6 +410,9 @@ int valid_input(struct Token *token)
                     token = token->next;
                     while(token->next && token->type != type_operators)
                         token = token->next;
+                    if(token->next)
+                        if (token->next->type != type_command)
+                            err = 0;
 
                     // break;
                 }
