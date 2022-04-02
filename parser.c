@@ -407,12 +407,12 @@ int valid_input(struct Token *token)
                 err = 1; //reset the err value
                 if (res == 0 && current_command.executable[0] != '\0')
                 {
-                    //token = token->next;
-                    //while(token->next && token->type != type_operators)
-                        do
-                        {
+                    if(token->next)
+                        token = token->next;
+                    while(token->next && token->type != type_operators)
+                    {
                             token = token->next;
-                        }while(token->next && token->type != type_operators);
+                    }
 
                     if(token->next)
                     {
