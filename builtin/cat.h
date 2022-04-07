@@ -23,7 +23,6 @@ typedef struct          Operators
 {
   bool                  sm; // >
   bool                  doublesm; // >>
-  bool                  dash; // --
   bool                  star; // *.txt
   size_t                ind;
 } Operators;

@@ -23,8 +23,8 @@ void getOptions(char** argv, Options* opt, size_t argc)
                     opt->sflag = true;
                 if (argv[i][j] == 'E')
                     opt->Eflag = true;
-		if (argv[i][j] == 'n')
-		    opt->Eflag = true;
+                if (argv[i][j] == 'n')
+                    opt->Eflag = true;
 
                 j++;
             }
@@ -54,11 +54,6 @@ void getOperators(char** argv, Operators* ope, size_t argc)
 	   ope->sm = true;
 	   break;
 	}
-	if (argv[i] == "--")
-	{
-	   ope->dash = true;
-	   break;
-	}
 	if (argv[i][0] == '*')
 	{
 	   ope->star = true;
@@ -81,7 +76,7 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
     {
         int f;
         int count;
-        char buffer[2048]; //characer buffer to store the bytes
+        char buffer[BUFFER_SIZE*3]; //characer buffer to store the bytes
         f = open(path, O_RDONLY);
         if(f == -1)
         {
@@ -100,7 +95,7 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
             size_t i = 0;
             int f;
             int count;
-            char buffer[2048]; //characer buffer to store the bytes
+            char buffer[BUFFER_SIZE*3]; //characer buffer to store the bytes
             f = open(path, O_RDONLY);
             if(f == -1)
             {
@@ -119,7 +114,7 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
             size_t i = 0;
             int f;
             int count;
-            char buffer[2048]; //characer buffer to store the bytes
+            char buffer[BUFFER_SIZE*3]; //characer buffer to store the bytes
             f = open(path, O_RDONLY);
             if(f == -1)
             {
@@ -153,7 +148,8 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
      return 0;
 }
 
-int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc, Operators ope)
+int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc, 
+    Operators ope)
 {
     size_t i = 0;
     while (i < argc)
@@ -240,8 +236,12 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
             }
             else
             {
-                // TODO: copy files from 0 to i-2 to file i
-                // cp function by enrique
+                // copy files from 0 to i-2 to file i
+                for (size_t j = 0; j < i-1; j++)
+                {
+                    if (appendFiles(argv[j], argv[i], builtinFd) == -1)
+                        return -1;
+                }
             }
         }
     }
@@ -253,12 +253,8 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
             return -1;
         }
 
-        if (appendFiles(argv[0], argv[2]) == -1)
+        if (appendFiles(argv[0], argv[2], builtinFd) == -1)
             return -1;
-    }
-    else if (ope.dash == true)
-    {
-        // TODO: opens a dash file ?
     }
     else if (ope.star == true)
     {
@@ -318,7 +314,6 @@ int cat(char** argv, BuiltinFd *builtinFd)
     Operators  ope;
     ope.sm = false;
     ope.doublesm = false;
-    ope.dash = false;
     ope.star = false;
     ope.ind = -1;
 
@@ -344,7 +339,7 @@ int cat(char** argv, BuiltinFd *builtinFd)
             if (ope.ind == -1)
             {
                 // no operators
-                if (multipleFiles(argv, argc, builtinFd, opt) == -1)
+                if (multipleFiles(argv, builtinFd, opt, argc, ope) == -1)
                     return -1;
             }
             else

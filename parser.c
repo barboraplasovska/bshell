@@ -340,3 +340,4 @@ void execute(char *argv[],struct command current_command)
         execvp(current_command.executable,argv);
     }
     wait(NULL);
+}

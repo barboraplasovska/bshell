@@ -14,14 +14,10 @@ void getOptions(char** argv, Options* opt, size_t argc)
         if (argv[i][0] == '-')
         {
             j = 1;
-            while (argv[i][j] == 's' || argv[i][j] == 'n' || argv[i][j] == 'b')
+            while (argv[i][j] == 'n')
             {
                 if (argv[i][j] == 'n')
                     opt->nflag = true;
-                if (argv[i][j] == 's')
-                    opt->sflag = true;
-                if (argv[i][j] == 'b')
-                    opt->bflag = true;
 
                 j++;
             }
@@ -33,39 +29,108 @@ void getOptions(char** argv, Options* opt, size_t argc)
             break;
   }
   if (i < argc)
-  {
-      opt->ind = i;
-      if (opt->sflag)
-      {
-          opt->separator = argv[i];
-          opt->ind += 1;
-      }
-  }
+    opt->ind = i;
+      
 }
 
-int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
+char** getFileContent (char* path, size_t *length, size_t *bufferSize)
 {
+    char** lines = calloc(BUFFER_SIZE, sizeof(char*));
+
+    for (size_t i = 0; i < BUFFER_SIZE; i++)
+    {
+        lines[i] = calloc(BUFFER_SIZE, sizeof(char));
+    }
+
+    size_t nbLines = 0;
+    size_t buffSize = BUFFER_SIZE;
+
+    FILE* f = fopen(path, "r");
+    while(fgets(lines[nbLines], BUFFER_SIZE, f)) 
+	{
+        nbLines++;
+        if (nbLines >= buffSize)
+        {
+            buffSize *= 2;
+            lines = realloc(lines, buffSize * sizeof(char*));
+            for (size_t i = 0; i < buffSize; i++)
+            {
+                lines[i] = realloc(lines[i], buffSize * sizeof(char));
+            }
+        }
+    }
+
+    // reverse array
+    for(size_t i = 0; i < nbLines/2; i++)
+    {
+        char* temp = lines[i];
+        lines[i] = lines[nbLines-i-1];
+        lines[nbLines-i-1] = temp;
+    }
+
+    length = nbLines;
+    bufferSize = buffSize;
+    return lines;
+}
+
+int singleFile(char* path, BuiltinFd *builtinFd, Options opt)
+{
+    size_t length;
+    size_t bufferSize;
     if (opt.ind == -1)
     {
-        // TODO:
+        char** lines = getFileContent(path, &length, &bufferSize);
+        size_t i = 0;
+        while(i < length)
+        {
+            fprintf(builtinFd->out, "%s", lines[i]);
+            i++;
+        }
+        // freeeing lines
+        for (size_t i = 0; i < bufferSize; i++)
+        {
+            free(lines[i]);
+        }
+        free(lines);
     }
     else
     {
+        char** lines = getFileContent(path, &length, &bufferSize);
+
         if (opt.nflag)
         {
-            // TODO:
+            // numbered
+            size_t i = 0;
+            while(i < length)
+            {
+                fprintf(builtinFd->out, "%lu: %s", i, lines[i]);
+                i++;
+            }
+            // freeeing lines
+            for (size_t i = 0; i < bufferSize; i++)
+            {
+                free(lines[i]);
+            }
+            free(lines);
         }
-        else if (opt.sflag)
+        else
         {
-            
-            // TODO:
-        }
-        else if (opt.bflag)
-        {
-            // TODO:
+            // not numbered
+            size_t i = 0;
+            while(i < length)
+            {
+                fprintf(builtinFd->out, "%s", lines[i]);
+                i++;
+            }
+            // freeeing lines
+            for (size_t i = 0; i < bufferSize; i++)
+            {
+                free(lines[i]);
+            }
+            free(lines);
         }
     }
-     return 0;
+    return 0;
 }
 
 int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc)
@@ -90,7 +155,6 @@ int tac(char** argv, BuiltinFd *builtinFd)
 {
     Options opt;
     opt.nflag = false;
-    opt.sflag = false;
     opt.ind = -1;
 
     size_t argc = getArgc(argv);
@@ -119,9 +183,9 @@ int main(int argc, char **argv)
     if (argc){}
     struct builtinFd *terminal = NULL;
     terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
-    terminal->in = stdin;//STDIN_FILENO;
-    terminal->out = stdout;//(FILE *) STDOUT_FILENO;
-    terminal->err = stderr;//(FILE *) STDERR_FILENO;
+    terminal->in = stdin; //STDIN_FILENO;
+    terminal->out = stdout; //(FILE *) STDOUT_FILENO;
+    terminal->err = stderr; //(FILE *) STDERR_FILENO;
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;

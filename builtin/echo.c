@@ -1,5 +1,6 @@
 #include "echo.h"
 #include "builtin.h"
+
 /**
 ** @brief               Gets the options
 ** @param argv          Array of string arguments.

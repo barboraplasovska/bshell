@@ -179,7 +179,7 @@ int monthsSort(char** lines, size_t length)
     return 0;
 }
 
-char* isSorted (char** lines, size_t length, char* path)
+char* isSorted(char** lines, size_t length, char* path)
 {
     char* line = calloc(BUFFER_SIZE, sizeof(char));
     for (size_t i = 0; i < length; i++)
@@ -198,23 +198,25 @@ char* isSorted (char** lines, size_t length, char* path)
     return line;
 }
 
-void removeDuplicates(char** lines, size_t length)
+size_t removeDuplicates(char** lines, size_t length)
 {
-    // TODO: check if this works
-    char* last = lines[0];
-    for (size_t i = 1; i < length; i++)
-    {
-        if (last == lines[i])
-        {
-            for (size_t j = i; j < length; j++)
-            {
-                lines[j] = lines[j+1];
-            }
-            length -= 1;
-        }
-        else
-            last = lines[i];
-    }
+    // check if this works
+    if (length <= 1)
+        return length;
+
+    char* temp[length];
+
+    size_t j = 0;
+    size_t i;
+    for (i = 0; i < length - 1; i++)
+        if (lines[i] != lines[i + 1])
+        temp[j++] = lines[i];
+    temp[j++] = lines[length - 1];
+
+    for (i = 0; i < j; i++)
+        lines[i] = temp[i];
+
+    return j;
 }
 
 void reverseArray(char** lines, size_t length)
@@ -324,11 +326,12 @@ int sortFile (char* src, char* dest, BuiltinFd *builtinFd, Options opt,
         {
             if (count != 0)
             {
-                removeDuplicates(diff, count);
-                removeDuplicates(lines, length-count);
+                size_t temp = count;
+                count = removeDuplicates(diff, count);
+                length = removeDuplicates(lines, length-temp) + count; // check this
             }
             else
-                removeDuplicates(lines, length);
+                length = removeDuplicates(lines, length);
         }
         if (opt.rflag) 
         {

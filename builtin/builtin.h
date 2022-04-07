@@ -14,6 +14,22 @@
 //#include <sys/types.h>
 
 #define BUFFER_SIZE 1024
+#define NB_COMMANDS 13
+
+char commands[NB_COMMANDS][7] = 
+  { "cat", 
+    "clear",
+    "cp",
+    "echo",
+    "help",
+    "ls",
+    "mkdir",
+    "mv",
+    "rm", 
+    "rmdir", 
+    "sort", 
+    "tac",
+    "touch"};
 
 /**
 ** @brief               Builtin files.

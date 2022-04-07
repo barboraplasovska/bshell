@@ -12,8 +12,10 @@ typedef struct          Options
 {
   bool                  oflag; // output to a new file
   bool                  rflag; // Sorting In Reverse Order
-  bool                  nflag; //  sort a file numerically
-  bool                  cflag; //  f the file given is already sorted or not ( returns nothing if sorted, else "sort: cars.txt:3: disorder: BMW")
+  bool                  nflag; // sort a file numerically
+  bool                  cflag; // f the file given is already sorted or not 
+                               // ( returns nothing if sorted, else 
+                               // "sort: cars.txt:3: disorder: BMW")
   bool                  uflag; // To sort and remove duplicates
   bool                  Mflag; // To sort by month 
   size_t                ind;
@@ -21,7 +23,7 @@ typedef struct          Options
 
 
 /**
-** @brief               tac main function.
+** @brief               sort main function.
 ** @param argv          Array of string arguments.
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
