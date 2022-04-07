@@ -4,8 +4,8 @@
 #include "builtin.h"
 
 /**
-** @brief               Builtin echo options.
-** @param nflag         Option -s is activated.
+** @brief               Builtin tac options.
+** @param nflag         Option -n is activated.
 ** @param ind           Index of the first argument (Options excluded).
 */
 typedef struct          Options
