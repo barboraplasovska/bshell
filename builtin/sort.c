@@ -217,11 +217,30 @@ void removeDuplicates(char** lines, size_t length)
     }
 }
 
-int sortFile (char* path, BuiltinFd *builtinFd, Options opt, size_t argc)
+void reverseArray(char** lines, size_t length)
+{
+    for(size_t i = 0; i < length/2; i++)
+    {
+        char* temp = lines[i];
+        lines[i] = lines[length-i-1];
+        lines[length-i-1] = temp;
+    }
+}
+
+void printLines(char* path, char** lines, size_t length)
+{
+    for (size_t i = 0; i < length; i++)
+    {
+        fprintf(path, lines[i]);
+    }
+}
+
+int sortFile (char* src, char* dest, BuiltinFd *builtinFd, Options opt, 
+    size_t argc)
 {
     size_t length;
     size_t bufferSize;
-    char** lines = getFileContent(path, &length, &bufferSize);
+    char** lines = getFileContent(src, &length, &bufferSize);
     if (opt.ind == -1)
     {
         // no options
@@ -260,7 +279,7 @@ int sortFile (char* path, BuiltinFd *builtinFd, Options opt, size_t argc)
         else if (opt.cflag)
         {
 
-            char* mistake = isSorted(lines, length, path);
+            char* mistake = isSorted(lines, length, src);
             fprintf(builtinFd->out, mistake);
             free(mistake);
             // freeing diff
@@ -313,15 +332,33 @@ int sortFile (char* path, BuiltinFd *builtinFd, Options opt, size_t argc)
         }
         if (opt.rflag) 
         {
-            // TODO: reverse sort
+            if (count != 0)
+            {
+                reverseArray(diff, count);
+                reverseArray(lines, length-count);
+            }
+            else
+                reverseArray(lines, length);
         }
         if (opt.oflag) 
         {
-            // TODO: change output file
+            if (count != 0)
+            {
+                printLines(dest, diff, count);
+                printLines(dest, lines, length-count);
+            }
+            else
+                printLines(dest, lines, length);
         }
         else 
         {
-            // TODO: output to the stdout
+            if (count != 0)
+            {
+                printLines(builtinFd->out, diff, count);
+                printLines(builtinFd->out, lines, length-count);
+            }
+            else
+                printLines(builtinFd->out, lines, length);
         }
 
         // freeing diff
@@ -367,7 +404,19 @@ int sort(char** argv, BuiltinFd *builtinFd)
     else
     {
         getOptions(argv, &opt, argc);
-        if (sortFile(argv, builtinFd, opt, argc) == -1)
+        char* dest;
+        char* src;
+        if (opt.ind+1 >= argc)
+        {
+            dest = NULL;
+            src = argv[opt.ind];
+        }
+        else
+        {
+            src = argv[opt.ind+1];
+            dest = argv[opt.ind];
+        }
+        if (sortFile(src, dest, builtinFd, opt, argc) == -1)
             return -1;
     }
 
