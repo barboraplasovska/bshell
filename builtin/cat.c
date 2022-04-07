@@ -141,19 +141,19 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
                 fprintf(builtinFd->out, "%s", buffer);
             }
         }
-        else if (opt.Aflag)
+        /*else if (opt.Aflag)
         {
             // TODO
         }
         else if (opt.Eflag)
         {
             // TODO
-        }
+        }*/
     }
      return 0;
 }
 
-int multipleFiles (char** argv, size_t argc, BuiltinFd *builtinFd, Options opt)
+int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc, Operators ope)
 {
     size_t i = 0;
     while (i < argc)
@@ -311,7 +311,7 @@ int cat(char** argv, BuiltinFd *builtinFd)
     Options opt;
     opt.nflag = false;
     opt.sflag = false;
-    opt.Aflag = false;
+    opt.Aflag = false; // option A end E are illegal ??
     opt.Eflag = false;
     opt.ind = -1;
 
@@ -357,7 +357,7 @@ int cat(char** argv, BuiltinFd *builtinFd)
         else
         {
             // options
-            if (multipleFiles(argv, builtinFd, opt, argc, opt) == -1)
+            if (multipleFiles(argv, builtinFd, opt, argc, ope) == -1)
                 return -1;
         }
     }
