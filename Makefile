@@ -1,17 +1,17 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c99 -g #-O1 -g
-LDLIBS = -pthread #-fsanitize=address
+LDLIBS =  -pthread #-fsanitize=address -pthread
 LDLFLAGS = -D_XOPEN_SOURCE=700
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 MAIN = test.o
 
-EXEC = test cat clear cp echo grep help ls mkdir mv rm rmdir sort tac touch procstatus
+EXEC = test ls echo cat clear cd cp date mv touch cpuinfo history prockill proclist procstatus
 all: $(EXEC)
 
 
-main: $(MAIN) $(OBJ)
+test: $(MAIN) $(OBJ)
 	$(CC) $(CFLAGS) $(LDLIBS) -g -o $@ $^
 
 #BUILTIN
@@ -21,6 +21,8 @@ clear:
 	$(CC) $(CFLAGS) -o $@ ./builtin/clear.c ./builtin/builtin.c
 cp:
 	$(CC) $(CFLAGS) -o $@ ./builtin/cp.c ./builtin/builtin.c
+date:
+	$(CC) $(CFLAGS) -o $@ ./builtin/date.c ./builtin/builtin.c
 echo:
 	$(CC) $(CFLAGS) -o $@ ./builtin/echo.c ./builtin/builtin.c
 grep:
@@ -45,8 +47,18 @@ touch:
 	$(CC) $(CFLAGS) -o $@ ./builtin/touch.c ./builtin/builtin.c
 
 #EXTERNAL
+procinfo:
+	$(CC) $(CFLAGS) -o $@ ./external/procInfo.c ./builtin/builtin.c
+history:
+	$(CC) $(CFLAGS) -o $@ ./external/history.c ./builtin/builtin.c
+prockill:
+	$(CC) $(CFLAGS) -o $@ ./external/procKill.c ./builtin/builtin.c
+proclist:
+	$(CC) $(CFLAGS) -o $@ ./external/procList.c ./builtin/builtin.c
 procstatus:
-	$(CC) $(CFLAGS) -o $@ ./external/procStatus.c
+	$(CC) $(CFLAGS) -o $@ ./external/procStatus.c ./builtin/builtin.c
+
+
 
 $(OBJ): %.o: %.c $(HEADERS)
 
@@ -54,3 +66,4 @@ clean:
 	$(RM) test *.o
 	$(RM) ./builtin/main ./builtin/*.o
 	$(RM) $(EXEC)
+	$(RM) myHistory.txt
