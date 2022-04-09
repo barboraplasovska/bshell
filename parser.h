@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #define CMDSIZE 20
-#define OPSIZE 4
+#define OPSIZE 7
 
 enum type
 {
@@ -17,7 +17,7 @@ enum type
 struct command
 {
     char param[15];
-    char *valid_options[3];
+    char *valid_options[OPSIZE];
     char executable[15];
     int args_needed;
     int nb_options;
