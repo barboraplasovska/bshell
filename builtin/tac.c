@@ -99,7 +99,6 @@ int singleFile(char* path, BuiltinFd *builtinFd, Options opt)
 
         if (opt.nflag)
         {
-	    fprintf(builtinFd->out, "i am in the optnflag conditon\n");
             // numbered
             size_t i = 0;
             while(i < length)

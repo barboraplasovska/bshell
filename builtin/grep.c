@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include "grep.h"
 
 /**
@@ -61,7 +62,7 @@ void getOptions(char** argv, Options* opt, size_t *bufferSize, size_t argc)
         else
             break;
     }
-
+    
     if (i < argc)
         opt->ind = i;
     
@@ -112,7 +113,8 @@ void getOptions(char** argv, Options* opt, size_t *bufferSize, size_t argc)
     }
 }
 
-char** searchFile(char* path, size_t *length, size_t *bufferSize, Options opt)
+char** searchFile(char* pattern, 
+		char* path, size_t *length, size_t *bufferSize, Options opt)
 {
     char** lines = calloc(BUFFER_SIZE, sizeof(char*));
 
@@ -127,17 +129,15 @@ char** searchFile(char* path, size_t *length, size_t *bufferSize, Options opt)
     FILE *fp;
     char line[BUFFER_SIZE];
     fp = fopen(path, "r");
-    char delim[] = " ";
- 
+    size_t i = 0;
     while(fgets(line, BUFFER_SIZE, fp)) 
-	{
-        char* word = strtok(line, delim);
-        while(word != NULL)
+    {
+	    //printf("%s", line);
+        if (strstr(line, pattern))
         {
-            for (size_t i = 0; i < opt.ecount; i++)
-            {
-                if (word == opt.patterns[i])
-                {
+	    printf("%s", line);
+
+		    //printf("i am here\n");
                     if (opt.nflag)
                     {
                         char* str = "";
@@ -151,22 +151,21 @@ char** searchFile(char* path, size_t *length, size_t *bufferSize, Options opt)
                     }
                     else
                         lines[nbLines] = line;
-                    nbLines++;
+                    
+		    nbLines++;
                     if (nbLines >= buffSize)
                     {
                         buffSize *= 2;
                         lines = realloc(lines, buffSize * sizeof(char*));
-                        for (size_t i = 0; i < buffSize; i++)
+                        for (size_t j = 0; j < buffSize; j++)
                         {
-                            lines[i] = realloc(lines[i], 
+                            lines[j] = realloc(lines[j], 
                                 buffSize * sizeof(char));
                         }
                     }
-                    break;
-                }
-            }
-            word = strtok(NULL, delim);
+		    //printf( "line[%lu] = %s\n", i, lines[i]);
         }
+	i++;
     }
     *length = nbLines;
     *bufferSize = buffSize;
@@ -177,7 +176,7 @@ void printLines(char** lines, size_t length, FILE* file)
 {
     for (size_t i = 0; i < length; i++)
     {
-        fprintf(file, "%s\n", lines[i]);
+        fprintf(file, "%s", lines[i]);
     }
 }
 
@@ -226,9 +225,9 @@ int grep(char** argv, BuiltinFd *builtinFd)
         size_t length;
         size_t bufferSize;
 
-        if (opt.ind == -1) // no options
+        if (opt.ind == 0) // no options
         {
-            lines = searchFile(argv[0], &length, &bufferSize, opt);
+	    lines = searchFile(argv[0], argv[1], &length, &bufferSize, opt);
         }
         if (opt.iflag)
         {
@@ -239,7 +238,7 @@ int grep(char** argv, BuiltinFd *builtinFd)
             }
         }
 
-        printLines(lines, length, builtinFd->out);
+    //uncomment    printLines(lines, length, builtinFd->out);
         
         // freeing lines
         for (size_t i = 0; i < bufferSize; i++)
