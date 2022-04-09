@@ -53,7 +53,6 @@ static const struct command command_list[CMDSIZE] =
 size_t get_array_size(char **args);
 
 size_t get_array_byte_size(char **args);
-
 char** add_string_to_array(char **src, char *element);
 
 char *get_string(char**args);
@@ -69,6 +68,7 @@ int is_command(char *param,struct command *current_command);
 int is_operator(char *param);
 
 int valid_input(struct Token *token);
+
 
 int execute(char *argv[], struct command current_command);
 #endif

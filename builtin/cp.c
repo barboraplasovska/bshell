@@ -122,8 +122,8 @@ int mv2(char** argv, BuiltinFd *builtinFd)
                 return -1;
             }
 
-      //	    if (remove(argv[0]) != 0)
-		//return -1;
+	    if (remove(argv[0]) != 0)
+		        return -1;
 
         }
         else if (S_ISREG(path_stat2.st_mode))
@@ -238,7 +238,6 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
         fprintf(builtinFd->err,
                 "cp: missing destination file operand after '%s'\n", argv[0]);
         fprintf(builtinFd->err, "Try 'cp --help' for more information.\n");
-
         exit(EXIT_FAILURE);
         return -1;
     }

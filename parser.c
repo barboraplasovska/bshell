@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
 #include <ctype.h>
 #include <string.h>
 #include <unistd.h>
@@ -315,7 +314,7 @@ int valid_input(struct Token *token)
                 printf("one command at a time\n");
             }
         }
-
+      
         if (token->type == type_argument)
         {
             nb_args++;

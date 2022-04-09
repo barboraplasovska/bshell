@@ -141,7 +141,7 @@ int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
         {
             if (eprintWord(argv[i], builtinFd) == -1)
                 return -1;
-	}
+        }
     }
 
     return 0;
@@ -157,8 +157,6 @@ int echo(char** argv, BuiltinFd *builtinFd)
 {
     struct Options opt;
     opt.nflag = false;
-    opt.eflag = false;
-    opt.Eflag = false;
     opt.ind = 0;
 
     size_t argc = getArgc(argv);
@@ -188,9 +186,8 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    int res = echo(argv,terminal);
+    echo(argv,terminal);
     free(terminal);
-    return res;
 }
 
 

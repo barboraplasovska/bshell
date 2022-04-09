@@ -14,7 +14,6 @@ const char *operators_list[] = {"&&" , "||", "|", ">"};
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-
 size_t mystrlen(const char *s1)
 {
     size_t i = 0;
@@ -100,6 +99,7 @@ char** add_string_to_array(char **src, char *element)
 
 char *get_string(char **args)
 {
+
         size_t i = 1;
         char *tmp = malloc(255);
         size_t skip = 0;
