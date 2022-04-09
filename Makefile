@@ -7,7 +7,7 @@ OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 MAIN = test.o
 
-EXEC = test ls echo cat clear cd cp date mv touch cpuinfo history prockill proclist procstatus
+EXEC = test ls echo cat clear cp date mv touch cpuinfo history prockill proclist procstatus
 all: $(EXEC)
 
 
@@ -47,8 +47,8 @@ touch:
 	$(CC) $(CFLAGS) -o $@ ./builtin/touch.c ./builtin/builtin.c
 
 #EXTERNAL
-procinfo:
-	$(CC) $(CFLAGS) -o $@ ./external/procInfo.c ./builtin/builtin.c
+cpuinfo:
+	$(CC) $(CFLAGS) -o $@ ./external/cpuInfo.c ./builtin/builtin.c
 history:
 	$(CC) $(CFLAGS) -o $@ ./external/history.c ./builtin/builtin.c
 prockill:

@@ -16,7 +16,7 @@ typedef struct          Options
   bool                  Eflag;
   bool                  sflag;
   bool                  nflag;
-  size_t                ind;
+  ssize_t                ind;
 } Options;
 
 /*

@@ -67,6 +67,8 @@ void getOptions(char** argv, Options* opt, size_t argc)
 
 int infiniteCat (char** argv, BuiltinFd *builtinFd)
 {
+    (void)argv;
+    (void)builtinFd;
     return 0;
 }
 
@@ -126,7 +128,7 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
             }
             while((count = read(f, buffer, sizeof(buffer))) > 0)
             {
-                if (buffer == '\n')
+                if (buffer[0] == '\0')
                 {
                     if (i == 1)
                     {
