@@ -19,6 +19,7 @@ int ls(char** argv, BuiltinFd *builtinFd)
 	if (!t)
 	{
 	    fprintf(builtinFd->err, "Error getting current directory\n");
+        exit(EXIT_FAILURE);
 	    return -1;
 	}
         err = scandir(currDir, &namelist, NULL, alphasort);

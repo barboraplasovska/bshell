@@ -139,7 +139,10 @@ int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc)
     while (i < argc)
     {
         if (singleFile(argv[i], builtinFd, opt) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
         i++;
     }
     return 0;
@@ -166,13 +169,19 @@ int tac(char** argv, BuiltinFd *builtinFd)
     else if (argc == 1)
     {
         if (singleFile(argv[1], builtinFd, opt) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
     else // more than 1 argument
     {
         getOptions(argv, &opt, argc);
         if (multipleFiles(argv, builtinFd, opt, argc) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
 
     return 0;

@@ -1,16 +1,24 @@
+#include "mkdir.h"
+
 int rmDirs(char** argv, size_t argc)
 {
-    for (size_t i = opt.ind; i < argc; i++)
+    for (size_t i = 0; i < argc; i++)
     {
         if (isFile(argv[i]))
         {
             if (remove(argv[i]) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
         else
         {
-            if (removeDir(path) == -1)
+            if (removeDir(argv[i]) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
     }
     return 0;
@@ -28,11 +36,12 @@ int mkdir(char** argv, BuiltinFd *builtinFd)
     if (argc == 0)
     {
         fprintf(builtinFd->err, "mkdir: missing an argument\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else
     {
-        for (size_t i = 0; i < argc: i++)
+        for (size_t i = 0; i < argc; i++)
         {
             struct stat st = {0};
 

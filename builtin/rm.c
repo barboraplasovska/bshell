@@ -47,29 +47,38 @@ int isFile(const char *path)
 int removeDir(char* path, BuiltinFd* builtinFd)
 {
     struct dirent **namelist;
-    int err = scandir(argv[i], &namelist, NULL, alphasort);
+    int err = scandir(path, &namelist, NULL, alphasort);
     if (err == -1)
         return -1;
     
     for (size_t i = err-1; i > 0 ; i--)
     {
-        char* name = argv[i];
+        char* name = path;
         strcat(name, namelist[i]->d_name);
-        if (isFile())
+        if (isFile(name))
         {
             if (remove(name) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
         else
         {
             if (removeDir(name, builtinFd) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
     }
 
     // remove empty dir
     if (rmdir(path) == -1)
+    {
+        exit(EXIT_FAILURE);
         return -1;
+    }
 
     return 0;
 }
@@ -81,12 +90,18 @@ int rmDirs(char** argv, size_t argc, Options opt, BuiltinFd* builtinFd)
         if (isFile(argv[i]))
         {
             if (remove(argv[i]) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
         else
         {
-            if (removeDir(path, builtinFd) == -1)
+            if (removeDir(argv[i], builtinFd) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }        
         }
     }
     return 0;
@@ -99,7 +114,10 @@ int rmFiles (char** argv, size_t argc, Options opt, BuiltinFd* builtinFd)
         for (size_t i = 0; i < argc; i++)
         {
             if (remove(argv[i]) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
     }
     else
@@ -128,7 +146,10 @@ int rmFiles (char** argv, size_t argc, Options opt, BuiltinFd* builtinFd)
                     if (c == 'y')
                     {
                         if (remove(argv[i]) == -1)
+                        {
+                            exit(EXIT_FAILURE);
                             return -1;
+                        }
                     }
                     else
                         continue;
@@ -136,7 +157,10 @@ int rmFiles (char** argv, size_t argc, Options opt, BuiltinFd* builtinFd)
                 else
                 {
                     if (remove(argv[i]) == -1)
+                    {
+                        exit(EXIT_FAILURE);
                         return -1;
+                    }
                 }
             }
             else
@@ -167,21 +191,28 @@ int rm(char** argv, BuiltinFd *builtinFd)
     if (argc == 0)
     {
         fprintf(builtinFd->err, "rm: missing an argument\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else
     {
-        getOptions(argv, argc, &opt, argc);
+        getOptions(argv, &opt, argc);
 
         if (opt.rflag)
         {
-            if (rmDirs(argv, opt, builtinFd) == -1)
+            if (rmDirs(argv, argc, opt, builtinFd) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
         else
         {
-            if (rmFiles(argv, opt, builtinFd) == -1)
+            if (rmFiles(argv, argc, opt, builtinFd) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
     }
 }

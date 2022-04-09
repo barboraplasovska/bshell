@@ -202,6 +202,7 @@ int grep(char** argv, BuiltinFd *builtinFd)
     if (argc == 0)
     {
         fprintf(builtinFd->err,"grep: usage: grep [options] pattern [files]\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else

@@ -69,6 +69,7 @@ int main(int argc, char **argv)
         if (strcmp(buffer, status) == 0)
         {
             fprintf(terminal->err, "ProcStatus: Process doesn't exist!\n");
+            exit(EXIT_FAILURE);
             return -1;
         }
 

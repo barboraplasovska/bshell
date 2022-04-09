@@ -133,15 +133,21 @@ int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
         for (i = opt.ind ; i < argc-1; i++)
         {
             if (eprintWord(argv[i], builtinFd) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
             fprintf(builtinFd->out, " ");
         }
 
         if (argv[i])
         {
             if (eprintWord(argv[i], builtinFd) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
-	}
+            }
+        }
     }
 
     return 0;
@@ -167,7 +173,10 @@ int echo(char** argv, BuiltinFd *builtinFd)
         getOptions(argv, &opt, argc);
 
         if (eprintAll(argv, argc, opt, builtinFd) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
 
     if (opt.nflag == false)

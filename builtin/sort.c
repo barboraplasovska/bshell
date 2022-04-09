@@ -247,7 +247,10 @@ int sortFile (char* src, char* dest, BuiltinFd *builtinFd, Options opt,
     {
         // no options
         if (asciiSort(lines, length) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
     else
     {
@@ -402,6 +405,7 @@ int sort(char** argv, BuiltinFd *builtinFd)
     if (argc == 0)
     {
         fprintf(builtinFd->err, "sort: missing parameter\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else
@@ -420,7 +424,10 @@ int sort(char** argv, BuiltinFd *builtinFd)
             dest = argv[opt.ind];
         }
         if (sortFile(src, dest, builtinFd, opt, argc) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
 
     return 0;
