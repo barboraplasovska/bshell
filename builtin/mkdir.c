@@ -30,7 +30,7 @@ int rmDirs(char** argv, size_t argc)
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int mkdir(char** argv, BuiltinFd *builtinFd)
+int mkdirr(char** argv, BuiltinFd *builtinFd)
 {
     size_t argc = getArgc(argv);
     if (argc == 0)

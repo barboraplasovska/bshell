@@ -9,6 +9,6 @@
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int mkdir(char** argv, BuiltinFd *builtinFd);
+int mkdirr(char** argv, BuiltinFd *builtinFd);
 
 #endif

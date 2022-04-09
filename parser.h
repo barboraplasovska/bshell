@@ -42,10 +42,10 @@ static const struct command echo = { "echo", {"n","e","E"}, "./echo", -1 ,3};
 static const struct command grep = { "grep", {"n","e","i"}, "./grep", -1,3};
 static const struct command help = { "help", {}, "./help", 0 , 0};
 static const struct command ls = { "ls", {}, "./ls", -1 , 0};
-static const struct command mkdir = { "mkdir", {}, "./mkdir", -1 ,0};
+static const struct command mkdirr = { "mkdir", {}, "./mkdir", -1 ,0};
 static const struct command mv = {"mv", {}, "./mv", -1, -1};
 static const struct command rm = {"rm", {"i", "f","r"}, "./rm", -1, 3};
-static const struct command rmdir = {"rmdir", {}, "./rmdir", -1, 0};
+static const struct command rmdirr = {"rmdir", {}, "./rmdir", -1, 0};
 static const struct command sort = 
         {"sort", {"o","r","n","c","u","M"}, "./sort", 1, 6};
 static const struct command tac = {"tac", {"n"}, "./tac", -1, 1};
@@ -66,7 +66,7 @@ static const struct command procstatus =
 
 
 static const struct command command_list[CMDSIZE] =
-{cat, clear, cp, date, echo, grep, help, ls, mkdir, mv, rm, rmdir, sort, tac,
+{cat, clear, cp, date, echo, grep, help, ls, mkdirr, mv, rm, rmdirr, sort, tac,
 touch, cpuinfo, history, prockill, proclist, procstatus};
 
 
