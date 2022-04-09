@@ -71,4 +71,6 @@ int is_operator(char *param);
 int valid_input(struct Token *token);
 
 int execute(char *argv[], struct command current_command);
+
+int free_tokens(struct Token *token);
 #endif

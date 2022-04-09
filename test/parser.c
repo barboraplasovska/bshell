@@ -80,10 +80,13 @@ char** add_string_to_array(char **src, char *element)
     for (; i < size ; i++,src_index++)
     {
         size_t test = strlen(src[src_index]);
-        char *new = NULL;
-        new = (char *) malloc((test) * sizeof(char) + 1);
+        char *new = (char *) malloc((test) * sizeof(char) + 1);
         //res = (char *) realloc(res,sizeof(char) * (test) + 1);
-        strncpy(new,src[src_index],test);
+        for(size_t j = 0; j < test; j++)
+        {
+            new[j] = src[src_index][j];
+        }
+        //strncpy(new,src[src_index],test);
         *(new+test) = '\0';
         (p_res[i]) = new;
     }
@@ -399,9 +402,9 @@ char *get_string(char **args)
                 if((strcmp(Token_param,">") == 0 ) && token->next)
                 {
                     //token->next->instruction = NULL;
-                    token->next->instruction = add_string_to_array(token->next->instruction,token->next->param);
+                    //token->next->instruction = add_string_to_array(token->next->instruction,token->next->param);
                     int fd;
-                    fd = open(*token->next->instruction,O_APPEND | O_CREAT | O_WRONLY | O_TRUNC, 0666);
+                    fd = open(token->next->param,O_APPEND | O_CREAT | O_WRONLY | O_TRUNC, 0666);
             //        token->next->instruction = NULL;
                     if(!fork())
                     {
@@ -414,6 +417,8 @@ char *get_string(char **args)
                     }
                     wait(NULL);
 
+                    //free_instruction(token->instruction,0);
+                    //token->next->instruction = NULL;
                     err = 0;
                     res = 0;
                 }
@@ -522,10 +527,12 @@ char *get_string(char **args)
         return res;
     }
 
-    void free_instruction(char **instruction)
+    void free_instruction(char **instruction,int second)
     {
         char *p = NULL;
         ssize_t i =0;
+        if (second == 1)
+            i =1;
         for(; instruction[i]; i++)
         {
             p = instruction[i];
@@ -541,23 +548,38 @@ char *get_string(char **args)
     }
     int free_tokens(struct Token *token)
     {
+
+        size_t second = 0;
         while (token)
         {
             struct Token *p = token->next;
-            free(token);
+            //free(token);
             free(token->param);
-            token->param = NULL;
-            if(token->instruction)// && !token->next)
+            //token->param = NULL;
+            if(token->instruction)
             {
                 //if(*token->instruction+1)
-                free_instruction(token->instruction);
+                /*if(second == 0 && *(token->instruction+1))
+                {
+                    second = 1;
+                    free_instruction(token->instruction,second);
+                    free(token);
+                    token = p;
+                    continue;
+                }*/
+                free_instruction(token->instruction,second);
                 free(token->instruction);
                 token->instruction = NULL;
-
+                second++;
             }
-            free(token->instruction);
-            token->instruction = NULL;
+            else
+            {
+                second = 0;
+            }
+            //free(token->instruction);
+            //token->instruction = NULL;
                         //}
+            free(token);
             token = p;
         }
         return 0;
