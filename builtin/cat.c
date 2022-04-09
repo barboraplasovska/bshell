@@ -78,12 +78,23 @@ size_t removeDuplicates(char** lines, size_t length)
     if (length <= 1)
         return length;
 
-    for (size_t i = 0: i < length; i++)
+    for (size_t i = 0; i < length; i++)
     {
-	// TODO
+	if (strcmp(lines[i],lines[i+1]) == 0)
+	{
+	    //upshift(lines, i+2, length);
+            for (size_t j = i+2; j < length; j++)
+	    {
+		char* temp = lines[j-1];
+		lines[j-1] = lines[j];
+		lines[j] = temp;
+	    }
+	    i--;
+	    length--;
+        }
     }
 
-    return j;
+    return length;
 }
 
 char** getFileContent (char* path, size_t *length, size_t *bufferSize)

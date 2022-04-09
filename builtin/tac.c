@@ -99,11 +99,12 @@ int singleFile(char* path, BuiltinFd *builtinFd, Options opt)
 
         if (opt.nflag)
         {
+	    fprintf(builtinFd->out, "i am in the optnflag conditon\n");
             // numbered
             size_t i = 0;
             while(i < length)
             {
-                fprintf(builtinFd->out, "%lu: %s", i, lines[i]);
+                fprintf(builtinFd->out, "%lu %s", i, lines[i]);
                 i++;
             }
             // freeeing lines
@@ -136,6 +137,8 @@ int singleFile(char* path, BuiltinFd *builtinFd, Options opt)
 int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc)
 {
     size_t i = 0;
+    if (opt.ind != -1)
+	i = opt.ind;
     while (i < argc)
     {
         if (singleFile(argv[i], builtinFd, opt) == -1)
@@ -168,7 +171,7 @@ int tac(char** argv, BuiltinFd *builtinFd)
     }
     else if (argc == 1)
     {
-        if (singleFile(argv[1], builtinFd, opt) == -1)
+        if (singleFile(argv[0], builtinFd, opt) == -1)
         {
             exit(EXIT_FAILURE);
             return -1;
@@ -198,6 +201,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    tac(argv,terminal);
+    int res = tac(argv,terminal);
     free(terminal);
+    return res;
 }
