@@ -136,12 +136,13 @@ int rmFiles (char** argv, size_t argc, Options opt, BuiltinFd* builtinFd)
                     {
                         // file empty
                         fprintf(builtinFd->out, 
-                            "rm: remove regular empty file '%s'? y", argv[i]);
+                        "rm: remove regular empty file '%s'? y/n\n", argv[i]);
                     } 
                     else
                     {
                         fprintf(builtinFd->out, 
-                            "rm: remove regular non-empty file '%s'? y", argv[i]);
+                        "rm: remove regular non-empty file '%s'? y/n\n", 
+			argv[i]);
                         ungetc(c, fp);
                     }
                     c = getchar();

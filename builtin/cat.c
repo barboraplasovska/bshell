@@ -24,7 +24,7 @@ void getOptions(char** argv, Options* opt, size_t argc)
                 if (argv[i][j] == 'E')
                     opt->Eflag = true;
                 if (argv[i][j] == 'n')
-                    opt->Eflag = true;
+                    opt->nflag = true;
 
                 j++;
             }
@@ -72,75 +72,103 @@ int infiniteCat (char** argv, BuiltinFd *builtinFd)
     return 0;
 }
 
+size_t removeDuplicates(char** lines, size_t length)
+{
+    // check if this works
+    if (length <= 1)
+        return length;
+
+    for (size_t i = 0: i < length; i++)
+    {
+	// TODO
+    }
+
+    return j;
+}
+
+char** getFileContent (char* path, size_t *length, size_t *bufferSize)
+{
+    char** lines = calloc(BUFFER_SIZE, sizeof(char*));
+
+    for (size_t i = 0; i < BUFFER_SIZE; i++)
+    {
+        lines[i] = calloc(BUFFER_SIZE, sizeof(char));
+    }
+
+    size_t nbLines = 0;
+    size_t buffSize = BUFFER_SIZE;
+
+    FILE* f = fopen(path, "r");
+    while(fgets(lines[nbLines], BUFFER_SIZE, f)) 
+	{
+        nbLines++;
+        if (nbLines >= buffSize)
+        {
+            buffSize *= 2;
+            lines = realloc(lines, buffSize * sizeof(char*));
+            for (size_t i = 0; i < buffSize; i++)
+            {
+                lines[i] = realloc(lines[i], buffSize * sizeof(char));
+            }
+        }
+    }
+    *length = nbLines;
+    *bufferSize = buffSize;
+    return lines;
+}
+
 int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
 {
     if (opt.ind == -1)
     {
-        int f;
-        int count;
+        FILE* f;
+        //int count;
         char buffer[BUFFER_SIZE*3]; //characer buffer to store the bytes
-        f = open(path, O_RDONLY);
-        if(f == -1)
+        f = fopen(path, "r");
+        if(f == NULL)
         {
             fprintf(builtinFd->err, "cat: error: cannot open file");
             exit(EXIT_FAILURE);
             return -1;
         }
-        while((count = read(f, buffer, sizeof(buffer))) > 0)
+        while(fgets(buffer, BUFFER_SIZE, f))
         {
             fprintf(builtinFd->out, "%s", buffer);
         }
+	fclose(f);
     }
     else
     {
-        if (opt.nflag)
+	size_t length;
+	size_t bufferSize;
+	char** lines = getFileContent(path,&length,&bufferSize);
+	
+
+	if (opt.sflag)
+	{
+	    length = removeDuplicates(lines, length);
+	}
+
+	if (opt.nflag)
         {
-            size_t i = 0;
-            int f;
-            int count;
-            char buffer[BUFFER_SIZE*3]; //characer buffer to store the bytes
-            f = open(path, O_RDONLY);
-            if(f == -1)
+            for (size_t i = 0; i < length; i++)
             {
-                fprintf(builtinFd->err, "cat: error: cannot open file");
-                exit(EXIT_FAILURE);
-                return -1;
-            }
-            while((count = read(f, buffer, sizeof(buffer))) > 0)
-            {
-                fprintf(builtinFd->out, "%lu: %s", i, buffer);
-                i++;
+                fprintf(builtinFd->out, "%lu %s", i, lines[i]);
             }
         }
-        else if (opt.sflag)
-        {
-            
-            size_t i = 0;
-            int f;
-            int count;
-            char buffer[BUFFER_SIZE*3]; //characer buffer to store the bytes
-            f = open(path, O_RDONLY);
-            if(f == -1)
-            {
-                fprintf(builtinFd->err, "cat: error: cannot open file");
-                exit(EXIT_FAILURE);
-                return -1;
-            }
-            while((count = read(f, buffer, sizeof(buffer))) > 0)
-            {
-                if (buffer[0] == '\0')
-                {
-                    if (i == 1)
-                    {
-                        continue;
-                    }
-                    i++;
-                }
-                else
-                    i = 0;
-                fprintf(builtinFd->out, "%s", buffer);
-            }
-        }
+	else
+	{
+	    for (size_t i = 0; i < length; i++)
+		fprintf(builtinFd->out, "%s", lines[i]);
+	}
+	
+
+	for (size_t i = 0; i < bufferSize; i++)
+		free(lines[i]);
+	free(lines);
+
+
+
         /*else if (opt.Aflag)
         {
             // TODO
@@ -160,6 +188,8 @@ int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc)
 	i = opt.ind;
     while (i < argc)
     {
+	/*fprintf(builtinFd->out, " i=%lu < argc=%lu\n", i, argc);
+	fprintf(builtinFd->out, "argv[%lu] = %s\n", i, argv[i]);*/
         if (singleFile(argv[i], builtinFd, opt) == -1)
         {
           exit(EXIT_FAILURE);
@@ -357,16 +387,23 @@ int cat(char** argv, BuiltinFd *builtinFd)
     else // more than 1 argument
     {
         getOptions(argv, &opt, argc);
+
+	 if (multipleFiles(argv, builtinFd, opt, argc) == -1)
+         {
+              exit(EXIT_FAILURE);
+              return -1;
+         }
+
+
         //getOperators(argv, &ope, argc);
 
-        if (opt.ind == -1)
+        /*if (opt.ind == -1)
         {
             if (multipleFiles(argv, builtinFd, opt, argc) == -1)
             {
                 exit(EXIT_FAILURE);
                 return -1;
             }
-            /*
             // no options
             if (ope.ind == -1)
             {
@@ -385,7 +422,7 @@ int cat(char** argv, BuiltinFd *builtinFd)
                      exit(EXIT_FAILURE);
                      return -1;
                 }
-            }*/
+            }
         }
         else
         {
@@ -395,7 +432,7 @@ int cat(char** argv, BuiltinFd *builtinFd)
                   exit(EXIT_FAILURE);
                   return -1;
             }
-        }
+        }*/
     }
 
   
@@ -414,7 +451,6 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    cat(argv,terminal);
     int res = cat(argv,terminal);
     free(terminal);
     return res;
