@@ -6,30 +6,51 @@
 ** @param opt           Options structure.
 ** @param argc          The number of arguments.
 */
-void getOptions(char** argv, Options* opt, size_t argc)
+void getOptions(char** argv, Options* opt, size_t *bufferSize, size_t argc)
 {
-    // TODO: fix this
     size_t i, j = 0;//1 
     for (i = 0; i < argc; i++) //1
     {
         if (argv[i][0] == '-')
         {
             j = 1;
-            while (argv[i][j] == 'o' || argv[i][j] == 'r' || argv[i][j] == 'n' 
-            || argv[i][j] == 'c' || argv[i][j] == 'u' || argv[i][j] == 'M')
+            while (argv[i][j] == 'c' || argv[i][j] == 'h' || argv[i][j] == 'i' 
+            || argv[i][j] == 'l' || argv[i][j] == 'n' || argv[i][j] == 'v'
+            || argv[i][j] == 'e' || argv[i][j] == 'f' || argv[i][j] == 'w'
+            || argv[i][j] == 'o' || argv[i][j] == 'A' || argv[i][j] == 'B'
+            || argv[i][j] == 'C' )
             {
-                if (argv[i][j] == 'o')
-                    opt->oflag = true;
-                if (argv[i][j] == 'r')
-                    opt->rflag = true;
-                if (argv[i][j] == 'n')
-                    opt->nflag = true;
                 if (argv[i][j] == 'c')
                     opt->cflag = true;
-                if (argv[i][j] == 'u')
-                    opt->uflag = true;
-                if (argv[i][j] == 'M')
-                    opt->Mflag = true;
+                if (argv[i][j] == 'h')
+                    opt->hflag = true;
+                if (argv[i][j] == 'i')
+                    opt->iflag = true;
+                if (argv[i][j] == 'l')
+                    opt->lflag = true;
+                if (argv[i][j] == 'n')
+                    opt->nflag = true;
+                if (argv[i][j] == 'v')
+                    opt->vflag = true;
+                if (argv[i][j] == 'e')
+                {
+                    opt->eflag = true;
+                    opt->ecount = 1;
+                }
+
+                if (argv[i][j] == 'f')
+                    opt->fflag = true;
+                
+                if (argv[i][j] == 'w')
+                    opt->wflag = true;
+                if (argv[i][j] == 'o')
+                    opt->oflag = true;
+                if (argv[i][j] == 'A')
+                    opt->Aflag = true;
+                if (argv[i][j] == 'B')
+                    opt->Bflag = true;
+                if (argv[i][j] == 'C')
+                    opt->Cflag = true;
 
                 j++;
             }
@@ -39,12 +60,112 @@ void getOptions(char** argv, Options* opt, size_t argc)
         }
         else
             break;
-  }
-  if (i < argc)
-  	opt->ind = i;
+    }
+
+    if (i < argc)
+        opt->ind = i;
+    
+    if (opt->eflag)
+    {
+        bool expectPattern = false;
+        size_t j = 0;
+        for (; i < argc; i++)
+        {
+            if (expectPattern)
+            {
+                opt->patterns[j] = argv[i];
+                j++;
+                opt->ecount++;
+            }
+            else if (argv[i] == '-e')
+            {
+                expectPattern = true;
+            }
+            else
+                break;
+        }
+        if (i < argc)
+            opt->ind = i;
+    }
+
+    if (opt->fflag)
+    {
+        opt->filename = argv[opt->ind];
+        opt->ind++;
+    }
+
+    if (opt->Aflag || opt->Bflag || opt->Cflag)
+    {
+        opt->n = argv[opt->ind];
+        opt->ind++;
+    }
 }
 
+char** searchFile(char* path, size_t *length, size_t *bufferSize, Options opt)
+{
+    char** lines = calloc(BUFFER_SIZE, sizeof(char*));
 
+    for (size_t i = 0; i < BUFFER_SIZE; i++)
+    {
+        lines[i] = calloc(BUFFER_SIZE, sizeof(char));
+    }
+
+    size_t nbLines = 0;
+    size_t buffSize = BUFFER_SIZE;
+
+    FILE *fp;
+    char line[BUFFER_SIZE];
+    fp = fopen(path, "r");
+    char delim[] = " ";
+ 
+    while(fgets(line, BUFFER_SIZE, fp)) 
+	{
+        char* word = strok(line, delim);
+        while(word != NULL)
+        {
+            for (size_t i = 0; i < opt.ecount; i++)
+            {
+                if (word == opt.patterns[i])
+                {
+                    if (opt.nflag)
+                    {
+                        char* str = "";
+                        strcat(str, i);
+                        strcat(str, ":");
+                        strcat(str, line);
+                        lines[nbLines] = str;
+                    }
+                    else
+                        lines[nbLines] = line;
+                    nbLines++;
+                    if (nbLines >= buffSize)
+                    {
+                        buffSize *= 2;
+                        lines = realloc(lines, buffSize * sizeof(char*));
+                        for (size_t i = 0; i < buffSize; i++)
+                        {
+                            lines[i] = realloc(lines[i], 
+                                buffSize * sizeof(char));
+                        }
+                    }
+                    break;
+                }
+            }
+            word = strtok(NULL, delim);
+        }
+    }
+    length = nbLines;
+    bufferSize = buffSize;
+    return lines;
+}
+
+void printLines(char** lines, size_t length, FILE* file)
+{
+    for (size_t i = 0; i < length; i++)
+    {
+        fprintf(file, "%s\n", lines[i]);
+    }
+}
 
 /**
 ** @brief               grep main function.
@@ -63,7 +184,7 @@ int grep(char** argv, BuiltinFd *builtinFd)
     opt.nflag = false; 
     opt.vflag = false; 
     opt.eflag = false; 
-    opt.ecount = -1; 
+    opt.ecount = 0; 
     opt.patterns = calloc(bufferSize, sizeof(char*));
     for (size_t i = 0; i < bufferSize; i++)
         opt.patterns[i] = calloc(bufferSize, sizeof(char)); 
@@ -86,8 +207,29 @@ int grep(char** argv, BuiltinFd *builtinFd)
     else
     {
         getOptions(argv, &opt, &bufferSize, argc);
+        char** lines;
+        size_t length;
+        size_t bufferSize;
+
+        if (opt.ind == -1) // no options
+        {
+            lines = searchFile(argv, &length, &bufferSize, opt);
+        }
+        if (opt.iflag)
+        {
+            for (size_t i = 0; i < length; i++)
+            {
+                for (size_t j = 0; lines[i][j] != '\0'; ++j) 
+                    lines[i][j] = tolower((unsigned char) lines[i][j]);
+            }
+        }
+
+        printLines(lines, length, builtinFd->out);
         
-        // TODO:
+        // freeing lines
+        for (size_t i = 0; i < bufferSize; i++)
+            free(lines[i]);
+        free(lines);
     }
 
 

@@ -10,13 +10,13 @@ typedef struct          Options
                                // a pattern
   bool                  hflag; // Displays the matched lines, but do not display
                                // the filenames.
-  bool                  iflag; // Ignores lower/uppercase for matching
+  bool    /*done*/      iflag; // Ignores lower/uppercase for matching
   bool                  lflag; // Displays list of a filenames only.
-  bool                  nflag; // Display the matched lines and their line 
+  bool    /*done*/      nflag; // Display the matched lines and their line 
                                // numbers.
   bool                  vflag; // This prints out all the lines that do not 
                                // matches the pattern
-  bool                  eflag; // Specifies expression with this option. 
+  bool    /*done*/      eflag; // Specifies expression with this option. 
                                // Can be used multiple times.
   size_t                ecount; // how many times has it been used
   char**                patterns; // patterns
