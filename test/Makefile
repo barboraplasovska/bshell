@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -O1 -g
-LDLIBS = -pthread
+CFLAGS = -Wall -Wextra -Werror -std=c99 -g #-O1 -g
+LDLIBS =  -pthread #-fsanitize=address -pthread
 LDLFLAGS = -D_XOPEN_SOURCE=700
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
