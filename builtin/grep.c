@@ -77,7 +77,7 @@ void getOptions(char** argv, Options* opt, size_t *bufferSize, size_t argc)
                 j++;
                 opt->ecount++;
             }
-            else if (argv[i] == '-e')
+            else if (argv[i] == "-e")
             {
                 expectPattern = true;
             }
@@ -96,7 +96,7 @@ void getOptions(char** argv, Options* opt, size_t *bufferSize, size_t argc)
 
     if (opt->Aflag || opt->Bflag || opt->Cflag)
     {
-        opt->n = argv[opt->ind];
+        opt->n = (size_t)argv[opt->ind];
         opt->ind++;
     }
 }

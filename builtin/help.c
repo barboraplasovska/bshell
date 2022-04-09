@@ -1,6 +1,6 @@
 #include "help.h"
 
-int help(char** argv, BuiltinFd *builtinFd)
+int help(BuiltinFd *builtinFd)
 {
     fprintf(builtinFd->out, "Terminal powered by NaN (A1 S4)\n\n");
     int f;
@@ -13,4 +13,9 @@ int help(char** argv, BuiltinFd *builtinFd)
     }
 
     return 0;
+}
+
+int main()
+{
+	return 0;
 }
