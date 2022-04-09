@@ -33,9 +33,9 @@ typedef struct          Options
                                // the result.
   bool                  Cflag; // -C n : Prints searched line and nlines before 
                                // and after the result.
-  size_t                n;
+  ssize_t                n;
 
-  size_t                ind;
+  ssize_t                ind;
 } Options;
 
 /**

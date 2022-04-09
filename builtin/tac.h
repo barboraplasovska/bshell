@@ -11,7 +11,7 @@
 typedef struct          Options
 {
   bool                  nflag; // numbered
-  size_t                ind;
+  ssize_t                ind;
 } Options;
 
 

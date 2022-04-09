@@ -69,6 +69,7 @@ void getOptions(char** argv, Options* opt, size_t *bufferSize, size_t argc)
     {
         bool expectPattern = false;
         size_t j = 0;
+	i = 0;
         for (; i < argc; i++)
         {
             if (expectPattern)
@@ -76,8 +77,18 @@ void getOptions(char** argv, Options* opt, size_t *bufferSize, size_t argc)
                 opt->patterns[j] = argv[i];
                 j++;
                 opt->ecount++;
+
+		if (opt->ecount >= *bufferSize)
+	        {
+		     *bufferSize *= 2;
+		     opt->patterns = 
+			realloc(opt->patterns, *bufferSize * sizeof(char*));
+		     for (size_t k = 0; k < *bufferSize; k++)
+			opt->patterns[k] =
+			realloc(opt->patterns[k], *bufferSize*sizeof(char));
+		}
             }
-            else if (argv[i] == "-e")
+            else if (strcmp(argv[i], "-e") == 0)
             {
                 expectPattern = true;
             }
@@ -120,7 +131,7 @@ char** searchFile(char* path, size_t *length, size_t *bufferSize, Options opt)
  
     while(fgets(line, BUFFER_SIZE, fp)) 
 	{
-        char* word = strok(line, delim);
+        char* word = strtok(line, delim);
         while(word != NULL)
         {
             for (size_t i = 0; i < opt.ecount; i++)
@@ -130,7 +141,10 @@ char** searchFile(char* path, size_t *length, size_t *bufferSize, Options opt)
                     if (opt.nflag)
                     {
                         char* str = "";
-                        strcat(str, i);
+			char p[2];
+			p[0] = i - '0';
+			p[1] = '\0';
+                        strcat(str, p);
                         strcat(str, ":");
                         strcat(str, line);
                         lines[nbLines] = str;
@@ -154,8 +168,8 @@ char** searchFile(char* path, size_t *length, size_t *bufferSize, Options opt)
             word = strtok(NULL, delim);
         }
     }
-    length = nbLines;
-    bufferSize = buffSize;
+    *length = nbLines;
+    *bufferSize = buffSize;
     return lines;
 }
 
@@ -214,7 +228,7 @@ int grep(char** argv, BuiltinFd *builtinFd)
 
         if (opt.ind == -1) // no options
         {
-            lines = searchFile(argv, &length, &bufferSize, opt);
+            lines = searchFile(argv[0], &length, &bufferSize, opt);
         }
         if (opt.iflag)
         {

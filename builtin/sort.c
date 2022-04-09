@@ -70,8 +70,8 @@ char** getFileContent (char* path, size_t *length, size_t *bufferSize)
             }
         }
     }
-    length = nbLines;
-    bufferSize = buffSize;
+    *length = nbLines;
+    *bufferSize = buffSize;
     return lines;
 }
 
@@ -82,9 +82,9 @@ bool onlyNumbers(char** lines, char*** notNumb, size_t length, size_t* count)
     for (size_t i = 0; i < length; i++)
     {
         bool number = true;
-        for(size_t j = 0; lines[j] != '\0'; j++)
+        for(size_t j = 0; lines[i][j] != '\0'; j++)
         {
-            if (isNumber(lines[i][j]))
+            if (isdigit(lines[i][j]))
                 continue;
             else
             {
@@ -95,10 +95,11 @@ bool onlyNumbers(char** lines, char*** notNumb, size_t length, size_t* count)
         }
         if (!number)
         {
-            notNumb[nb] = lines[i];
+            *notNumb[nb] = lines[i];
             nb++;
         }
     }
+    *count = nb;
 
     return res;
 }
@@ -128,7 +129,12 @@ int isMonth(char* test)
 
     for (int i = 0; i < 12; i++)
     {
-        if (months[i] == tolower((unsigned char) test))
+	size_t l = strlen(test);
+	char n[l];
+	for (size_t j = 0; j < l; j++)
+	    n[j] = tolower(test[j]);
+
+        if (strcmp(months[i], n) == 0)
             return i;
     }
     return -1;
@@ -140,25 +146,16 @@ bool onlyMonths(char** lines, char*** notNumb, size_t length, size_t* count)
     size_t nb = 0;
     for (size_t i = 0; i < length; i++)
     {
-        bool number = true;
-        for(size_t j = 0; lines[j] != '\0'; j++)
+        if (isMonth(lines[i]) != -1)
+	    continue;
+	else
         {
-            if (isMonth(lines[i][j]) != -1)
-                continue;
-            else
-            {
-                number = false;
-                res = false;
-                break;
-            }
-        }
-        if (!number)
-        {
-            notNumb[nb] = lines[i];
+            *notNumb[nb] = lines[i];
             nb++;
         }
     }
 
+    *count = nb;
     return res;
 }
 
@@ -189,7 +186,10 @@ char* isSorted(char** lines, size_t length, char* path)
             strcpy(line, "sort: ");
             strcat(line, path);
             strcat(line, ":");
-            strcat(line, i);
+	    char p[2];
+	    p[0] = (char)i;
+	    p[1] = '\0';
+            strcat(line, p);
             strcat(line, ": disorder: ");
             strcat(line, lines[i]);
             break;
@@ -229,7 +229,7 @@ void reverseArray(char** lines, size_t length)
     }
 }
 
-void printLines(char* path, char** lines, size_t length)
+void printLines(FILE* path, char** lines, size_t length)
 {
     for (size_t i = 0; i < length; i++)
     {
@@ -237,8 +237,7 @@ void printLines(char* path, char** lines, size_t length)
     }
 }
 
-int sortFile (char* src, char* dest, BuiltinFd *builtinFd, Options opt, 
-    size_t argc)
+int sortFile (char* src, char* dest, BuiltinFd *builtinFd, Options opt)
 {
     size_t length;
     size_t bufferSize;
@@ -350,11 +349,17 @@ int sortFile (char* src, char* dest, BuiltinFd *builtinFd, Options opt,
         {
             if (count != 0)
             {
-                printLines(dest, diff, count);
-                printLines(dest, lines, length-count);
+		FILE* f = fopen(dest, "r");
+                printLines(f, diff, count);
+                printLines(f, lines, length-count);
+		fclose(f);
             }
             else
-                printLines(dest, lines, length);
+	    {
+		FILE* f = fopen(dest, "r");
+                printLines(f, lines, length);
+		fclose(f);
+	    }
         }
         else 
         {
@@ -381,7 +386,7 @@ int sortFile (char* src, char* dest, BuiltinFd *builtinFd, Options opt,
         free(lines[i]);
     }
     free(lines);
-
+    return 0;
 }
 
 /**
@@ -413,7 +418,7 @@ int sort(char** argv, BuiltinFd *builtinFd)
         getOptions(argv, &opt, argc);
         char* dest;
         char* src;
-        if (opt.ind+1 >= argc)
+        if (opt.ind+1 >= (ssize_t)argc)
         {
             dest = NULL;
             src = argv[opt.ind];
@@ -423,7 +428,7 @@ int sort(char** argv, BuiltinFd *builtinFd)
             src = argv[opt.ind+1];
             dest = argv[opt.ind];
         }
-        if (sortFile(src, dest, builtinFd, opt, argc) == -1)
+        if (sortFile(src, dest, builtinFd, opt) == -1)
         {
             exit(EXIT_FAILURE);
             return -1;

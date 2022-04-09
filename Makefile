@@ -36,11 +36,11 @@ mkdir:
 mv:
 	$(CC) $(CFLAGS) -o $@ ./builtin/mv.c ./builtin/builtin.c
 rm:
-	$(CC) $(CFLAGS) -o $@ ./builtin/rm.c ./builtin/builtin.c
+	$(CC) $(CFLAGS) $(LDLFLAGS) -o $@ ./builtin/rm.c ./builtin/builtin.c
 rmdir:
-	$(CC) $(CFLAGS) -o $@ ./builtin/rmdir.c ./builtin/builtin.c
+	$(CC) $(CFLAGS) $(LDLFLAGS) -o $@ ./builtin/rmdir.c ./builtin/builtin.c
 sort:
-	$(CC) $(CFLAGS) -o $@ ./builtin/sort.c ./builtin/builtin.c
+	$(CC) $(CFLAGS) $(LDLFLAGS) -o $@ ./builtin/sort.c ./builtin/builtin.c
 tac:
 	$(CC) $(CFLAGS) -o $@ ./builtin/tac.c ./builtin/builtin.c
 touch:

@@ -68,8 +68,8 @@ char** getFileContent (char* path, size_t *length, size_t *bufferSize)
         lines[nbLines-i-1] = temp;
     }
 
-    length = nbLines;
-    bufferSize = buffSize;
+    *length = nbLines;
+    *bufferSize = buffSize;
     return lines;
 }
 

@@ -1,29 +1,5 @@
 #include "mkdir.h"
 
-int rmDirs(char** argv, size_t argc)
-{
-    for (size_t i = 0; i < argc; i++)
-    {
-        if (isFile(argv[i]))
-        {
-            if (remove(argv[i]) == -1)
-            {
-                exit(EXIT_FAILURE);
-                return -1;
-            }
-        }
-        else
-        {
-            if (removeDir(argv[i]) == -1)
-            {
-                exit(EXIT_FAILURE);
-                return -1;
-            }
-        }
-    }
-    return 0;
-}
-
 /**
 ** @brief               mkdir main function.
 ** @param argv          Array of string arguments.
@@ -70,6 +46,6 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    mkdir(argv,terminal);
+    mkdirr(argv,terminal);
     free(terminal);
 }

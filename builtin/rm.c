@@ -1,4 +1,6 @@
 #include "rm.h"
+#define _GNU_SOURCE
+#include <sys/dir.h>
 
 
 /**
@@ -128,7 +130,7 @@ int rmFiles (char** argv, size_t argc, Options opt, BuiltinFd* builtinFd)
             {
                 if (opt.iflag)
                 {
-                    FILE* fp = open(argv[i], O_RDONLY);
+                    FILE* fp = fopen(argv[i], "r");
                     int c = fgetc(fp);
                     if (c == EOF)
                     {
@@ -142,7 +144,7 @@ int rmFiles (char** argv, size_t argc, Options opt, BuiltinFd* builtinFd)
                             "rm: remove regular non-empty file '%s'? y", argv[i]);
                         ungetc(c, fp);
                     }
-                    int c = getchar();
+                    c = getchar();
                     if (c == 'y')
                     {
                         if (remove(argv[i]) == -1)
@@ -215,6 +217,7 @@ int rm(char** argv, BuiltinFd *builtinFd)
             }
         }
     }
+    return 0;
 }
 
 int main(int argc, char **argv)
