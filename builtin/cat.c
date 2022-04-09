@@ -39,7 +39,7 @@ void getOptions(char** argv, Options* opt, size_t argc)
   	opt->ind = i;
 }
 
-void getOperators(char** argv, Operators* ope, size_t argc)
+/*void getOperators(char** argv, Operators* ope, size_t argc)
 {
    size_t i = 0;
    for (i = 0; i < argc; i++)
@@ -63,7 +63,7 @@ void getOperators(char** argv, Operators* ope, size_t argc)
 
    if (i < argv)
       ope->ind = i;
-}
+}*/
 
 int infiniteCat (char** argv, BuiltinFd *builtinFd)
 {
@@ -151,8 +151,7 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
      return 0;
 }
 
-int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc, 
-    Operators ope)
+int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc)
 {
     size_t i = 0;
     while (i < argc)
@@ -203,7 +202,7 @@ int appendFiles(char* source, char* destination, BuiltinFd *builtinFd)
     return 0;
 }
 
-
+/*
 int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
 {
     // no options, only operators
@@ -311,7 +310,7 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
             closedir(di);
         }
     }
-}
+}*/
 
 /**
 ** @brief               cat main function.
@@ -328,11 +327,11 @@ int cat(char** argv, BuiltinFd *builtinFd)
     opt.Eflag = false;
     opt.ind = -1;
 
-    Operators  ope;
+    /*Operators  ope;
     ope.sm = false;
     ope.doublesm = false;
     ope.star = false;
-    ope.ind = -1;
+    ope.ind = -1;*/
 
     size_t argc = getArgc(argv);
     if (argc == 0)
@@ -354,10 +353,16 @@ int cat(char** argv, BuiltinFd *builtinFd)
     else // more than 1 argument
     {
         getOptions(argv, &opt, argc);
-        getOperators(argv, &ope, argc);
+        //getOperators(argv, &ope, argc);
 
         if (opt.ind == -1)
         {
+            if (multipleFiles(argv, builtinFd, opt, argc) == -1)
+            {
+                exit(EXIT_FAILURE);
+                return -1;
+            }
+            /*
             // no options
             if (ope.ind == -1)
             {
@@ -376,12 +381,12 @@ int cat(char** argv, BuiltinFd *builtinFd)
                      exit(EXIT_FAILURE);
                      return -1;
                 }
-            }
+            }*/
         }
         else
         {
             // options
-            if (multipleFiles(argv, builtinFd, opt, argc, ope) == -1)
+            if (multipleFiles(argv, builtinFd, opt, argc) == -1)
             {
                   exit(EXIT_FAILURE);
                   return -1;
