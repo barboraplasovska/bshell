@@ -1,18 +1,18 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -O1 -g
-LDLIBS = -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -std=c99 -g #-O1 -g
+LDLIBS = -pthread -fsanitize=address
 LDLFLAGS = -D_XOPEN_SOURCE=700
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
-MAIN = test.o
+MAIN = main.o
 
 EXEC = main ls echo cat clear cd cp mv touch procstatus
 all: $(EXEC)
 
 
 main: $(MAIN) $(OBJ)
-	$(CC) -g -o $@ $^
+	$(CC) $(CFLAGS) $(LDLIBS) -g -o $@ $^
 
 #BUILTIN
 ls:
@@ -39,6 +39,6 @@ procstatus:
 $(OBJ): %.o: %.c $(HEADERS)
 
 clean:
-	$(RM) test *.o
-	$(RM) ./builtin/test ./builtin/*.o
+	$(RM) main *.o
+	$(RM) ./builtin/main ./builtin/*.o
 	$(RM) $(EXEC)

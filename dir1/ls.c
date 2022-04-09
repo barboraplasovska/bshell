@@ -1,6 +1,6 @@
 #define _GNU_SOURCE
 #include "ls.h"
-
+#include <errno.h>
 /**
 ** @brief               Ls main function.
 ** @param argv          Array of string arguments.
@@ -15,19 +15,13 @@ int ls(char** argv, BuiltinFd *builtinFd)
     if (argv[0] == NULL)
     {
         char currDir[BUFFER_SIZE];
-        char *t = getcwd(currDir, BUFFER_SIZE);
-	if (!t)
-	{
-	    fprintf(builtinFd->err, "Error getting current directory\n");
-	    return -1;
-	}
+        getcwd(currDir, BUFFER_SIZE);
         err = scandir(currDir, &namelist, NULL, alphasort);
+
         if (err == -1)
         {
-            fprintf(builtinFd->err,
-	    	"ls: Directory cannot be opened for reading.");
-            exit(EXIT_FAILURE);
-            return -1;
+            fprintf(builtinFd->err, "ls: Directory cannot be opened for reading.");
+            return 1;
         }
     }
     else
@@ -36,19 +30,17 @@ int ls(char** argv, BuiltinFd *builtinFd)
 
         if (err == -1)
         {
-            fprintf(builtinFd->err,
-	    	"ls: %s: No such file or directory\n", argv[0]);
-            exit(EXIT_FAILURE);
-            return -1;
+            fprintf(builtinFd->err, "ls: %s: No such file or directory\n", argv[0]);
+            return 1;
         }
     }
 
-    for (int i = err-1; i >= 0; i--)
+    for (int i = err-1; i -1 > 0; i--)
     {
         //if (i-1 >= 0)
             fprintf(builtinFd->out, "%s ", namelist[i]->d_name);
         //else
-            //fprintf(builtinFd->out, "%s ", namelist[i]);
+        //    fprintf(builtinFd->out, "%s ", namelist[i]->d_name);
     }
     fprintf(builtinFd->out, "\n");
     free(namelist);
@@ -68,7 +60,6 @@ int main(int argc, char **argv)
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
     //printf("this is argv[0] : %s\n",argv[0]);
-    int res = ls(argv,terminal);
+    ls(argv,terminal);
     free(terminal);
-    return res;
 }

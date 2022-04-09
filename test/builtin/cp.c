@@ -122,8 +122,8 @@ int mv2(char** argv, BuiltinFd *builtinFd)
                 return -1;
             }
 
-	    if (remove(argv[0]) != 0)
-		return -1;
+	    //if (remove(argv[0]) != 0)
+		//return -1;
 
         }
         else if (S_ISREG(path_stat2.st_mode))

@@ -69,7 +69,7 @@ int main(int argc, char **argv)
         if (strcmp(buffer, status) == 0)
         {
             fprintf(terminal->err, "ProcStatus: Process doesn't exist!\n");
-            return 1;
+            return -1;
         }
 
         fprintf(terminal->out, "%s\n", status);

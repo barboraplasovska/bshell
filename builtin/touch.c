@@ -27,6 +27,7 @@ int touch(char** argv, BuiltinFd *builtinFd)
                 {
                     fprintf(builtinFd->err, "Touch: Failed to create file\n");
                     //global variable errno is the error number
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
 
@@ -48,6 +49,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    touch(argv,terminal);
+    int res = touch(argv,terminal);
     free(terminal);
+    return res;
 }

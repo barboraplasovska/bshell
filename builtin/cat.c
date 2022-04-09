@@ -81,6 +81,7 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
         if(f == -1)
         {
             fprintf(builtinFd->err, "cat: error: cannot open file");
+            exit(EXIT_FAILURE);
             return -1;
         }
         while((count = read(f, buffer, sizeof(buffer))) > 0)
@@ -100,6 +101,7 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
             if(f == -1)
             {
                 fprintf(builtinFd->err, "cat: error: cannot open file");
+                exit(EXIT_FAILURE);
                 return -1;
             }
             while((count = read(f, buffer, sizeof(buffer))) > 0)
@@ -119,6 +121,7 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
             if(f == -1)
             {
                 fprintf(builtinFd->err, "cat: error: cannot open file");
+                exit(EXIT_FAILURE);
                 return -1;
             }
             while((count = read(f, buffer, sizeof(buffer))) > 0)
@@ -155,7 +158,10 @@ int multipleFiles (char** argv, BuiltinFd *builtinFd, Options opt, size_t argc,
     while (i < argc)
     {
         if (singleFile(argv[i], builtinFd, opt) == -1)
-            return -1;
+        {
+          exit(EXIT_FAILURE);
+          return -1;
+        }
         i++;
     }
     return 0;
@@ -172,6 +178,7 @@ int appendFiles(char* source, char* destination, BuiltinFd *builtinFd)
     if (!fp1 && !fp2) 
     {
         fprintf(builtinFd->err, "Unable to open/detect file(s)\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
  
@@ -208,6 +215,7 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
             if(argv[i] == NULL)
             {
                 fprintf(builtinFd->err, "cat: missing file name.");
+                exit(EXIT_FAILURE);
                 return -1;
             }
             else
@@ -220,6 +228,7 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
                     if  (fp == NULL)
                     {
                         fprintf(builtinFd->err, "cat: Failed to create file\n");
+                        exit(EXIT_FAILURE);
                         return -1;
                     }
 
@@ -232,6 +241,7 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
             if (argv[i] == NULL)
             {
                 fprintf(builtinFd->err, "cat: missing file name.");
+                exit(EXIT_FAILURE);
                 return -1;
             }
             else
@@ -240,7 +250,10 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
                 for (size_t j = 0; j < i-1; j++)
                 {
                     if (appendFiles(argv[j], argv[i], builtinFd) == -1)
-                        return -1;
+                    {
+                      exit(EXIT_FAILURE);
+                      return -1;
+                    }
                 }
             }
         }
@@ -250,11 +263,15 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
         if (i == 0 || argv[0] == NULL || argv[1] == NULL)
         {
             fprintf(builtinFd->err, "cat: missing file(s) name\n");
+            exit(EXIT_FAILURE);
             return -1;
         }
 
         if (appendFiles(argv[0], argv[2], builtinFd) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
     else if (ope.star == true)
     {
@@ -321,12 +338,18 @@ int cat(char** argv, BuiltinFd *builtinFd)
     if (argc == 0)
     {
         if (infiniteCat(argv, builtinFd) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
     else if (argc == 1)
     {
         if (singleFile(argv[1], builtinFd, opt) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
     else // more than 1 argument
     {
@@ -340,23 +363,34 @@ int cat(char** argv, BuiltinFd *builtinFd)
             {
                 // no operators
                 if (multipleFiles(argv, builtinFd, opt, argc, ope) == -1)
-                    return -1;
+                {
+                     exit(EXIT_FAILURE);
+                     return -1;
+                 }
             }
             else
             {
                 // no options but operators
                 if (withOpe(argv, builtinFd, ope, argc) == -1)
-                    return -1;
+                {
+                     exit(EXIT_FAILURE);
+                     return -1;
+                }
             }
         }
         else
         {
             // options
             if (multipleFiles(argv, builtinFd, opt, argc, ope) == -1)
-                return -1;
+            {
+                  exit(EXIT_FAILURE);
+                  return -1;
+            }
         }
     }
 
+  
+ 
     return 0;
 }
 
@@ -373,4 +407,7 @@ int main(int argc, char **argv)
     terminal->errNo = STDOUT_FILENO;
     cat(argv,terminal);
     free(terminal);
+    int res = cat(argv,terminal);
+    free(terminal);
+    return res;
 }

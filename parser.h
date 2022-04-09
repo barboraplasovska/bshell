@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 #define CMDSIZE 9
-#define OPSIZE 2
+#define OPSIZE 4
 
 enum type
 {
@@ -26,16 +26,17 @@ struct command
 
 struct Token {
     enum type type;
-    char* param;
-    struct Token* next;
+    char *param;
+    struct Token *next;
     struct command current_command;
+    char **instruction;
 };
 
-static const struct command ls = { "ls", {}, "./ls", -1, 0};
+static const struct command ls = { "ls", {}, "./ls", -1 , 0};
 static const struct command cat = { "cat", {}, "./cat", -1 , 0};
 static const struct command cd = { "cd", {}, "./cd", -1 , 0};
 static const struct command echo = { "echo", {"n","e","E"}, "./echo", -1 ,3};
-static const struct command clear = { "clear", {}, "./clear", 0,0};
+static const struct command clear = { "clear", {}, "./clear", 0 ,0};
 
 static const struct command cp = { "cp", {}, "./cp", -1 , -1};
 static const struct command procstatus = { "procstatus", {}, "./procstatus", -1 , -1};
@@ -47,16 +48,13 @@ static const struct command mv = {"mv", {}, "./mv", -1, -1};
 static const struct command command_list[CMDSIZE] =
 {ls, cd, echo, cat, clear,cp, touch, mv,procstatus};
 
-
 size_t get_array_size(char **args);
 
 size_t get_array_byte_size(char **args);
 
-char** add_string_to_array(char **src, /*char *element,*/ size_t array_size);
+char** add_string_to_array(char **src, char *element);
 
 char *get_string(char**args);
-
-//const char *operators_list[2] = {"&&" , "||"};
 
 void PrintToken(struct Token *token);
 
@@ -70,5 +68,5 @@ int is_operator(char *param);
 
 int valid_input(struct Token *token);
 
-void execute(char *argv[], struct command current_command);
+int execute(char *argv[], struct command current_command);
 #endif

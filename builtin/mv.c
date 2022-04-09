@@ -231,12 +231,18 @@ int mv(char** argv, BuiltinFd *builtinFd)
     else if (argc > 2)
     {
         if (mvMore2(argc, argv, builtinFd) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
     else
     {
         if (mv2(argv, builtinFd) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
 
     return 0;
@@ -253,7 +259,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    mv(argv,terminal);  //argv+1 to debug
+    int res = mv(argv,terminal);  //argv+1 to debug
     free(terminal);
-    return 0;
+    return res;
 }

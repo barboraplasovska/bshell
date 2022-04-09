@@ -123,7 +123,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
             }
 
 	    if (remove(argv[0]) != 0)
-		return -1;
+		        return -1;
 
         }
         else if (S_ISREG(path_stat2.st_mode))
@@ -154,7 +154,7 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd) //if it is directory
     if (err == -1)
     {
         fprintf(builtinFd->err,
-                    "cp: target '%s' is not a directory",
+                    "cp: target '%s' is not a directory\n",
                         argv[argc - 1]);
         return -1;
     }
@@ -230,6 +230,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
     {
         fprintf(builtinFd->err, "cp: missing file operand\n");
         fprintf(builtinFd->err, "Try 'cp --help' for more information.\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else if (argc == 1)
@@ -237,6 +238,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
         fprintf(builtinFd->err,
                 "cp: missing destination file operand after '%s'\n", argv[0]);
         fprintf(builtinFd->err, "Try 'cp --help' for more information.\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else
@@ -259,7 +261,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
             fprintf(builtinFd->err,
                     "cp: cannot stat '%s': No such file or directory\n",
                     argv[0]);
-            
+            exit(EXIT_FAILURE);
             return -1;
         }
 
@@ -301,6 +303,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
                 if (source == NULL)
                 {
                     fprintf(builtinFd->err, "Cp: Check permissions..\n");
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
 
@@ -309,6 +312,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
                 if(target == NULL)
                 {
                     fprintf(builtinFd->err, "Cp: Check permissions..\n");
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
 
@@ -354,7 +358,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    cp(argv, argc, terminal);
+    int res = cp(argv, argc, terminal);
     free(terminal);
-    return 0;
+    return res;
 }

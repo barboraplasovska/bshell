@@ -4,15 +4,12 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include  <sys/stat.h>
 #include <err.h>
-#include <fcntl.h>
+
 #include "parser.h"
 
-const char *operators_list[] = {"&&" , "||", "|", ">"};
+const char *operators_list[2] = {"&&" , "||"};
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 
 size_t mystrlen(const char *s1)
 {
@@ -24,7 +21,7 @@ size_t mystrlen(const char *s1)
 size_t get_array_size(char **args)
 {
     size_t i = 0;
-    for(;*(args+i);i++){};
+    for(;*(args+i);i++){}
     return i;
 }
 
@@ -69,19 +66,17 @@ char** add_string_to_array(char **src, char *element)
     size_t i = 0;
     size_t src_index= 0;
 
-    size_t size = 0;
-    if (src)
-        size = get_array_size(src);
-    char **res = (char **) malloc((size) * sizeof(char*));
+    size_t size = get_array_size(src);
+    char **res = (char **) malloc((size+1) * sizeof(char*));
     for (; i < size ; i++,src_index++)
     {
-        size_t test = mystrlen(src[src_index]);
-        res[i]= malloc((test) * sizeof(char));
-        strncpy(res[i],src[src_index],mystrlen(src[src_index]));
+        size_t test = strlen(src[src_index]);
+        res[i]= malloc((test+1) * sizeof(char));
+        strcpy(res[i],src[src_index]);
     }
     res[i] = element;
-    res[i+1] = '\0';
     return res;
+
 }
 
 
@@ -137,12 +132,10 @@ struct Token *getParameters(const char *command)
     initialToken = (struct Token *)malloc(sizeof(struct Token)); // used as sentinel
     initialToken->param = NULL;
     initialToken->next = NULL;
-    initialToken->instruction = NULL;
 
     struct Token *currentToken = initialToken;
 
     char *tempParamInitial;
-    currentToken->instruction = NULL;
     tempParamInitial = (char *)malloc(255);
     size_t paramLength = 0;
 
@@ -159,14 +152,13 @@ struct Token *getParameters(const char *command)
 
             struct Token *token = NULL;
             token = (struct Token *)malloc(sizeof(struct Token));
-            token->instruction = NULL;
 
             if (param[0] == '-')
             {
                 token->type = type_option;
                 struct Token *p_newToken;
                 char *tmp_param = malloc(paramLength);
-                strncpy(tmp_param,param,paramLength);
+                strcpy(tmp_param,param);
                 p_newToken = seperate_options(tmp_param,token,currentToken);
                 currentToken->next = token;
                 currentToken = p_newToken;
@@ -186,7 +178,6 @@ struct Token *getParameters(const char *command)
                     else
                         token->type = type_argument;
                 }
-            token->param = (char *) malloc(paramLength);
             token->param = param;
             currentToken->next = token;
 
@@ -266,17 +257,6 @@ int valid_option(struct Token *token, struct command current_command)
     return (i < current_command.nb_options);
 }
 
-void* worker(void* arg)
-{
-    pthread_mutex_lock(&mutex);
-    pthread_cond_wait(&cond,&mutex);
-    pthread_mutex_unlock(&mutex);
-    struct Token *token = arg;
-    execute(token->instruction,token->current_command);
-    return NULL;
-}
-
-
 int valid_input(struct Token *token)
 {
     int err = 1; //instead of returning whenever we find out that the input
@@ -284,42 +264,25 @@ int valid_input(struct Token *token)
                 // that's why we don't return as soon as we find a mistake
     token = token->next;
 
-    struct command current_command = token->current_command;
-
     if (token->type != type_command)
-    {
-        current_command.executable[0] = '\0';
-        char Token_param[mystrlen(token->param) + 1];
-        strncpy(Token_param,token->param,mystrlen(token->param));
-        Token_param[mystrlen(token->param)] = '\0';
-        printf("%s: command not found\n",Token_param);
-        err = 0;
-        current_command.args_needed = -1;
-    }
+        printf("command not found\n");
+
+    struct command current_command = token->current_command;
     int nb_args = 0;
-    int res = 1; //return value of the current command that's being executed
-    pthread_t thr;
-
-    char opts[10];
-
     while(token)
     {
         if (token->type == type_command)
         {
-            err = 1;
-            res = 0;
             if (token->next && token->next->type == type_command)
             {
                 err = 0;
                 printf("one command at a time\n");
             }
         }
-      
+        nb_args++;
         if (token->type == type_argument)
         {
-            nb_args++;
-            if (nb_args > current_command.args_needed && current_command.args_needed != -1
-                && current_command.param[0] != '\0')
+            if (nb_args > current_command.args_needed && current_command.args_needed != -1)
             {
                 err = 0;
                 nb_args = -99; //temporary fix so it prints once not for every
@@ -328,6 +291,8 @@ int valid_input(struct Token *token)
             }
             else
             {
+                if(token->instruction == NULL)
+                        token->instruction = malloc(sizeof(char**));
                 token->instruction = add_string_to_array(token->instruction,token->param);
                 if(token->next)
                     token->next->instruction = token->instruction;
@@ -342,14 +307,12 @@ int valid_input(struct Token *token)
             }
             else
             {
+                if(token->instruction == NULL)
+                    token->instruction = malloc(sizeof(char**));
+
+                token->instruction = add_string_to_array(token->instruction,token->param);
                 if (token->next)
                 {
-                    strncat(opts,token->param,1);
-
-                    if (token->next->type != type_option)
-                    {
-                        token->instruction = add_string_to_array(token->instruction,opts);
-                    }
                     token->next->instruction = token->instruction;
                 }
             }
@@ -361,123 +324,15 @@ int valid_input(struct Token *token)
                 err = 0;
                 printf("add an operator before adding another command\n");
             }
-        }
-        if(token->type == type_operators)
-        {
-            char Token_param[mystrlen(token->param) + 1];
-            strncpy(Token_param,token->param,mystrlen(token->param));
-            Token_param[mystrlen(token->param)] = '\0';
-            if(strcmp(Token_param,"|") == 0)
-            {
-                    if (pthread_create(&thr,NULL,worker,(void *)token) != 0)
-                    {
-                        return err;
-                    }
-                    //pthread_join(thr,NULL);
-                    token= token->next;
-                    continue;
-            }
-            if((strcmp(Token_param,">") == 0 ) && token->next)
-            {
-                token->next->instruction = NULL;
-                token->next->instruction = add_string_to_array(token->next->instruction,token->next->param);
-                int fd;
-                fd = open(*token->next->instruction,O_APPEND | O_CREAT | O_WRONLY | O_TRUNC, 0666);
-                if(!fork())
-                {
-                    if(dup2(fd,STDOUT_FILENO) < 0)
-                        printf("rer");
-
-                    close(fd);
-                    res = execvp(token->current_command.executable,token->instruction);//execute the first command
-                }
-                wait(NULL);
-                err = 0;
-                res = 0;
-            }
-
-            if(strcmp(Token_param,"||") == 0)
-            {
-                if (err == 1 && res==0)
-                {
-                    res = execute(token->instruction,token->current_command);
-                    pthread_cond_signal(&cond);
-                }
-                err = 1; //reset the err value
-                if (res == 0 && current_command.executable[0] != '\0')
-                {
-                    if(token->next)
-                        token = token->next;
-                    while(token->next && token->type != type_operators)
-                    {
-                            token = token->next;
-                    }
-
-                    if(token->next)
-                    {
-
-                        if(token->next->type != type_command)
-                        {
-                            strncpy(Token_param,token->param,mystrlen(token->param));
-                            Token_param[mystrlen(token->param)] = '\0';
-                            current_command.executable[0] = '\0';
-                            err = 0;
-                        }
-                    }
-                    else
-                    {
-                        if(res == 0)
-                            break;
-                    }
-
-                }
-            }
-            if(strcmp(Token_param,"&&") == 0 )
-            {
-                if (err == 1)
-                {
-                    res = execute(token->instruction,token->current_command);
-                    pthread_cond_signal(&cond);
-                }
-                if (res != 0 )//|| err == 0)
-                {
-                    break;
-                }
-
-                current_command.executable[0]= '\0';
-            }
-            if(token->next)
-            {
-                char Token_next_param[mystrlen(token->next->param)];
-                strncpy(Token_next_param,token->next->param,mystrlen(token->next->param));
-                Token_next_param[mystrlen(token->next->param)] = '\0';
-
-                if(token->next->type != type_command)
-                {
-                    if(strcmp(Token_param,">") != 0)
-                        printf("%s: command not found\n",Token_next_param);
-                    if (strcmp(Token_param,"&&") == 0)
-                    {
-                        err = 0;
-                        res = 1;
-                    }
-                }
-                if (token->next->type == type_command)
-                    current_command = token->next->current_command;
-            }
-            token->instruction = NULL;
-        }
-        if (!token->next && token->type != type_operators && token->current_command.executable[0] != '\0')
-        {
-            if (err == 1)
-            {
-                res = execute(token->instruction,token->current_command);
-                pthread_cond_signal(&cond);
-            }
             else
-                res = -1;
+            {
+                execute(token->instruction,token->current_command);
+                current_command = token->next->current_command;
+                token->instruction = NULL;
+            }
         }
-
+        if (!token->next)
+            execute(token->instruction,token->current_command);
         token = token->next;
         if(token)
             token->current_command = current_command;
@@ -485,17 +340,14 @@ int valid_input(struct Token *token)
     return err;
 }
 
-int execute(char *argv[],struct command current_command)
+void execute(char *argv[],struct command current_command)
 {
-    int res = 0;
     pid_t pid = fork();
     if (pid == -1)
         err(EXIT_FAILURE,"problem encountered while forking");
     if (!pid)
     {
-            execvp(current_command.executable,argv);
+        execvp(current_command.executable,argv);
     }
-    waitpid(-1,&res,0);//res will be different from 0 if we reached a part in
-                       //the code of any command where we exit(EXIT_FAILURE)
-    return res;
+    wait(NULL);
 }
