@@ -506,6 +506,7 @@ char *get_string(char **args)
                     if (token->next->type == type_command)
                         current_command = token->next->current_command;
                 }
+                //current_command.executable[0]= '\0';
                 token->instruction = NULL;
             }
             if (!token->next && token->type != type_operators && token->current_command.executable[0] != '\0')
