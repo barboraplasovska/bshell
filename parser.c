@@ -428,7 +428,8 @@ char *get_string(char **args)
                         }
                         wait(NULL);
 
-                        err = 0;
+                        current_command.executable[0] = '\0';
+                        //err = 0;
                         res = 0;
                     }
                     else
@@ -444,38 +445,46 @@ char *get_string(char **args)
                         res = execute(token->instruction,token->current_command);
                         pthread_cond_signal(&cond);
                     }
-                    err = 1; //reset the err value
-                    if (res == 0 && current_command.executable[0] != '\0')
+                    //err = 1; //reset the err value
+                    if (res == 0) //&& current_command.executable[0] != '\0')
                     {
-                        if(token->next)
-                            token = token->next;
-                        while(token->next && token->type != type_operators)
+                        if(current_command.executable[0] != '\0')
                         {
-                                token = token->next;
-                        }
-
-                        if(token->next)
-                        {
-
-                            if(token->next->type != type_command)
+                            if (err == 1)
                             {
-                                strncpy(Token_param,token->param,mystrlen(token->param));
-                                Token_param[mystrlen(token->param)] = '\0';
-                                current_command.executable[0] = '\0';
-                                err = 0;
+                                if(token->next)
+                                    token = token->next;
+                                while(token->next && token->type != type_operators)
+                                {
+                                        token = token->next;
+                                }
+                            }
+
+                            if(token->next)
+                            {
+
+                                if(token->next->type != type_command)
+                                {
+                                    strncpy(Token_param,token->param,mystrlen(token->param));
+                                    Token_param[mystrlen(token->param)] = '\0';
+                                    current_command.executable[0] = '\0';
+                                    err = 0;
+                                }
                             }
                         }
                         else
                         {
-                            if(res == 0)
+                            if((err == 1 && res == 0)) //|| token->next->type != type_command)
                                 break;
                         }
+                        //err = 1; //reset the err value
 
                     }
+
                 }
                 if(strcmp(Token_param,"&&") == 0 )
                 {
-                    if (err == 1)
+                    if (err == 1 && current_command.executable[0] != '\0')
                     {
                         res = execute(token->instruction,token->current_command);
                         pthread_cond_signal(&cond);
