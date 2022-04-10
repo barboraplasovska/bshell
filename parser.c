@@ -399,28 +399,30 @@ char *get_string(char **args)
                         token= token->next;
                         continue;
                 }
-                if((strcmp(Token_param,">") == 0 ) && token->next)
+                if((strcmp(Token_param,">") == 0 ))
                 {
-                    //token->next->instruction = NULL;
-                    //token->next->instruction = add_string_to_array(token->next->instruction,token->next->param);
-                    int fd;
-                    fd = open(token->next->param,O_APPEND | O_CREAT | O_WRONLY | O_TRUNC, 0666);
-            //        token->next->instruction = NULL;
-                    if(!fork())
+                    if(token->next)
                     {
-                        if(dup2(fd,STDOUT_FILENO) < 0)
-                            printf("rer");
+                        int fd;
+                        fd = open(token->next->param,O_APPEND | O_CREAT | O_WRONLY | O_TRUNC, 0666);
+                        if(!fork())
+                        {
+                            if(dup2(fd,STDOUT_FILENO) < 0)
+                                printf("dup2 error\n");
 
-                        close(fd);
-                        res = execvp(token->current_command.executable,token->instruction);//execute the first command
+                            close(fd);
+                            res = execvp(token->current_command.executable,token->instruction);//execute the first command
 
+                        }
+                        wait(NULL);
+
+                        err = 0;
+                        res = 0;
                     }
-                    wait(NULL);
-
-                    //free_instruction(token->instruction,0);
-                    //token->next->instruction = NULL;
-                    err = 0;
-                    res = 0;
+                    else
+                    {
+                        printf("syntax error: expected token after > and got nothing\n");
+                    }
                 }
 
                 if(strcmp(Token_param,"||") == 0)
