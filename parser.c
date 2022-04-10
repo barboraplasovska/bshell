@@ -368,9 +368,10 @@ char *get_string(char **args)
                     {
                         strncat(opts,token->param,1);
 
-                        if (token->next->type != type_option)
+                        if (strlen(opts) == 2)
                         {
                             token->instruction = add_string_to_array(token->instruction,opts);
+                            opts[0] = '\0';
                         }
                         token->next->instruction = token->instruction;
                     }
