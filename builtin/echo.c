@@ -19,9 +19,9 @@ void getOptions(char** argv, Options* opt, size_t argc)
                 if (argv[i][j] == 'n')
                     opt->nflag = true;
                 if (argv[i][j] == 'e')
-                    opt->nflag = true;
+                    opt->eflag = true;
                 if (argv[i][j] == 'E')
-                    opt->nflag = true;
+                    opt->Eflag = true;
 
                 j++;
             }
@@ -67,6 +67,9 @@ int printEscaped(char c, BuiltinFd *builtinFd)
         case 'e':
             fprintf(builtinFd->out, "%s", "\033");
             return 0;
+	case 'n':
+	    fprintf(builtinFd->out, "\n");
+	    return 0;
         default:
             fprintf(builtinFd->out, "\\%c", c);
             return 0;
