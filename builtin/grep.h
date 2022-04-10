@@ -16,7 +16,7 @@ typedef struct          Options
                                // numbers.
   bool                  vflag; // This prints out all the lines that do not 
                                // matches the pattern
-  bool    /*done*/      eflag; // Specifies expression with this option. 
+  bool                  eflag; // Specifies expression with this option. 
                                // Can be used multiple times.
   size_t                ecount; // how many times has it been used
   char**                patterns; // patterns
