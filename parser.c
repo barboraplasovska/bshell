@@ -372,6 +372,17 @@ char *get_string(char **args)
                         {
                             token->instruction = add_string_to_array(token->instruction,opts);
                             opts[0] = '\0';
+                            //token->next->instruction = token->instruction;
+                        }
+                        else
+                        {
+                            if(opts[0] != '-')
+                            {
+                                opts[0] = '-';
+                                strncat(opts,token->param,1);
+                                token->instruction = add_string_to_array(token->instruction,opts);
+                                //token->next->instruction = token->instruction;
+                            }
                         }
                         token->next->instruction = token->instruction;
                     }
