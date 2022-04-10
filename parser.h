@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define CMDSIZE 19
+#define CMDSIZE 20
 #define OPSIZE 4
 
 enum type
@@ -36,6 +36,7 @@ struct Token {
 static const struct command cat = 
         { "cat", {"A", "E", "s", "n"}, "./cat", -1 , 4};
 static const struct command clear = { "clear", {}, "./clear", 0 ,0};
+static const struct command clearhistory = { "clearhistory", {}, "./clearhistory", 0 ,0};
 static const struct command cp = { "cp", {}, "./cp", -1 , 0};
 static const struct command date = { "date", {}, "./date", 0 , 0};
 static const struct command echo = { "echo", {"n","e","E"}, "./echo", -1 ,3};
@@ -53,7 +54,7 @@ static const struct command touch = { "touch", {}, "./touch", -1 ,-1};
 
 // EXTERNAL
 static const struct command cpuinfo = 
-        { "procstatus", {}, "./cpuinfo", -1 , -1};
+        { "cpuinfo", {}, "./cpuinfo", -1 , -1};
 static const struct command history = 
         { "history", {}, "./history", -1 , -1};
 static const struct command prockill = 
@@ -67,7 +68,7 @@ static const struct command procstatus =
 
 static const struct command command_list[CMDSIZE] =
 {cat, clear, cp, date, echo, grep, help, ls, mkdirr, mv, rm, sort, tac,
-touch, cpuinfo, history, prockill, proclist, procstatus};
+touch, cpuinfo, history, prockill, proclist, procstatus, clearhistory};
 
 
 

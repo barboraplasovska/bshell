@@ -41,4 +41,6 @@ typedef struct          builtinFd
 */
 size_t getArgc(char **argv);
 
+int AppendToHistory(char **argv, char *functionName ,BuiltinFd *builtinFd);
+
 #endif

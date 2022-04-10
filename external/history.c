@@ -52,13 +52,14 @@ int history(BuiltinFd *builtinFd)
         }
         else
         {
-            while ((read = getline(&line, &len, fp)) != -1) 
+            while ((read = getline(&line, &len, fp)) != -1)
             {
                 struct Node* current = (struct Node*)malloc(sizeof(struct Node));
                 if (n)
                     n->next = current;
-                char *content = (char*)malloc(read * sizeof(char));
+                char *content = (char*)malloc(read);
                 string_copy(line, content);
+		printf("we read: %s", content);
                 current->array = content;
                 current->prev = prev;
                 prev = current;
@@ -73,7 +74,7 @@ int history(BuiltinFd *builtinFd)
                 char *res = fgets(a, 2, builtinFd->in);
                 if (!res)
                     break;
-                    
+
                 if (a[0] == 'u')
                 {
                     if (n->prev)
@@ -98,15 +99,15 @@ int history(BuiltinFd *builtinFd)
                 while((ch = getc(builtinFd->in)) != '\n' && ch != EOF);
             }
         }
-        
+
         freeNext(n->next);
         freePrevious(n->prev);
         free(n->array);
         free(n);
 
         fclose(fp);
-    } 
-    else 
+    }
+    else
     {
         fprintf(builtinFd->out, "There is no history...\n");
     }
@@ -116,8 +117,6 @@ int history(BuiltinFd *builtinFd)
 
 int main(int argc, char **argv)
 {
-    if (argc == 0)
-        return 0;
     struct builtinFd *terminal = NULL;
     terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
     terminal->in = stdin;//STDIN_FILENO;
@@ -128,7 +127,7 @@ int main(int argc, char **argv)
     terminal->errNo = STDOUT_FILENO;
 
     if (argc){}
-    if (argv[1] == NULL)
+    if (argv[0] == NULL)
     {
         history(terminal);
     }

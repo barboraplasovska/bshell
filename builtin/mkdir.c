@@ -46,6 +46,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
+    AppendToHistory(argv, "mkdir", terminal);
     mkdirr(argv,terminal);
     free(terminal);
 }

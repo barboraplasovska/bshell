@@ -200,6 +200,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
+    AppendToHistory(argv, "echo", terminal);
     int res = echo(argv,terminal);
     free(terminal);
     return res;

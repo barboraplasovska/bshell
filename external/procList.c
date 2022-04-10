@@ -87,10 +87,10 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-
+    AppendToHistory(argv, "proclist", terminal);
 
     if (argc){}
-    if (argv[1] == NULL)
+    if (argv[0] == NULL)
     {
         char **processes = listProc(terminal);
 
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
         char *countC = processes[0];
         int count = atoi(countC);
 
-        for (int i = 1; i < count; i++)
+        for (int i = 0; i < count; i++)
         {
             fprintf(terminal->err ,"Process_ID: %s\n", processes[i]);
         }
