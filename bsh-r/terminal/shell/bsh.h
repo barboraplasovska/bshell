@@ -18,7 +18,7 @@ void print_prompt(void); //prompt -> to change when customization come
 char **lsh_split_line(char *line); // splits line parsed into array of string
 // ex: {"ls","-a"}
 char *lsh_read_line(void); //reads line from main stdin of shell
-
+//char *parseRC(void);
 
 
 #endif

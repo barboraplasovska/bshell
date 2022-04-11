@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define CMDSIZE 9
+#define CMDSIZE 11
 #define OPSIZE 4
 
 enum type
@@ -32,6 +32,8 @@ struct Token {
     char **instruction;
 };
 
+static const struct command tree = {"tree",{},"./tree",-1,0};
+static const struct command pwd = {"pwd",{},"./pwd",0,0};
 static const struct command ls = { "ls", {}, "./ls", -1 , 0};
 static const struct command cat = { "cat", {}, "./cat", -1 , 0};
 static const struct command cd = { "cd", {}, "./cd", -1 , 0};
@@ -46,7 +48,7 @@ static const struct command mv = {"mv", {}, "./mv", -1, -1};
 
 
 static const struct command command_list[CMDSIZE] =
-{ls, cd, echo, cat, clear,cp, touch, mv,procstatus};
+{ls, cd, echo, cat, clear,cp, touch, mv,procstatus, pwd, tree};
 
 
 

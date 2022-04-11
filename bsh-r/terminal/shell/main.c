@@ -61,7 +61,7 @@ char **lsh_split_line(char *line)
       bufsize += LSH_TOK_BUFSIZE;
       tokens = realloc(tokens, bufsize * sizeof(char*));
       if (!tokens) {
-        fprintf(stderr, "lsh: allocation error\n");
+        fprintf(stderr, "bsh: allocation error\n");
         exit(EXIT_FAILURE);
       }
     }
@@ -72,31 +72,35 @@ char **lsh_split_line(char *line)
   return tokens;
 }
 
+/*char* parseRC(void){
+    size_t line_len = 80;
+    char line[line_len];
+    FILE *fp;
 
-void print_prompt(void){
-    //char hostname[1024];
-    //char user[1024];
+    fp = fopen(".bshrc","r");
+
+    if (fp == NULL){
+        err(-1,"cannot open .bshrc");
+    }
+    while (fgets(line,line_len,fp));
+    fclose(fp);
+
+    return line;
+
+}*/
+
+void print_prompt(){
     char* r;// = gethostname(hostname,1024);
-    /*if (r == -1){
-        err(-1,"gethostname");
-    }*/
     r = getlogin();
-    /*if (r != 0){
-        err(-2,"getlogin_r");
-    }*/
-    //size_t size = strlen(hostname) + strlen(user); //add colors and a place to edit that 
-    //char *prompt_1 = strncat(hostname,"@",size);
-    //char *prompt_2 = strncat(prompt_1,user,size);
-    //red();
     printf("\033[1;31m");
     printf(r);
-    //reset();
     printf("\033[0m");
-    printf("@");
-    //red();
+    //if (strcmp("cute-bear",colors[2]) == 0){
+    printf("ʕ•́ᴥ•̀ʔ");
+    //printf("@");
     printf("\033[1;31m");
+    //printf(colors[1]);
     printf("bsh");
-    //reset();
     printf("\033[0m");
     printf("~");
 }
@@ -107,6 +111,7 @@ void loop(void){
     int status = 1;
 
     do{
+        //char **custom = parseRC();
         print_prompt();
         
         char *input = lsh_read_line();

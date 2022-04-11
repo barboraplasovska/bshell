@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -std=c99 -g #-O1 -g
+CFLAGS = -Wall -Wextra -Werror -std=c99 -g -D_DEFAULT_SOURCE #-O1 -g
 LDLIBS = -pthread -fsanitize=address
 LDLFLAGS = -D_XOPEN_SOURCE=700
 
@@ -7,7 +7,7 @@ OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 MAIN = main.o
 
-EXEC = main ls echo cat clear cd cp mv touch procstatus
+EXEC = main ls echo cat clear cd cp mv touch procstatus pwd tree
 all: $(EXEC)
 
 
@@ -31,6 +31,11 @@ mv:
 	$(CC) $(CFLAGS) -o $@ ./builtin/mv.c ./builtin/builtin.c
 touch:
 	$(CC) $(CFLAGS) -o $@ ./builtin/touch.c
+pwd:
+	$(CC) $(CFLAGS) -o $@ ./builtin/pwd.c ./builtin/builtin.c
+
+tree:
+	$(CC) $(CFLAGS) -o $@ ./builtin/tree.c ./builtin/builtin.c
 
 #EXTERNAL
 procstatus:
