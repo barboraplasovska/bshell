@@ -1,30 +1,20 @@
 ./test ‘notacommand && ls’
 ./test ‘ls && notacommand’
-./test ‘ls || clear -o’
 ./test clear -o
+./test ‘ls || clear -o’
 ./test ‘notacommand || ls’
-./test ‘echo hi > testdir/months.txt && cat testdir/months.txt || dont && rm testdir/months.txt && ls’
-./test mkdir testdir
-./test touch testdir/months.txt testdir/output.txt
-./test ls testdir
+./test ‘mkdir testdir && touch testdir/months.txt testdir/output.txt && ls testdir’
 ./test echo -e “march\njanuary\napril” > testdir/months.txt
 ./test cat -n testdir/months.txt
 ./test sort testdir/months.txt
 ./test sort -M testdir/months.txt
-vim testdir/months.txt
-**write some words on each line (1 word per line)
-./test sort -M testdir/months.txt
 ./test echo -e “hello\nhello\nahoj\nmom” > testdir/months.txt
 ./test sort -u testdir/months.txt
-./test sort -o testdir/output.txt testdir/months.txt
-./test cat testdir/output.txt
-./test ‘rm -i testdir/output.txt && ls’
-./test tac Makefile
+./test ‘rm -i testdir/output.txt && ls testdir’
 ./test grep -i INclude builtin/builtin.h
 ./test grep -ni INCLUDE builtin/builtin.h
-./test help
 ./test proclist
-cat
+cat (on a new terminal)
 ctrl + z
 ps
 ./test proclist 
