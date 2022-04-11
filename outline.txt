@@ -1,29 +1,41 @@
-./test ‘notacommand && ls’
-./test ‘ls && notacommand’
+./test 'notacommand && ls'
+./test 'ls && notacommand'
 ./test clear -o
-./test ‘ls || clear -o’
-./test ‘notacommand || ls’
-./test ‘mkdir testdir && touch testdir/months.txt testdir/output.txt && ls testdir’
-./test echo -e “march\njanuary\napril” > testdir/months.txt
+./test 'ls || clear -o'
+./test 'notacommand || ls'
+
+./test clear
+
+./test 'mkdir testdir && touch testdir/months.txt testdir/output.txt && ls testdir'
+./test echo -e "march\njanuary\napril" > testdir/months.txt
 ./test cat -n testdir/months.txt
 ./test sort testdir/months.txt
 ./test sort -M testdir/months.txt
-./test echo -e “hello\nhello\nahoj\nmom” > testdir/months.txt
-./test sort -u testdir/months.txt
-./test ‘rm -i testdir/output.txt && ls testdir’
+./test 'echo -e hello\nhello\nahoj\nmom > testdir/months.txt && cat testdir/months.txt'
+./test 'sort -u -o testdir/output.txt testdir/months.txt && cat testdir/output.txt'
+./test 'rm -i testdir/output.txt && ls testdir'
 ./test grep -i INclude builtin/builtin.h
 ./test grep -ni INCLUDE builtin/builtin.h
+
+./test clear
+
 ./test proclist
 cat (on a new terminal)
 ctrl + z
 ps
-./test proclist 
-./test prockill {the cat pid} 
-./test proclist 
+./test proclist
+./test prockill {the cat pid}
+./test proclist
+./test clear
+
 ./test procstatus
 ./test procstatus 1
 ./test procstatus 6283628392368
+./test clear
+
 ./test cpuinfo
+./test clear
+
 ./test history
 ./test clearhistory
 ./test history

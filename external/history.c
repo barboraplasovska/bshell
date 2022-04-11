@@ -59,7 +59,7 @@ int history(BuiltinFd *builtinFd)
                     n->next = current;
                 char *content = (char*)malloc(read);
                 string_copy(line, content);
-		printf("we read: %s", content);
+		//printf("we read: %s", content);
                 current->array = content;
                 current->prev = prev;
                 prev = current;
