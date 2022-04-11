@@ -2,7 +2,7 @@
 ./test 'ls && notacommand'
 ./test clear -o
 ./test 'ls || clear -o'
-./test 'notacommand || ls'
+./test 'clear -o || ls'
 
 ./test clear
 
@@ -29,8 +29,6 @@ ps
 ./test clear
 
 ./test procstatus
-./test procstatus 1
-./test procstatus 6283628392368
 ./test clear
 
 ./test cpuinfo
