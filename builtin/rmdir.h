@@ -9,6 +9,6 @@
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int rmdir(char** argv, BuiltinFd *builtinFd);
+int rmdirr(char** argv, BuiltinFd *builtinFd);
 
 #endif

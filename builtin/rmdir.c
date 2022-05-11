@@ -10,46 +10,61 @@ int isFile(const char *path)
 int removeDir(char* path)
 {
     struct dirent **namelist;
-    int err = scandir(argv[i], &namelist, NULL, alphasort);
+    int err = scandir(path, &namelist, NULL, alphasort);
     if (err == -1)
         return -1;
     
     for (size_t i = err-1; i > 0 ; i--)
     {
-        char* name = argv[i];
+        char* name = path;
         strcat(name, namelist[i]->d_name);
-        if (isFile())
+        if (isFile(name))
         {
             if (remove(name) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
         else
         {
             if (removeDir(name) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
     }
 
     // remove empty dir
     if (rmdir(path) == -1)
+    {
+        exit(EXIT_FAILURE);
         return -1;
+    }
 
     return 0;
 }
 
 int rmDirs(char** argv, size_t argc)
 {
-    for (size_t i = opt.ind; i < argc; i++)
+    for (size_t i = 0; i < argc; i++)
     {
         if (isFile(argv[i]))
         {
             if (remove(argv[i]) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
         else
         {
-            if (removeDir(path) == -1)
+            if (removeDir(argv[i]) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
         }
     }
     return 0;
@@ -61,19 +76,24 @@ int rmDirs(char** argv, size_t argc)
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int rmdir(char** argv, BuiltinFd *builtinFd)
+int rmdirr(char** argv, BuiltinFd *builtinFd)
 {
     size_t argc = getArgc(argv);
     if (argc == 0)
     {
         fprintf(builtinFd->err, "rmdir: missing an argument\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else
     {
         if (rmDirs(argv, argc) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
+    return 0;
 }
 
 int main(int argc, char **argv)
@@ -87,6 +107,6 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    rmdir(argv,terminal);
+    rmdirr(argv,terminal);
     free(terminal);
 }

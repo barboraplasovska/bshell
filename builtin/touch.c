@@ -18,7 +18,8 @@ int touch(char** argv, BuiltinFd *builtinFd)
         FILE *fp;
         for(int i = 0; argv[i] != NULL; i++)
         {
-            // TODO: create a clone if the name is a directory but the clone as a file
+            // TODO: create a clone if the name is a directory but 
+            // the clone as a file
             if (access(argv[i], F_OK) == -1)  //if it doesn't exist
             {
                 fp = fopen(argv[i], "w");
@@ -49,6 +50,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
+    AppendToHistory(argv, "touch", terminal);
     int res = touch(argv,terminal);
     free(terminal);
     return res;

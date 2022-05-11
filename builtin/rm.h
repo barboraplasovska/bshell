@@ -13,7 +13,7 @@ typedef struct          Options
   bool                  iflag; // interactive (asks if sure to delete)
   bool                  fflag; // force delete
   bool                  rflag; // or -R recursive delet (for dir)
-  size_t                ind;
+  ssize_t                ind;
 } Options;
 
 

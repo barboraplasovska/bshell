@@ -9,6 +9,6 @@
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int help(char** argv, BuiltinFd *builtinFd);
+int help(BuiltinFd *builtinFd);
 
 #endif

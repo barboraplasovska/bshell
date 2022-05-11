@@ -18,7 +18,7 @@ typedef struct          Options
                                // "sort: cars.txt:3: disorder: BMW")
   bool                  uflag; // To sort and remove duplicates
   bool                  Mflag; // To sort by month 
-  size_t                ind;
+  ssize_t                ind;
 } Options;
 
 

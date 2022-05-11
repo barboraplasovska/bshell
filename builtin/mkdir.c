@@ -1,20 +1,4 @@
-int rmDirs(char** argv, size_t argc)
-{
-    for (size_t i = opt.ind; i < argc; i++)
-    {
-        if (isFile(argv[i]))
-        {
-            if (remove(argv[i]) == -1)
-                return -1;
-        }
-        else
-        {
-            if (removeDir(path) == -1)
-                return -1;
-        }
-    }
-    return 0;
-}
+#include "mkdir.h"
 
 /**
 ** @brief               mkdir main function.
@@ -22,17 +6,18 @@ int rmDirs(char** argv, size_t argc)
 ** @param builtinFd     Files.
 ** @return              Returns 0 in case of no problems.
 */
-int mkdir(char** argv, BuiltinFd *builtinFd)
+int mkdirr(char** argv, BuiltinFd *builtinFd)
 {
     size_t argc = getArgc(argv);
     if (argc == 0)
     {
         fprintf(builtinFd->err, "mkdir: missing an argument\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else
     {
-        for (size_t i = 0; i < argc: i++)
+        for (size_t i = 0; i < argc; i++)
         {
             struct stat st = {0};
 
@@ -61,6 +46,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    mkdir(argv,terminal);
+    AppendToHistory(argv, "mkdir", terminal);
+    mkdirr(argv,terminal);
     free(terminal);
 }

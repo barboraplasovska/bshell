@@ -16,16 +16,17 @@ typedef struct          Options
   bool                  Eflag;
   bool                  sflag;
   bool                  nflag;
-  size_t                ind;
+  ssize_t                ind;
 } Options;
 
+/*
 typedef struct          Operators
 {
   bool                  sm; // >
   bool                  doublesm; // >>
   bool                  star; // *.txt
   size_t                ind;
-} Operators;
+} Operators;*/
 
 /**
 ** @brief               Gets the options
