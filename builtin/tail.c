@@ -34,7 +34,8 @@ void getOptions(char** argv, Options* opt, size_t argc)
   }
   if (opt->nflag)
   {
-      opt->nb = argv[i];
+      char* endptr;
+      opt->nb = strtol(argv[i],&endptr  ,10);
       i++;
   }
 
@@ -88,16 +89,19 @@ int oneFile(char* path, Options opt, BuiltinFd* builtinFd)
         i -= opt.nb;
     else
         i -= 10;
-    
+   
     for (; i < length; i++)
-        fprintf(builtinFd->out, "%s", lines[i]);
+        fprintf(builtinFd->out, "%s\n", lines[i]);
 
+    fflush(builtinFd->out);
     // freeeing lines
     for (size_t i = 0; i < bufferSize; i++)
     {
         free(lines[i]);
     }
     free(lines);
+
+    return 0;
 }
 
 int multiFiles(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
@@ -143,18 +147,22 @@ int tail(char** argv, BuiltinFd *builtinFd)
     {
         getOptions(argv, &opt, argc);
 
-        if (argc > 1) // multiple files
+        if (argc-opt.ind > 1) // multiple files
         {
             if (multiFiles(argv, opt, argc, builtinFd) != 0)
             {
+		fflush(builtinFd->out);
                 exit(EXIT_FAILURE);
                 return -1;
             }
         }
         else // one file
         {
+	    if (opt.ind < 0)
+		opt.ind = 0;
             if (oneFile(argv[opt.ind], opt, builtinFd) != 0)
             {
+		fflush(builtinFd->out);
                 exit(EXIT_FAILURE);
                 return -1;
             }
@@ -176,7 +184,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    AppendToHistory(argv, "sort", terminal);
-    sort(argv,terminal);
+    AppendToHistory(argv, "tail", terminal);
+    tail(argv,terminal);
     free(terminal);
 }
