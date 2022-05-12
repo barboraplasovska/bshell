@@ -43,6 +43,8 @@ sort:
 	$(CC) $(CFLAGS) $(LDLFLAGS) -o $@ ./builtin/sort.c ./builtin/builtin.c
 tac:
 	$(CC) $(CFLAGS) -o $@ ./builtin/tac.c ./builtin/builtin.c
+tail:
+	$(CC) $(CFLAGS) -o $@ ./builtin/tail.c ./builtin/builtin.c
 touch:
 	$(CC) $(CFLAGS) -o $@ ./builtin/touch.c ./builtin/builtin.c
 
