@@ -7,7 +7,7 @@ OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 MAIN = test.o
 
-EXEC = test cat clear cp date echo grep help ls mkdir mv rm sort tac tail touch cpuinfo history prockill proclist procstatus clearhistory
+EXEC = test cat clear cp date echo grep head help ls mkdir mv rm sort tac tail touch cpuinfo history prockill proclist procstatus clearhistory
 all: $(EXEC)
 
 
@@ -27,6 +27,8 @@ echo:
 	$(CC) $(CFLAGS) -o $@ ./builtin/echo.c ./builtin/builtin.c
 grep:
 	$(CC) $(CFLAGS) -o $@ ./builtin/grep.c ./builtin/builtin.c
+head:
+	$(CC) $(CFLAGS) -o $@ ./builtin/head.c ./builtin/builtin.c
 help:
 	$(CC) $(CFLAGS) -o $@ ./builtin/help.c
 ls:

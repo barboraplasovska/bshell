@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define CMDSIZE 21
+#define CMDSIZE 22
 #define OPSIZE 4
 
 enum type
@@ -41,6 +41,8 @@ static const struct command cp = { "cp", {}, "./cp", -1 , 0};
 static const struct command date = { "date", {}, "./date", 0 , 0};
 static const struct command echo = { "echo", {"n","e","E"}, "./echo", -1 ,3};
 static const struct command grep = { "grep", {"n","i"}, "./grep", -1,2};
+
+static const struct command head = {"head", {"n", "q", "v"}, "./head", -1, 3};
 static const struct command help = { "help", {}, "./help", 0 , 0};
 static const struct command ls = { "ls", {}, "./ls", -1 , 0};
 static const struct command mkdirr = { "mkdir", {}, "./mkdir", -1 ,0};
