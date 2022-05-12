@@ -70,8 +70,8 @@ static const struct command procstatus =
 
 
 static const struct command command_list[CMDSIZE] =
-{cat, clear, cp, date, echo, grep, help, ls, mkdirr, mv, rm, sort, tac, tail,
-touch, cpuinfo, history, prockill, proclist, procstatus, clearhistory};
+{cat, clear, cp, date, echo, grep, head, help, ls, mkdirr, mv, rm, sort, tac, 
+tail, touch, cpuinfo, history, prockill, proclist, procstatus, clearhistory};
 
 
 
