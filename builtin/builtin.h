@@ -7,13 +7,13 @@
 #include <string.h>
 #include <stdbool.h>
 #include <dirent.h> 
+#include <ctype.h>
 #include <fcntl.h>
 //#include <iostream.h>
 #include <sys/stat.h>
 #include <errno.h>
 //#include <sys/types.h>
-
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 1024
 
 /**
 ** @brief               Builtin files.
@@ -40,5 +40,7 @@ typedef struct          builtinFd
 ** @return              Returns the number of arguments.
 */
 size_t getArgc(char **argv);
+
+int AppendToHistory(char **argv, char *functionName ,BuiltinFd *builtinFd);
 
 #endif

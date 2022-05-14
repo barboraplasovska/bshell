@@ -1,0 +1,3 @@
+hello cat outline.txt
+bye grep -e thisfile
+dont qwe qw

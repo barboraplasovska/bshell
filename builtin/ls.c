@@ -12,13 +12,14 @@ int ls(char** argv, BuiltinFd *builtinFd)
     struct dirent **namelist;
     int err;
 
-    if (argv[0] == NULL)
+    if (*argv[0] == '\0')
     {
         char currDir[BUFFER_SIZE];
         char *t = getcwd(currDir, BUFFER_SIZE);
 	if (!t)
 	{
 	    fprintf(builtinFd->err, "Error getting current directory\n");
+        exit(EXIT_FAILURE);
 	    return -1;
 	}
         err = scandir(currDir, &namelist, NULL, alphasort);
@@ -67,7 +68,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    //printf("this is argv[0] : %s\n",argv[0]);
+    AppendToHistory(argv, "ls", terminal);
     int res = ls(argv,terminal);
     free(terminal);
     return res;

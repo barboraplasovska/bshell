@@ -19,9 +19,9 @@ void getOptions(char** argv, Options* opt, size_t argc)
                 if (argv[i][j] == 'n')
                     opt->nflag = true;
                 if (argv[i][j] == 'e')
-                    opt->nflag = true;
+                    opt->eflag = true;
                 if (argv[i][j] == 'E')
-                    opt->nflag = true;
+                    opt->Eflag = true;
 
                 j++;
             }
@@ -67,6 +67,9 @@ int printEscaped(char c, BuiltinFd *builtinFd)
         case 'e':
             fprintf(builtinFd->out, "%s", "\033");
             return 0;
+	case 'n':
+	    fprintf(builtinFd->out, "\n");
+	    return 0;
         default:
             fprintf(builtinFd->out, "\\%c", c);
             return 0;
@@ -133,15 +136,21 @@ int eprintAll(char** argv, size_t argc, Options opt, BuiltinFd *builtinFd)
         for (i = opt.ind ; i < argc-1; i++)
         {
             if (eprintWord(argv[i], builtinFd) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
+            }
             fprintf(builtinFd->out, " ");
         }
 
         if (argv[i])
         {
             if (eprintWord(argv[i], builtinFd) == -1)
+            {
+                exit(EXIT_FAILURE);
                 return -1;
-	}
+            }
+        }
     }
 
     return 0;
@@ -157,6 +166,8 @@ int echo(char** argv, BuiltinFd *builtinFd)
 {
     struct Options opt;
     opt.nflag = false;
+    opt.eflag = false;
+    opt.Eflag = false;
     opt.ind = 0;
 
     size_t argc = getArgc(argv);
@@ -165,7 +176,10 @@ int echo(char** argv, BuiltinFd *builtinFd)
         getOptions(argv, &opt, argc);
 
         if (eprintAll(argv, argc, opt, builtinFd) == -1)
+        {
+            exit(EXIT_FAILURE);
             return -1;
+        }
     }
 
     if (opt.nflag == false)
@@ -186,6 +200,7 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
+    AppendToHistory(argv, "echo", terminal);
     int res = echo(argv,terminal);
     free(terminal);
     return res;
