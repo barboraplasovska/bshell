@@ -1,10 +1,9 @@
 #include "unalias.h"
 
 
-int removeAlias(char** argv,  size_t argc, BuiltinFd* builtinFd)
+int removeAlias(char** argv,  size_t argc)
 {
     char line[BUFFER_SIZE];
-    int e;
     FILE *source;
     FILE *target;
     source = fopen("aliases.txt", "r+");
@@ -13,7 +12,7 @@ int removeAlias(char** argv,  size_t argc, BuiltinFd* builtinFd)
     if (source == NULL)
             return -1;
     
-    while (fgets(line, BUFFER_SIZE, source) != EOF)
+    while (fgets(line, BUFFER_SIZE, source) != NULL)
     {
         bool todelete = false;
         for (size_t i = 0; i < argc; i++)
@@ -26,14 +25,14 @@ int removeAlias(char** argv,  size_t argc, BuiltinFd* builtinFd)
         }
 
         if (!todelete)
-            fprintf(target, line);
+            fprintf(target, "%s", line);
     }
 
     fclose(source);
     fclose(target);
 
-    remove(source);
-    rename(target, "aliases.txt");
+    remove("aliases.txt");
+    rename("temp.txt", "aliases.txt");
 
     return 0;
 }
@@ -57,7 +56,7 @@ int unalias(char** argv, BuiltinFd *builtinFd)
     }
     else
     {
-        if (removeAlias(argv, argc, builtinFd) != 0)
+        if (removeAlias(argv, argc) != 0)
         {
             exit(EXIT_FAILURE);
             return -1;

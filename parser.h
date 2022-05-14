@@ -33,7 +33,7 @@ struct Token {
 };
 
 // BUILTIN
-static const struct command alias = { "alias", {}, "./alias", -1 , 0};
+static const struct command alias = { "alias", {"p"}, "./alias", -1 , 1};
 static const struct command cat = 
         { "cat", {"A", "E", "s", "n"}, "./cat", -1 , 4};
 static const struct command clear = { "clear", {}, "./clear", 0 ,0};
@@ -72,8 +72,8 @@ static const struct command procstatus =
 
 
 static const struct command command_list[CMDSIZE] =
-{cat, clear, cp, date, echo, grep, head, help, ls, mkdirr, mv, rm, sort, tac, 
-tail, touch, cpuinfo, history, prockill, proclist, procstatus, clearhistory};
+{alias, cat, clear, cp, date, echo, grep, head, help, ls, mkdirr, mv, rm, sort, tac, 
+tail, touch, cpuinfo, history, prockill, proclist, procstatus, clearhistory, unalias};
 
 
 

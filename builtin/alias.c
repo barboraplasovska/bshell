@@ -55,7 +55,6 @@ int addAlias (char* command, char* alias)
 {
     bool replaced = false;
     char line[BUFFER_SIZE];
-    int e;
     FILE *source;
     FILE *target;
     source = fopen("aliases.txt", "r+");
@@ -64,7 +63,7 @@ int addAlias (char* command, char* alias)
     if (source == NULL)
             return -1;
     
-    while (fgets(line, BUFFER_SIZE, source) != EOF)
+    while (fgets(line, BUFFER_SIZE, source) != NULL)
     {
         char word[strlen(line)];
         for (size_t i = 0; i < strlen(line) && line[i] != ' '; i++)
@@ -76,7 +75,7 @@ int addAlias (char* command, char* alias)
         }
 
         if (!replaced)
-            fprintf(target, line);
+            fprintf(target, "%s",line);
         else
         {
             fprintf(target, "%s %s\n", command, alias); 
@@ -90,8 +89,8 @@ int addAlias (char* command, char* alias)
     fclose(source);
     fclose(target);
 
-    remove(source);
-    rename(target, "aliases.txt");
+    remove("aliases.txt");
+    rename("temp.txt", "aliases.txt");
     return 0;
 }
 
@@ -100,6 +99,8 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
     
     for (size_t i = opt.ind; i < argc; i++)
     {
+ printf("line: %s\n", argv[i]);
+
         char* command = calloc(strlen(argv[i]), sizeof(char));
         char* alias = calloc(strlen(argv[i]), sizeof(char));
 
@@ -107,6 +108,7 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
         char* temp = argv[i];
         while (temp[j] != '=' && temp[j] != '\0')
         {
+	    printf("j: %lu, temp: %c\n", j, temp[j]);
             command[j] = temp[j];
             j++;
         }
@@ -114,7 +116,10 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
 
         if (temp[j] == '\0' || temp[j+1] != '\"') // wrong format
         {
-            fprintf(builtinFd->err, "alias: wrong format\n");
+            printf("j: %lu, temp: %c\n", j, temp[j]);
+ printf("j: %lu, temp: %c\n", j+1, temp[j+1]);
+
+	    fprintf(builtinFd->err, "alias: wrong format\n");
             fprintf(builtinFd->err, "alias: usage: alias [-p] [name[=\"value\"] ... ]\n");
             return -1;
         }
@@ -123,6 +128,8 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
         size_t k = 0;
         while(temp[j] != '\"' && temp[j] != '\0')
         {
+		 printf("j: %lu, temp: %c\n", j, temp[j]);
+
             alias[k] = temp[j];
             j++;
             k++;
@@ -182,6 +189,8 @@ int alias(char** argv, BuiltinFd *builtinFd)
         }
         if (argc > 1 || !opt.pflag) // add alias
         {
+	    for (size_t i = 0; i < argc; i++)
+ 		printf("argv[%lu]: %s\n",i, argv[i]);
             if (addAliases(argv, opt, argc, builtinFd) != 0)
             {
                 exit(EXIT_FAILURE);
