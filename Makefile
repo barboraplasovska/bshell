@@ -7,7 +7,7 @@ OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 MAIN = test.o
 
-EXEC = test cat clear cp date echo grep head help ls mkdir mv rm sort tac tail touch cpuinfo history prockill proclist procstatus clearhistory
+EXEC = test alias cat clear cp date echo grep head help ls mkdir mv rm sort tac tail touch cpuinfo history prockill proclist procstatus clearhistory unalias
 all: $(EXEC)
 
 
@@ -15,6 +15,8 @@ test: $(MAIN) $(OBJ)
 	$(CC) $(CFLAGS) $(LDLIBS) -g -o $@ $^
 
 #BUILTIN
+alias:
+	$(CC) $(CFLAGS) -o $@ ./builtin/alias.c ./builtin/builtin.c
 cat:
 	$(CC) $(CFLAGS) -o $@ ./builtin/cat.c ./builtin/builtin.c
 clear:
@@ -49,6 +51,8 @@ tail:
 	$(CC) $(CFLAGS) -o $@ ./builtin/tail.c ./builtin/builtin.c
 touch:
 	$(CC) $(CFLAGS) -o $@ ./builtin/touch.c ./builtin/builtin.c
+unalias:
+	$(CC) $(CFLAGS) -o $@ ./builtin/unalias.c ./builtin/builtin.c
 
 #EXTERNAL
 cpuinfo:

@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define CMDSIZE 22
+#define CMDSIZE 24
 #define OPSIZE 4
 
 enum type
@@ -33,6 +33,7 @@ struct Token {
 };
 
 // BUILTIN
+static const struct command alias = { "alias", {}, "./alias", -1 , 0};
 static const struct command cat = 
         { "cat", {"A", "E", "s", "n"}, "./cat", -1 , 4};
 static const struct command clear = { "clear", {}, "./clear", 0 ,0};
@@ -54,6 +55,7 @@ static const struct command sort =
 static const struct command tac = {"tac", {"n"}, "./tac", -1, 1};
 static const struct command tail = {"tail", {"n", "q", "v"}, "./tail", -1, 3};
 static const struct command touch = { "touch", {}, "./touch", -1 ,-1};
+static const struct command unalias = { "unalias", {}, "./unalias", -1 , 0};
 
 // EXTERNAL
 static const struct command cpuinfo = 
