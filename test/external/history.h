@@ -1,5 +1,5 @@
-#ifndef CD_H
-#define CD_H
+#ifndef HISTORY_H
+#define HISTORY_H
 
 #define _GNU_SOURCE
 #include <stdio.h>

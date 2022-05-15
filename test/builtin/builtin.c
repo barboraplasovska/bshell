@@ -20,7 +20,7 @@ size_t getArgc(char **argv)
 ** @param builtinFd     Files.
 ** @return              Return 0 in case of success, -1 otherwise
 */
-int AppendToHistory(char **argv, BuiltinFd *builtinFd)
+int AppendToHistory(char **argv, char *functionName, BuiltinFd *builtinFd)
 {
     FILE *f;
     f = fopen("myHistory.txt", "a");
@@ -32,6 +32,18 @@ int AppendToHistory(char **argv, BuiltinFd *builtinFd)
     }
     else
     {
+	const char str[7] = "./test ";
+	for (int i = 0; i < 7; i++)
+	{
+	    fputc(str[i], f);
+	}
+	int z = 0;
+	while (functionName[z])
+	{
+	    fputc(functionName[z], f);
+	    z++;
+	}
+	fputc(' ', f);
         int i = 0;
         while (argv[i])
         {

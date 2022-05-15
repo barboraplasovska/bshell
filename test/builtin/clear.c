@@ -11,6 +11,8 @@ int clear(char** argv, BuiltinFd *builtinFd)
     if (argv[0] != NULL)
     {
         fprintf(builtinFd->err, "clear: too many arguments");
+        exit(EXIT_FAILURE);
+        return -1;
     }
     fprintf(builtinFd->out, "\e[1;1H\e[2J");
     fflush(NULL);
@@ -28,6 +30,8 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    clear(argv, terminal);
+    AppendToHistory(argv, "clear", terminal);
+    int res = clear(argv, terminal);
     free(terminal);
+    return res;
 }

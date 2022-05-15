@@ -1,3 +1,0 @@
-./procstatus 1 1 
-./procstatus 2 2 
-./procstatus 2 2 

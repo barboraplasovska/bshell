@@ -13,6 +13,8 @@ int main(int argc,char** argv)
     struct Token *token = getParameters(input);
     int valid = valid_input(token);
 
+    //free_tokens(token);
+    //free(input);
     if(valid)
     {
         //argv[0] = token->next->current_command.executable; //first token is a sentinel

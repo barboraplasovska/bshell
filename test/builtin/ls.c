@@ -19,14 +19,16 @@ int ls(char** argv, BuiltinFd *builtinFd)
 	if (!t)
 	{
 	    fprintf(builtinFd->err, "Error getting current directory\n");
-	    return 1;
+        exit(EXIT_FAILURE);
+	    return -1;
 	}
         err = scandir(currDir, &namelist, NULL, alphasort);
         if (err == -1)
         {
             fprintf(builtinFd->err,
 	    	"ls: Directory cannot be opened for reading.");
-            return 1;
+            exit(EXIT_FAILURE);
+            return -1;
         }
     }
     else
@@ -37,7 +39,8 @@ int ls(char** argv, BuiltinFd *builtinFd)
         {
             fprintf(builtinFd->err,
 	    	"ls: %s: No such file or directory\n", argv[0]);
-            return 1;
+            exit(EXIT_FAILURE);
+            return -1;
         }
     }
 
@@ -65,7 +68,9 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
+    AppendToHistory(argv, "ls", terminal);
     //printf("this is argv[0] : %s\n",argv[0]);
-    ls(argv,terminal);
+    int res = ls(argv,terminal);
     free(terminal);
+    return res;
 }

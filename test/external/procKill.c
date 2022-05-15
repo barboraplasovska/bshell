@@ -22,11 +22,12 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
+    AppendToHistory(argv, "prockill", terminal);
 
     if (argc){}
-    if (argv[1] != NULL)
+    if (argv[0] != NULL)
     {
-        for (int i = 1; argv[i]; i++)
+        for (int i = 0; argv[i]; i++)
         {
             pid_t pid = atoi(argv[i]);
             procKill(pid, terminal);

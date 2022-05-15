@@ -41,9 +41,10 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
+    AppendToHistory(argv, "cpuinfo", terminal);
 
     if (argc){}
-    if (argv[1] == NULL)
+    if (argv[0] == NULL)
     {
         char* info = GetCPUInfo(terminal);
         fprintf(terminal->out, "%s\n", info);
@@ -51,6 +52,7 @@ int main(int argc, char **argv)
     else
     {
         fprintf(terminal->err, "CPUInfo: Invalid number of arguments.\n");
+        exit(EXIT_FAILURE);
         return 1;
     }
 

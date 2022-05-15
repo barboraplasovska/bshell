@@ -9,6 +9,7 @@
 */
 char* get_process_status_by_pid(const int pid, BuiltinFd *builtinFd)
 {
+    builtinFd = builtinFd;
     char* status = (char*)calloc(1024,sizeof(char));
 
     if(status){
@@ -42,11 +43,10 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-
-    AppendToHistory(argv, terminal);
+    AppendToHistory(argv, "procstatus", terminal);
 
     if (argc){}
-    if (argv[1] == NULL)
+    if (argv[0] == NULL)
     {
         fprintf(terminal->out, "TEST\n");
         pid_t pid = getpid();
@@ -70,7 +70,8 @@ int main(int argc, char **argv)
         if (strcmp(buffer, status) == 0)
         {
             fprintf(terminal->err, "ProcStatus: Process doesn't exist!\n");
-            return 1;
+            exit(EXIT_FAILURE);
+            return -1;
         }
 
         fprintf(terminal->out, "%s\n", status);

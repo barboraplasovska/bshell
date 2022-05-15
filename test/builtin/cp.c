@@ -31,6 +31,7 @@ int createFile(char* source, char* target, BuiltinFd *builtinFd)
    if (sourceF == NULL)
    {
       fprintf(builtinFd->err, "mv: %s\n", strerror(errno));
+      exit(EXIT_FAILURE);
       return -1;
    }
    targetF = fopen(target, "w+");
@@ -58,6 +59,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
     if (err == -1)
     {
         fprintf(builtinFd->err, "cp: Error while stat (3).");
+        exit(EXIT_FAILURE);
         return -1;
     }
 
@@ -69,6 +71,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
         if (rename(argv[0], argv[1]) != 0)
         {
              fprintf(builtinFd->err, "cp: rename error");
+             exit(EXIT_FAILURE);
              return -1;
         }
 
@@ -80,6 +83,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
         if (S_ISREG(path_stat2.st_mode))
         {
             fprintf(builtinFd->err, "cp: Illegal operation.");
+            exit(EXIT_FAILURE);
             return -1;
         }
         else if (S_ISDIR(path_stat2.st_mode))
@@ -89,6 +93,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
                 if (rename(argv[0], argv[1]) != 0)
                 {
                     fprintf(builtinFd->err, "cp: rename error");
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
             }
@@ -102,6 +107,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
                 if (rename(argv[0], newPath) != 0)
                 {
                     fprintf(builtinFd->err, "cp: rename error");
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
             }
@@ -119,11 +125,12 @@ int mv2(char** argv, BuiltinFd *builtinFd)
             // move argv[0] to argv[1]
             if (createFile(argv[0], newPath, builtinFd) != 0)
             {
+                exit(EXIT_FAILURE);
                 return -1;
             }
 
 	    //if (remove(argv[0]) != 0)
-		//return -1;
+		//        return -1;
 
         }
         else if (S_ISREG(path_stat2.st_mode))
@@ -131,6 +138,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
             if (rename(argv[0], argv[1]) != 0)
             {
                 fprintf(builtinFd->err, "cp: rename error");
+                exit(EXIT_FAILURE);
                 return -1;
             }
         }
@@ -140,6 +148,7 @@ int mv2(char** argv, BuiltinFd *builtinFd)
 	if (rename(argv[0], argv[1]) != 0)
 	{
 	     fprintf(builtinFd->err, "cp: rename error");
+         exit(EXIT_FAILURE);
 	     return -1;
 	}
     }
@@ -147,21 +156,24 @@ int mv2(char** argv, BuiltinFd *builtinFd)
     return 0;
 }
 
-int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd) //if it is directory say omitting instead of moving,
+int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd) 
+//if it is directory say omitting instead of moving,
 {
     struct stat path_stat1;
     int err = stat(argv[argc-1], &path_stat1);
     if (err == -1)
     {
         fprintf(builtinFd->err,
-                    "cp: target '%s' is not a directory",
+                    "cp: target '%s' is not a directory\n",
                         argv[argc - 1]);
+        exit(EXIT_FAILURE);
         return -1;
     }
 
     if (!(S_ISDIR(path_stat1.st_mode)))
     {
         fprintf(builtinFd->err, "cp: %s: is not a directory\n", argv[argc-1]);
+        exit(EXIT_FAILURE);
         return -1;
     }
     else
@@ -198,6 +210,7 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd) //if it is directory
                 {
                     fprintf(builtinFd->err, "cp: rename error");
                     free(newPath);
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
             }
@@ -208,6 +221,7 @@ int mvMore2(size_t argc, char** argv, BuiltinFd *builtinFd) //if it is directory
                 {
                     free(newPath);
                     fprintf(builtinFd->out, "BREAK\n");
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
             }
@@ -230,6 +244,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
     {
         fprintf(builtinFd->err, "cp: missing file operand\n");
         fprintf(builtinFd->err, "Try 'cp --help' for more information.\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else if (argc == 1)
@@ -237,6 +252,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
         fprintf(builtinFd->err,
                 "cp: missing destination file operand after '%s'\n", argv[0]);
         fprintf(builtinFd->err, "Try 'cp --help' for more information.\n");
+        exit(EXIT_FAILURE);
         return -1;
     }
     else
@@ -259,7 +275,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
             fprintf(builtinFd->err,
                     "cp: cannot stat '%s': No such file or directory\n",
                     argv[0]);
-            
+            exit(EXIT_FAILURE);
             return -1;
         }
 
@@ -301,6 +317,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
                 if (source == NULL)
                 {
                     fprintf(builtinFd->err, "Cp: Check permissions..\n");
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
 
@@ -309,6 +326,7 @@ int cp(char** argv, int argc, BuiltinFd *builtinFd)
                 if(target == NULL)
                 {
                     fprintf(builtinFd->err, "Cp: Check permissions..\n");
+                    exit(EXIT_FAILURE);
                     return -1;
                 }
 
@@ -354,7 +372,8 @@ int main(int argc, char **argv)
     terminal->inNo =  STDIN_FILENO;
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
-    cp(argv, argc, terminal);
+    AppendToHistory(argv, "cp", terminal);
+    int res = cp(argv, argc, terminal);
     free(terminal);
-    return 0;
+    return res;
 }
