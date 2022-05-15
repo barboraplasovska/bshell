@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     terminal->errNo = STDOUT_FILENO;
     AppendToHistory(argv, "listanimations", terminal);
 
-    if (argv[0] != NULL)
+    if (*argv[0] != '\0')
     {
         fprintf(terminal->err, "listanimations: This function doesn't take any parameters.\n");
         return -1;

@@ -70,8 +70,10 @@ int main(int argc, char **argv)
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
     AppendToHistory(argv, "removeanimation", terminal);
+    //printf("argv[0] = %s\n",argv[0]);
+    //printf("argv[1] = %s\n",argv[1]);
 
-    if (argv[1] != NULL)
+    if (*argv[0] == '\0') //|| *argv[2] != '\0')
     {
         fprintf(terminal->err, "removeanimation: This function only takes 1 parameter\n");
         return -1;

@@ -8,12 +8,7 @@
 */
 int clear(char** argv, BuiltinFd *builtinFd)
 {
-    if (argv[0] != NULL)
-    {
-        fprintf(builtinFd->err, "clear: too many arguments");
-        exit(EXIT_FAILURE);
-        return -1;
-    }
+    (void) argv;
     fprintf(builtinFd->out, "\e[1;1H\e[2J");
     fflush(NULL);
     return 0;
@@ -22,6 +17,12 @@ int clear(char** argv, BuiltinFd *builtinFd)
 int main(int argc, char **argv)
 {
     if (argc){}
+    if (*argv[0] == ' ')
+    {
+        fprintf(stdout, "clear: too many arguments");
+        exit(EXIT_FAILURE);
+        return -1;
+    }
     struct builtinFd *terminal = NULL;
     terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));
     terminal->in = stdin;//STDIN_FILENO;

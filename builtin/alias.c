@@ -57,7 +57,7 @@ int addAlias (char* command, char* alias)
     char line[BUFFER_SIZE];
     FILE *source;
     FILE *target;
-    source = fopen("./builtin/aliases.txt", "r+");
+    source = fopen("./builtin/aliases.txt", "a+");
     target = fopen("./builtin/temp.txt", "a+");
 
     if (source == NULL)
