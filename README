@@ -29,3 +29,8 @@ list of commands with options for first defense:
                     case 4: mv file1 file2 ... filen dir1/: move multiple files
                                                             to dir1/
     -procstatus: No options.
+
+
+#VISUALIZATION OF THE PROJECT
+
+![Visualization of the codebase](./diagram.svg)
