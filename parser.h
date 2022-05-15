@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
-#define CMDSIZE 24
+#define CMDSIZE 25
 #define OPSIZE 4
 
 enum type
@@ -58,7 +58,7 @@ static const struct command ls = { "ls", {}, "./ls", -1 , 0,0};
 static const struct command mkdirr = { "mkdir", {}, "./mkdir", -1 ,0,0};
 static const struct command mv = {"mv", {}, "./mv", -1, -1,0};
 static const struct command rm = {"rm", {"i", "f"}, "./rm", -1, 2,0}; //-r
-//static const struct command rmdirr = {"rmdir", {}, "./rmdir", -1, 0};
+static const struct command rmdirr = {"rmdir", {}, "./rmdir", -1, 0,0};
 static const struct command sort = 
         {"sort", {"o","r","n","c","u","M"}, "./sort", -1, 6,0};
 static const struct command tac = {"tac", {"n"}, "./tac", -1, 1,0};
@@ -81,7 +81,7 @@ static const struct command procstatus =
 
 
 static const struct command command_list[CMDSIZE] =
-{alias, cat, clear, cp, date, echo, grep, head, help, ls, mkdirr, mv, rm, sort, tac, 
+{alias, cat, clear, cp, date, echo, grep, head, help, ls, mkdirr, mv, rm,rmdirr, sort, tac, 
 tail, touch, cpuinfo, history, prockill, proclist, procstatus, clearhistory, unalias};
 
 

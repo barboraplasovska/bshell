@@ -330,6 +330,19 @@ struct Token *getParameters(const char *command)
 //    while(command[i])
     while(i <= len_args)
     {
+        if(command[i] == '\'')
+        {
+            while(command[i+1] != '\'')
+            {
+                tempParamInitial[paramLength] = command[i];
+                i++;
+                paramLength += 1;
+            }
+            tempParamInitial[paramLength] = command[i];
+            i++;
+            paramLength += 1;
+        }
+
         if (command[i] == ' ' || command[i] == '\n' || command[i] == '\0')
         {
             char *param = (char *)malloc(paramLength);

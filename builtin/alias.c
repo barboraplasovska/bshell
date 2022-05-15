@@ -99,7 +99,6 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
     
     for (size_t i = opt.ind; i < argc; i++)
     {
- 	printf("line: %s\n", argv[i]);
 
         char* command = calloc(strlen(argv[i]), sizeof(char));
         char* alias = calloc(strlen(argv[i]), sizeof(char));
@@ -108,17 +107,13 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
         char* temp = argv[i];
         while (temp[j] != '=' && temp[j] != '\0')
         {
-	    printf("j: %lu, temp: %c\n", j, temp[j]);
             command[j] = temp[j];
             j++;
         }
         command[j] = '\0';
 
-        if (temp[j] == '\0' || temp[j+1] != '\"') // wrong format
+        if (temp[j] == '\0' || temp[j+1] != '\'') // wrong format
         {
-            printf("j: %lu, temp: %c\n", j, temp[j]);
- 	    printf("j: %lu, temp: %c\n", j+1, temp[j+1]);
-
 	    fprintf(builtinFd->err, "alias: wrong format\n");
             fprintf(builtinFd->err, "alias: usage: alias [-p] [name[=\"value\"] ... ]\n");
             return -1;
@@ -126,9 +121,8 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
         j += 2; //skipping = and "
 
         size_t k = 0;
-        while(temp[j] != '\"' && temp[j] != '\0')
+        while(temp[j] != '\'' && temp[j] != '\0')
         {
-		 printf("j: %lu, temp: %c\n", j, temp[j]);
 
             alias[k] = temp[j];
             j++;
@@ -178,12 +172,9 @@ int alias(char** argv, BuiltinFd *builtinFd)
     else
     {
         getOptions(argv, &opt, argc);
-	for (size_t i = 0; i < argc; i++)
- 		printf("argv[%lu]: %s\n",i, argv[i]);
 
         if (opt.pflag) // print aliases
         {
-	    printf("p flag is on!\n");
             if (printAliases(builtinFd) != 0)
             {
                 exit(EXIT_FAILURE);
@@ -193,7 +184,6 @@ int alias(char** argv, BuiltinFd *builtinFd)
         if (argc > 1 || !opt.pflag) // add alias
         {
 	    for (size_t i = 0; i < argc; i++)
- 		printf("argv[%lu]: %s\n",i, argv[i]);
             if (addAliases(argv, opt, argc, builtinFd) != 0)
             {
                 exit(EXIT_FAILURE);

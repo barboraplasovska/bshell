@@ -1,1 +1,1 @@
-hello echo hello
+pop touch newfile && echo hi > newfile && cat newfile && rm newfile
