@@ -26,7 +26,7 @@ struct command
 {
     char param[15];
     char *valid_options[7];
-    char executable[15];
+    char executable[25];
     int args_needed;
     int nb_options;
     int executed;
@@ -99,7 +99,7 @@ static const struct command runanimation =
 static const struct command command_list[CMDSIZE] =
 {alias, cat, clear, cp, date, echo, grep, head, help, ls, mkdirr, mv, rm,rmdirr, 
 sort, tac, tail, touch, cpuinfo, history, prockill, proclist, procstatus, 
-clearhistory, unalias, exec, createanimation, removeanimation, listanimation,
+clearhistory, unalias, exec, createanimation, removeanimation, listanimations,
 clearanimations, animationframecount, runanimation};
 
 
