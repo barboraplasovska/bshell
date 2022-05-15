@@ -38,7 +38,7 @@ int printAliases(BuiltinFd* builtinFd)
    char ch;
    FILE *file;
 
-   file = fopen("aliases.txt", "w+");
+   file = fopen("./builtin/aliases.txt", "r+");
 
    if (file == NULL)
         return -1;
@@ -57,8 +57,8 @@ int addAlias (char* command, char* alias)
     char line[BUFFER_SIZE];
     FILE *source;
     FILE *target;
-    source = fopen("aliases.txt", "r+");
-    target = fopen("temp.txt", "w+");
+    source = fopen("./builtin/aliases.txt", "r+");
+    target = fopen("./builtin/temp.txt", "w+");
 
     if (source == NULL)
             return -1;
@@ -89,8 +89,8 @@ int addAlias (char* command, char* alias)
     fclose(source);
     fclose(target);
 
-    remove("aliases.txt");
-    rename("temp.txt", "aliases.txt");
+    remove("./builtin/aliases.txt");
+    rename("./builtin/temp.txt", "./builtin/aliases.txt");
     return 0;
 }
 
@@ -99,7 +99,7 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
     
     for (size_t i = opt.ind; i < argc; i++)
     {
- printf("line: %s\n", argv[i]);
+ 	printf("line: %s\n", argv[i]);
 
         char* command = calloc(strlen(argv[i]), sizeof(char));
         char* alias = calloc(strlen(argv[i]), sizeof(char));
@@ -117,7 +117,7 @@ int addAliases(char** argv, Options opt, size_t argc, BuiltinFd* builtinFd)
         if (temp[j] == '\0' || temp[j+1] != '\"') // wrong format
         {
             printf("j: %lu, temp: %c\n", j, temp[j]);
- printf("j: %lu, temp: %c\n", j+1, temp[j+1]);
+ 	    printf("j: %lu, temp: %c\n", j+1, temp[j+1]);
 
 	    fprintf(builtinFd->err, "alias: wrong format\n");
             fprintf(builtinFd->err, "alias: usage: alias [-p] [name[=\"value\"] ... ]\n");
@@ -178,9 +178,12 @@ int alias(char** argv, BuiltinFd *builtinFd)
     else
     {
         getOptions(argv, &opt, argc);
+	for (size_t i = 0; i < argc; i++)
+ 		printf("argv[%lu]: %s\n",i, argv[i]);
 
         if (opt.pflag) // print aliases
         {
+	    printf("p flag is on!\n");
             if (printAliases(builtinFd) != 0)
             {
                 exit(EXIT_FAILURE);
