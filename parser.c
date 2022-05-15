@@ -225,6 +225,7 @@ char **decompose_string(char *s)
             }
         }
     }
+    word[word_len] = '\0';
     res = add_string_to_array(res,word);
     return res;
 }
