@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
     if (argc){}
 
-    if (exec(argv + 1, terminal) == -1)
+    if (exec(argv, terminal) == -1)
     {
         // failed
     }

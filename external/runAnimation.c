@@ -200,21 +200,26 @@ int main(int argc, char **argv) //TODO: get options for l to loop runAnimation
     AppendToHistory(argv, "runanimation", terminal);
 
     if (argc){}
-    if (argv[1] != NULL)
-    {
-        fprintf(terminal->err, "runanimation: This function only takes one argument.\n");
-        return -1;
-    }
 
     Options opt;
     opt.ind = -1;
     opt.lflag = false;
 
     getOptions(argv, &opt, argc);
+    if (opt.lflag)
+    {
+        argc--;
+    }
+
+    if (argc > 1)
+    {
+        fprintf(terminal->err, "runanimation: This function only takes one argument.\n");
+        return -1;
+    }
 
     do
     {
-        runAnimation(argv[0], terminal);
+        runAnimation(argv[opt.ind], terminal);
     } 
     while (opt.lflag);
     

@@ -24,8 +24,8 @@ struct alias
 
 struct command
 {
-    char param[15];
-    char *valid_options[7];
+    char param[25];
+    char *valid_options[25];
     char executable[25];
     int args_needed;
     int nb_options;

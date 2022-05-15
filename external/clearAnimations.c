@@ -24,15 +24,17 @@ int clearAnimations(BuiltinFd *builtinFd)
             strncpy(filePath, path, pathLength);
             if (c != '.')
             {
-                size_t commandLength = 18 + strlen(dir->d_name) + 1;
+                size_t commandLength = 23 + strlen(dir->d_name) + 1;
                 char* command = malloc(commandLength);
-                strncpy(command, "./removeanimation ", 19);
+                strncpy(command, "./test removeanimation ", 24);
 
-                for (size_t i = 18; i < commandLength - 1; i++)
+                for (size_t i = 23; i < commandLength - 1; i++)
                 {
-                    command[i] = dir->d_name[i - 18];
+                    command[i] = dir->d_name[i - 23];
                 }
                 command[commandLength - 1] = '\0';
+
+                //printf("run command:%s\n", command);
 
                 system(command);
             }
@@ -61,7 +63,7 @@ int main(int argc, char **argv)
     terminal->errNo = STDOUT_FILENO;
     AppendToHistory(argv, "clearanimations", terminal);
 
-    if (argv[0] != NULL)
+    if (*argv[0] != '\0')
     {
         fprintf(terminal->err, "clearanimations: This function doesn't take any parameters.\n");
         return -1;
