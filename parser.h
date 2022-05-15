@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <signal.h>
-#define CMDSIZE 25
+#define CMDSIZE 32
 #define OPSIZE 4
 
 enum type
@@ -77,12 +77,30 @@ static const struct command proclist =
         { "proclist", {}, "./proclist", -1 , -1,0};
 static const struct command procstatus = 
         { "procstatus", {}, "./procstatus", -1 , -1,0};
+static const struct command exec = 
+        { "exec", {}, "./exec", 1 , 0,0};
+
+//ANIMATIONS
+static const struct command createanimation = 
+        { "createanimation", {}, "./createanimation", 1 , 0,0};
+static const struct command removeanimation = 
+        { "removeanimation", {}, "./removeanimation", 1 , 0,0};
+static const struct command listanimations = 
+        { "listanimations", {}, "./listanimations", 0 , 0,0};
+static const struct command clearanimations = 
+        { "clearanimations", {}, "./clearanimations", 0 , 0,0};
+static const struct command animationframecount = 
+        { "animationframecount", {}, "./animationframecount", 1 , 0,0};
+static const struct command runanimation = 
+        { "runanimation", {"l"}, "./runanimation", 1 , 1,0};
 
 
 
 static const struct command command_list[CMDSIZE] =
-{alias, cat, clear, cp, date, echo, grep, head, help, ls, mkdirr, mv, rm,rmdirr, sort, tac, 
-tail, touch, cpuinfo, history, prockill, proclist, procstatus, clearhistory, unalias};
+{alias, cat, clear, cp, date, echo, grep, head, help, ls, mkdirr, mv, rm,rmdirr, 
+sort, tac, tail, touch, cpuinfo, history, prockill, proclist, procstatus, 
+clearhistory, unalias, exec, createanimation, removeanimation, listanimation,
+clearanimations, animationframecount, runanimation};
 
 
 

@@ -7,7 +7,7 @@ OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
 MAIN = test.o
 
-EXEC = test alias cat clear cp date echo grep head help ls mkdir mv rm rmdir sort tac tail touch cpuinfo history prockill proclist procstatus clearhistory unalias
+EXEC = test alias cat clear cp date echo grep head help ls mkdir mv rm rmdir sort tac tail touch cpuinfo history prockill proclist procstatus clearhistory unalias exec createanimation removeanimation listanimations clearanimations animationframecount runanimation
 all: $(EXEC)
 
 
@@ -67,6 +67,22 @@ procstatus:
 	$(CC) $(CFLAGS) -o $@ ./external/procStatus.c ./builtin/builtin.c
 clearhistory:
 	$(CC) $(CFLAGS) -o $@ ./external/clearHistory.c ./builtin/builtin.c
+exec:
+	$(CC) $(CFLAGS) -o $@ ./external/exec.c ./builtin/builtin.c
+
+#ANIMATIONS
+createanimation:
+	$(CC) $(CFLAGS) -o $@ ./external/createAnimation.c ./builtin/builtin.c
+removeanimation:
+	$(CC) $(CFLAGS) -o $@ ./external/removeAnimation.c ./builtin/builtin.c
+listanimations:
+	$(CC) $(CFLAGS) -o $@ ./external/listAnimations.c ./builtin/builtin.c
+clearanimations:
+	$(CC) $(CFLAGS) -o $@ ./external/clearAnimations.c ./builtin/builtin.c
+animationframecount:
+	$(CC) $(CFLAGS) -o $@ ./external/animationFrameCount.c ./builtin/builtin.c
+runanimation:
+	$(CC) $(CFLAGS) -o $@ ./external/runAnimation.c ./builtin/builtin.c
 
 
 $(OBJ): %.o: %.c $(HEADERS)
