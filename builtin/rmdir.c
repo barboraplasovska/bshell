@@ -7,64 +7,42 @@ int isFile(const char *path)
     return S_ISREG(path_stat.st_mode);
 }
 
-int removeDir(char* path)
-{
-    struct dirent **namelist;
-    int err = scandir(path, &namelist, NULL, alphasort);
-    if (err == -1)
-        return -1;
-    
-    for (size_t i = err-1; i > 0 ; i--)
-    {
-        char* name = path;
-        strcat(name, namelist[i]->d_name);
-        if (isFile(name))
-        {
-            if (remove(name) == -1)
-            {
-                exit(EXIT_FAILURE);
-                return -1;
-            }
-        }
-        else
-        {
-            if (removeDir(name) == -1)
-            {
-                exit(EXIT_FAILURE);
-                return -1;
-            }
-        }
-    }
-
-    // remove empty dir
-    if (rmdir(path) == -1)
-    {
-        exit(EXIT_FAILURE);
-        return -1;
-    }
-
-    return 0;
-}
-
-int rmDirs(char** argv, size_t argc)
+int rmDirs(char** argv, size_t argc, BuiltinFd* builtinFd)
 {
     for (size_t i = 0; i < argc; i++)
     {
         if (isFile(argv[i]))
         {
-            if (remove(argv[i]) == -1)
-            {
-                exit(EXIT_FAILURE);
-                return -1;
-            }
+            fprintf(builtinFd->err, "rmdir: Failed to remove '%s: Not a dir\n'",
+                    argv[i]);
         }
         else
         {
-            if (removeDir(argv[i]) == -1)
+            // check if directory exiasts
+            DIR* dir = opendir(argv[i]);
+
+            if (dir)
             {
-                exit(EXIT_FAILURE);
-                return -1;
+                closedir(dir);
+                if (rmdir(argv[i]) == -1)
+                {
+                    fprintf(builtinFd->err,
+                            "rmdir: Failed to remove '%s': Directory not empty\n",
+                            argv[i]);
+                }
             }
+            else if (ENOENT == errno)
+            {
+                fprintf(builtinFd->err, "rmdir: Directory '%s' doesn't exist\n",
+                        argv[i]);
+            }
+            else
+            {
+                fprintf(builtinFd->err, "rmdir: Failed opening directory '%s'\n",
+                        argv[i]);
+            }
+
+
         }
     }
     return 0;
@@ -87,7 +65,7 @@ int rmdirr(char** argv, BuiltinFd *builtinFd)
     }
     else
     {
-        if (rmDirs(argv, argc) == -1)
+        if (rmDirs(argv, argc, builtinFd) == -1)
         {
             exit(EXIT_FAILURE);
             return -1;
