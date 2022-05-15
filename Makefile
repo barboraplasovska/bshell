@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -std=c99 -g #-O1 -g
 LDLIBS =  -pthread #-fsanitize=address -pthread
-LDLFLAGS = -D_XOPEN_SOURCE=700
+LDLFLAGS = -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)

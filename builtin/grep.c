@@ -124,13 +124,19 @@ char** searchFile(char* pattern, char* path, size_t *length, Options opt)
     char *line = NULL;
     size_t len = 0;
     ssize_t nread;
-
-    fp = fopen(path, "r");
-    if (fp == NULL)
+    if (path == NULL)
     {
-        //error opening file
+        fp = stdin;
     }
 
+    else
+    {
+        fp = fopen(path, "r");
+        if (fp == NULL)
+        {
+            //error opening file
+        }
+    }
     while((nread = getline(&line, &len, fp)) != -1) //fgets(line, BUFFER_SIZE, fp)
     {
         totalNumberOfLines++;
@@ -235,7 +241,7 @@ int grep(char** argv, BuiltinFd *builtinFd)
         {
             printf("index: %li: %s\n", i, argv[i]);
         }*/
-        
+        //lines = searchFile(argv[1],NULL,&length,opt); //for testing with pipes
         lines = searchFile(argv[opt.ind], argv[opt.ind + 1], &length, opt);
 
         /*

@@ -2,7 +2,6 @@
 
 
 /**
-** @brief               Gets the options
 ** @param argv          Array of string arguments.
 ** @param opt           Options structure.
 ** @param argc          The number of arguments.
@@ -55,8 +54,14 @@ char** getFileContent (char* path, size_t *length, size_t *bufferSize)
 
     size_t nbLines = 0;
     size_t buffSize = BUFFER_SIZE;
+    FILE *f;
 
-    FILE* f = fopen(path, "r");
+    if(path[0] == '\0' || path[0] == '-')
+        f = stdin;
+    else
+        f = fopen(path, "r");
+    if(f == NULL)
+        f = stdin;
     while(fgets(lines[nbLines], BUFFER_SIZE, f)) 
     {
 	lines[nbLines][strcspn(lines[nbLines], "\n")] = '\0';
@@ -251,6 +256,8 @@ void reverseArray(char** lines, size_t length)
 
 void printLines(FILE* path, char** lines, size_t length)
 {
+    if(path == NULL)
+        path = stdin;
     for (size_t i = 0; i < length; i++)
     {
         fprintf(path, "%s\n",lines[i]);
@@ -375,19 +382,28 @@ int sortFile (char* src, char* dest, BuiltinFd *builtinFd, Options opt)
 	   // printf("opt flag is true\n");
             if (count != 0)
             {
-		FILE* f = fopen(dest, "w+");
+                FILE* f;
+                /*if (dest == NULL)
+                    f = stdin;
+                else*/
+		            f = fopen(dest, "w+");
+
                 printLines(f, diff, count);
                 printLines(f, lines, length-count);
-		fclose(f);
+		        fclose(f);
             }
             else
-	    {
-		FILE* f = fopen(dest, "w+");
+	        {
+                FILE* f;
+                /*if (dest == NULL)
+                    f = stdin;
+                else*/
+		            f = fopen(dest, "w+");
                 printLines(f, lines, length);
-		fclose(f);
-	    }
+		        fclose(f);
+	        }
         }
-        else 
+        else
         {
 	    //printf("count = %lu\n", count);
             if (count != 0)
@@ -435,24 +451,37 @@ int sort(char** argv, BuiltinFd *builtinFd)
     /*argv[0] = argv[1];
     argv[1] = argv[2];
     argv[2] = NULL;*/
+    char* dest;
+    char* src;
 
     size_t argc = getArgc(argv);
     if (argc == 0)
     {
-        fprintf(builtinFd->err, "sort: missing parameter\n");
+        src = NULL;
+        dest = NULL;
+        if (sortFile(src, dest, builtinFd, opt) == -1)
+        {
+            exit(EXIT_FAILURE);
+            return -1;
+        }
+
+        /*fprintf(builtinFd->err, "sort: missing parameter\n");
         exit(EXIT_FAILURE);
         return -1;
+        */
     }
     else
     {
         getOptions(argv, &opt, argc);
 	//for (size_t i = 0; i < argc; i++)
 	//	printf("argv[%lu] = %s\n", i, argv[i]);
-        char* dest;
-        char* src;
         if (opt.ind+1 >= (ssize_t)argc)
         {
-            dest = NULL;
+            if(argc ==2)
+                dest = argv[1];
+            else
+                dest = NULL;
+
             src = argv[opt.ind];
         }
         else

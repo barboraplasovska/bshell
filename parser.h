@@ -14,6 +14,13 @@ enum type
     type_operators,
 };
 
+struct alias
+{
+    char **alias_name;
+    char **alias_replacement;
+    struct alias *next;
+};
+
 struct command
 {
     char param[15];
@@ -96,6 +103,7 @@ int is_operator(char *param);
 
 int valid_input(struct Token *token);
 
+struct alias *extract_aliases();
 
 int execute(char *argv[], struct command current_command);
 #endif

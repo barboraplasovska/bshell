@@ -12,7 +12,7 @@ int ls(char** argv, BuiltinFd *builtinFd)
     struct dirent **namelist;
     int err;
 
-    if (argv[0] == NULL)
+    if (*argv[0] == '\0')
     {
         char currDir[BUFFER_SIZE];
         char *t = getcwd(currDir, BUFFER_SIZE);
@@ -69,7 +69,6 @@ int main(int argc, char **argv)
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
     AppendToHistory(argv, "ls", terminal);
-    //printf("this is argv[0] : %s\n",argv[0]);
     int res = ls(argv,terminal);
     free(terminal);
     return res;

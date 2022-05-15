@@ -9,6 +9,7 @@
 void getOptions(char** argv, Options* opt, size_t argc)
 {
     size_t i, j = 0;//1 
+    int found = 0;
     for (i = 0; i < argc; i++) //1
     {
         if (argv[i][0] == '-')
@@ -26,6 +27,7 @@ void getOptions(char** argv, Options* opt, size_t argc)
                 if (argv[i][j] == 'n')
                     opt->nflag = true;
 
+                found = 1;
                 j++;
             }
 
@@ -35,8 +37,10 @@ void getOptions(char** argv, Options* opt, size_t argc)
         else
             break;
   }
-  if (i < argc)
+  if (i < argc || found)
   	opt->ind = i;
+  if(!found)
+    opt->ind = -1;
 }
 
 /*void getOperators(char** argv, Operators* ope, size_t argc)
@@ -60,7 +64,6 @@ void getOptions(char** argv, Options* opt, size_t argc)
 	   break;
 	}
    }
-
    if (i < argv)
       ope->ind = i;
 }*/
@@ -69,7 +72,16 @@ int infiniteCat (char** argv, BuiltinFd *builtinFd)
 {
     (void)argv;
     (void)builtinFd;
-    return 0;
+    //return 0;
+    char *buff = calloc(sizeof(char),256);
+    while(1)
+    {
+        int r = read(STDIN_FILENO,buff,256);
+        {
+            write(STDOUT_FILENO,buff,r);
+            buff = calloc(sizeof(char),256);
+        }
+    }
 }
 
 size_t removeDuplicates(char** lines, size_t length)
@@ -105,11 +117,13 @@ char** getFileContent (char* path, size_t *length, size_t *bufferSize)
     {
         lines[i] = calloc(BUFFER_SIZE, sizeof(char));
     }
-
+    FILE* f;
     size_t nbLines = 0;
     size_t buffSize = BUFFER_SIZE;
-
-    FILE* f = fopen(path, "r");
+    if(path[0] == '\0' || path[0] == '-')
+        f = stdin;
+    else
+        f = fopen(path, "r");
     while(fgets(lines[nbLines], BUFFER_SIZE, f)) 
 	{
         nbLines++;
@@ -130,15 +144,23 @@ char** getFileContent (char* path, size_t *length, size_t *bufferSize)
 
 int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
 {
-    if (opt.ind == -1)
+   if (opt.ind == -1)
     {
         FILE* f;
         //int count;
         char buffer[BUFFER_SIZE*3]; //characer buffer to store the bytes
-        f = fopen(path, "r");
+        if(path[0] == '\0' || path[0] == '-')
+        {
+            f = stdin;
+        }
+        else
+        {
+            f = fopen(path, "r");
+        }
         if(f == NULL)
         {
-            fprintf(builtinFd->err, "cat: error: cannot open file");
+            //infiniteCat(NULL,NULL);
+            fprintf(builtinFd->err, "cat: error: cannot open file\n");
             exit(EXIT_FAILURE);
             return -1;
         }
@@ -150,10 +172,9 @@ int singleFile (char* path, BuiltinFd *builtinFd, Options opt)
     }
     else
     {
-	size_t length;
-	size_t bufferSize;
-	char** lines = getFileContent(path,&length,&bufferSize);
-	
+        size_t length;
+        size_t bufferSize;
+	    char** lines = getFileContent(path,&length,&bufferSize);
 
 	if (opt.sflag)
 	{
@@ -268,14 +289,12 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
                 if (access(argv[i], F_OK) == -1)  //if it doesn't exist
                 {
                     fp = fopen(argv[i], "w");
-
                     if  (fp == NULL)
                     {
                         fprintf(builtinFd->err, "cat: Failed to create file\n");
                         exit(EXIT_FAILURE);
                         return -1;
                     }
-
                     fclose(fp);
                 }
             }
@@ -310,7 +329,6 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
             exit(EXIT_FAILURE);
             return -1;
         }
-
         if (appendFiles(argv[0], argv[2], builtinFd) == -1)
         {
             exit(EXIT_FAILURE);
@@ -330,8 +348,6 @@ int withOpe(char** argv, BuiltinFd *builtinFd, Operators ope, size_t argc)
             }
             i++;
         }
-
-
         DIR *di;
         char *ptr1,*ptr2;
         int retn;
@@ -381,7 +397,8 @@ int cat(char** argv, BuiltinFd *builtinFd)
     size_t argc = getArgc(argv);
     if (argc == 0)
     {
-        if (infiniteCat(argv, builtinFd) == -1)
+        //if (infiniteCat(argv, builtinFd) == -1)
+        if (singleFile(NULL, builtinFd, opt) == -1)
         {
             exit(EXIT_FAILURE);
             return -1;
@@ -389,6 +406,7 @@ int cat(char** argv, BuiltinFd *builtinFd)
     }
     else if (argc == 1)
     {
+        getOptions(argv, &opt, argc);
         if (singleFile(argv[0], builtinFd, opt) == -1)
         {
             exit(EXIT_FAILURE);

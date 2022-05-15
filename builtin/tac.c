@@ -44,8 +44,12 @@ char** getFileContent (char* path, size_t *length, size_t *bufferSize)
 
     size_t nbLines = 0;
     size_t buffSize = BUFFER_SIZE;
+    FILE *f;
 
-    FILE* f = fopen(path, "r");
+    if (path[0] == '\0' || path[0] == '-')
+        f = stdin;
+    else
+        f = fopen(path, "r");
     while(fgets(lines[nbLines], BUFFER_SIZE, f)) 
 	{
         nbLines++;
