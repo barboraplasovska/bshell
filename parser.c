@@ -527,8 +527,6 @@ int valid_input(struct Token *token)
             }
             else
             {
-                if (token->next)
-                {
                     strncat(opts,token->param,1);
 
                     if (strlen(opts) == 2)
@@ -547,8 +545,8 @@ int valid_input(struct Token *token)
                             //token->next->instruction = token->instruction;
                         }
                     }
-                    token->next->instruction = token->instruction;
-                }
+                    if(token->next)
+                        token->next->instruction = token->instruction;
             }
         }
         if (token->next && token->next->type == type_command)
