@@ -31,14 +31,16 @@
 
 
 # Pipes, operators & parser - Charbel
+./bshl default
 ./bshl 'ls | cat'
 ./bshl 'cat parser.c | grep -in parsEr'
 ./bshl 'echo -e april\nmarch\njanuary | sort -M'
-./bshl 'cat NEWFILE && nothing || everything && rm NEWFILE'
+./bshl 'echo hi > NEWFILE && cat NEWFILE && nothing || everything && rm NEWFILE'
 ./bshl cat NEWFILE
-./bshl cat NEWFILE && nothing || rm NEWFILE && applause
-./bshl cat NEWFILE && nothing || rm NEWFILE || applause
-./bshl cat NEWFILE && nothing || rm NEWFILE && applause
+./bshl 'nothing || echo ho || applause'
+./bshl 'nothing || echo ho || applause && echo hi'
+./bshl 'cat NEWERFILE ||  echo hello > THIRDFILE'
+./bshl 'cat THIRDFILE && nothing || rm THIRDFILE && applause'
 
 # External commands & animations - Enrique
 
