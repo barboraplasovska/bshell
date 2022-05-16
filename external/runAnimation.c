@@ -190,7 +190,7 @@ int runAnimation(char *name, bool lflag, BuiltinFd *builtinFd)
     return 0;
 }
 
-int main(int argc, char **argv) //TODO: get options for l to loop runAnimation
+int main(int argc, char **argv)
 {
     struct builtinFd *terminal = NULL;
     terminal = (struct builtinFd *) malloc(sizeof(struct builtinFd));

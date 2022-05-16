@@ -32,7 +32,7 @@ int AppendToHistory(char **argv, char *functionName, BuiltinFd *builtinFd)
     }
     else
     {
-	const char str[7] = "./test ";
+	const char str[7] = "./bshl ";
 	for (int i = 0; i < 7; i++)
 	{
 	    fputc(str[i], f);

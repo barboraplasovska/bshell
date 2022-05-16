@@ -26,7 +26,7 @@ int clearAnimations(BuiltinFd *builtinFd)
             {
                 size_t commandLength = 23 + strlen(dir->d_name) + 1;
                 char* command = malloc(commandLength);
-                strncpy(command, "./test removeanimation ", 24);
+                strncpy(command, "./bshl removeanimation ", 24);
 
                 for (size_t i = 23; i < commandLength - 1; i++)
                 {
