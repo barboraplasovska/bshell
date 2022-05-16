@@ -70,7 +70,7 @@ void ExecuteFrame(char* str, BuiltinFd *builtinFd)
     msleep(20);
 }
 
-char* itoa(int value, char* result, int base) \
+char* itoa(int value, char* result, int base)
 {
     // check that the base if valid
     if (base < 2 || base > 36) { *result = '\0'; return result; }
@@ -101,9 +101,8 @@ char* itoa(int value, char* result, int base) \
 ** @param builtinFd     Files.
 ** @return              return 0 on success
 */
-int runAnimation(char *name, BuiltinFd *builtinFd)
+int runAnimation(char *name, bool lflag, BuiltinFd *builtinFd)
 {
-
     struct stat st = {0};
 
     size_t pathLength = 11 + strlen(name) + 1;
@@ -144,7 +143,7 @@ int runAnimation(char *name, BuiltinFd *builtinFd)
             path[i] = snum[i - pathLength + numDigits];
         }
 
-        if (stat(path, &st) != 0)
+        if (stat(path, &st) != 0 && !lflag)
             break;
         
         //char content[MAX_LIMIT];
@@ -152,8 +151,9 @@ int runAnimation(char *name, BuiltinFd *builtinFd)
         fp = fopen(path , "r");
         if(fp == NULL) 
         {
-            fprintf(builtinFd->err, "runAnimation: Error opening file\n");
-            return -1;
+            //fprintf(builtinFd->err, "runAnimation: Error opening file\n");
+            frameNumber = 1;
+            continue;
         }
 
         char * line = NULL;
@@ -172,10 +172,12 @@ int runAnimation(char *name, BuiltinFd *builtinFd)
                 total[i] = line[i - totalLength + read];
             }
         }
-        total[totalLength] = '\0';
+        total[totalLength - 1] = '\0';
         //printf("our tota length is: %zu", totalLength);
         //printf("%s", total);
         ExecuteFrame(total, builtinFd);
+
+        //free(total);
 
         frameNumber++;
 
@@ -183,6 +185,7 @@ int runAnimation(char *name, BuiltinFd *builtinFd)
     } while (1);
 
     fprintf(builtinFd->out, "\n");
+    free(path);
 
     return 0;
 }
@@ -217,11 +220,7 @@ int main(int argc, char **argv) //TODO: get options for l to loop runAnimation
         return -1;
     }
 
-    do
-    {
-        runAnimation(argv[opt.ind], terminal);
-    } 
-    while (opt.lflag);
+    runAnimation(argv[opt.ind], opt.lflag,terminal);
     
     return 0;
 }

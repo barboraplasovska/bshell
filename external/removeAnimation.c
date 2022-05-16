@@ -22,25 +22,39 @@ int removeAnimation(char* name, BuiltinFd *builtinFd)
     DIR *d;
     struct dirent *dir;
     d = opendir(path);
+
+    char *directoryPath = malloc(pathLength);
+    strncpy(directoryPath, path, pathLength + 1);
+    //printf("directory path: %s\n", directoryPath);
     if (d)
     {
+        size_t pathLengthInitial = pathLength;
+
         while ((dir = readdir(d)) != NULL) 
         {
             char c = dir->d_name[0];
-            char *filePath = malloc(pathLength);
-            strncpy(filePath, path, pathLength);
+
             if (isdigit(c))
             {
-                filePath = realloc(filePath, pathLength + 2);
-                filePath[pathLength - 1] = '/';
-                filePath[pathLength] = c;
-                filePath[pathLength + 1] = '\0';
-                //remove file here
-                remove(filePath);
+                pathLength = pathLengthInitial;
+                pathLength = pathLengthInitial;
+
+                size_t numDigits = strlen(dir->d_name);
+                pathLength += numDigits;
+                path = realloc(path, pathLength);
+                path[pathLength - numDigits - 1] = '/';
+                path[pathLength] = '\0';
+
+                for(size_t i = pathLength - numDigits; i < pathLength; i++)
+                {
+                    path[i] = dir->d_name[i - pathLength + numDigits];
+                }
+
+                remove(path);
             }
         }
         //remove the directory here
-        rmdir(path);
+        rmdir(directoryPath);
         closedir(d);
     }
     else if (ENOENT == errno)

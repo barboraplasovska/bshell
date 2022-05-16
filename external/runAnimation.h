@@ -8,8 +8,6 @@
 #include <sys/types.h>
 #include <time.h>
 #include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 //#include <sys/stat.h>
 
@@ -32,6 +30,6 @@ typedef struct          Options
 ** @param builtinFd     Files.
 ** @return              return 0 on success
 */
-int runAnimation(char *name, BuiltinFd *builtinFd);
+int runAnimation(char *name, bool lflag, BuiltinFd *builtinFd);
 
 #endif

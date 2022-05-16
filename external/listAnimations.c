@@ -17,7 +17,7 @@ int listAnimations(BuiltinFd *builtinFd)
     d = opendir(path);
     if (d)
     {
-        while ((dir = readdir(d)) != NULL) 
+        while ((dir = readdir(d)) != NULL)
         {
             char c = dir->d_name[0];
             if (c != '.')
@@ -27,6 +27,10 @@ int listAnimations(BuiltinFd *builtinFd)
             }
         }
         closedir(d);
+    }
+    else
+    {
+        fprintf(builtinFd->out, "listAnimations: failed opening directory...\n");
     }
 
     return 0;
@@ -45,7 +49,7 @@ int main(int argc, char **argv)
     terminal->errNo = STDOUT_FILENO;
     AppendToHistory(argv, "listanimations", terminal);
 
-    if (*argv[0] != '\0')
+    if (argv[0] != NULL)
     {
         fprintf(terminal->err, "listanimations: This function doesn't take any parameters.\n");
         return -1;
