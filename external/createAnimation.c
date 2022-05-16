@@ -71,13 +71,13 @@ int createAnimation(char* name, BuiltinFd *builtinFd)
         if (ch == 'y')
         {
             // call remove animation
-            size_t commandLength = 18 + strlen(name) + 1;
+            size_t commandLength = 23 + strlen(name) + 1;
             char* command = malloc(commandLength);
-            strncpy(command, "./removeanimation ", 19);
+            strncpy(command, "./test removeanimation ", 24);
 
-            for (size_t i = 18; i < commandLength - 1; i++)
+            for (size_t i = 23; i < commandLength - 1; i++)
             {
-                command[i] = name[i - 18];
+                command[i] = name[i - 23];
             }
             command[commandLength - 1] = '\0';
 
