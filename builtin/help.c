@@ -2,13 +2,12 @@
 
 int help(BuiltinFd *builtinFd)
 {
-    fprintf(builtinFd->out, "Terminal powered by NaN (A1 S4)\n\n");
     FILE* f;
     char buffer[BUFFER_SIZE*3]; //characer buffer to store the bytes
-    f = fopen("./README", "r");
+    f = fopen("./builtin/help.txt", "r+");
     if(f == NULL)
     {
-        fprintf(builtinFd->err, "cat: error: cannot open file");
+        //fprintf(builtinFd->err, "cat: error: cannot open file");
         exit(EXIT_FAILURE);
         return -1;
     }
