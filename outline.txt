@@ -35,7 +35,7 @@
 ./bshl 'ls | cat'
 ./bshl 'cat parser.c | grep -in parsEr'
 ./bshl 'echo -e april\nmarch\njanuary | sort -M'
-./bshl 'echo hi > NEWFILE && cat NEWFILE && nothing || everything && rm NEWFILE'
+./bshl 'echo hi > NEWFILE && cat NEWFILE && laugh || cry && rm NEWFILE'
 ./bshl cat NEWFILE
 ./bshl 'nothing || echo ho || applause && echo hi'
 ./bshl 'cat NEWERFILE ||  echo hello > THIRDFILE'
