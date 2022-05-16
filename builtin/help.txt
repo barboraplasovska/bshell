@@ -38,7 +38,7 @@ The following builtin commands are available.
    tac                  concatenate and print content of files in reverse     ./bshl tac [option].. [file]..
    tail                 prints last 10 (by default) lines of file             ./bshl tail [option].. [file]..
    touch                creates file(s)                                       ./bshl touch [file]..
-   unalias              remove alias(es)                                      ./bshl unalias "[aliasname]"..
+   unalias              remove alias(es)                                      ./bshl unalias [aliasname]..
    
 The following external commands are available.
 

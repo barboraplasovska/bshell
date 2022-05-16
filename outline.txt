@@ -1,39 +1,42 @@
-./test 'notacommand && ls'
-./test 'ls && notacommand'
-./test clear -o
-./test 'ls || clear -o'
-./test 'clear -o || ls'
+# Builtin commands - Barbora
+./bshl help
+./bshl cat -s Makefile            (removes repeated empty lines)
+./bshl mdkir testdir1
+./bshl touch file1 file2
+./bshl cp Makefile file1
+./bshl mv file1 file2 testdir1
+./bshl ls testdir1
+./bshl rm testdir1/file2
+./bshl sort -o testdir1/outputfile testdir1/file1
+./bshl grep CC testdir1/outputfile
+./bshl tail -n 3 README.md
+./bshl tail -v README.md bshl.c
+./bshl tail -q README.md bshl.c
+./bshl head README.md bshl.c
+./bshl alias "hello='echo hello there'"
+./bshl alias "lost='cat builtin/help.txt'"
+./bshl alias -p
+./bshl unalias hello lost
+./bshl alias -p
 
-./test clear
+# Pipes, operators & parser - Charbel
 
-./test 'mkdir testdir && touch testdir/months.txt testdir/output.txt && ls testdir'
-./test echo -e "march\njanuary\napril" > testdir/months.txt
-./test cat -n testdir/months.txt
-./test sort testdir/months.txt
-./test sort -M testdir/months.txt
-./test 'echo -e hello\nhello\nahoj\nmom > testdir/months.txt && cat testdir/months.txt'
-./test 'sort -u -o testdir/output.txt testdir/months.txt && cat testdir/output.txt'
-./test 'rm -i testdir/output.txt && ls testdir'
-./test grep -i INclude builtin/builtin.h
-./test grep -ni INCLUDE builtin/builtin.h
 
-./test clear
 
-./test proclist
-cat (on a new terminal)
-ctrl + z
-ps
-./test proclist
-./test prockill {the cat pid}
-./test proclist
-./test clear
+# External commands & animations - Enrique
 
-./test procstatus
-./test clear
-
-./test cpuinfo
-./test clear
-
-./test history
-./test clearhistory
-./test history
+./bshl listanimations
+./bshl animationsframecount test
+./bshl runanimation -l test
+./bshl createanimation test
+./bshl animationsframecount test
+./bshl runanimation -l test
+./bshl removeanimation test
+./bshl listanimations
+./bshl animationsframecount special
+./bshl runanimation special
+./bshl runanimation -l special
+./bshl clearanimations
+./bshl listanimations
+./bshl exec something
+./bshl history

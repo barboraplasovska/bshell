@@ -1,2 +1,1 @@
-one cat outline.txt
-two echo outline.txt
+default echo this is a default alias
