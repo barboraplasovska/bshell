@@ -253,13 +253,15 @@ char *get_string(char **args)
             struct alias *alias = is_alias(str_arr[i],aliases);
             if(alias && !no_rep)
             {
-                size_t len_s = strlen(*alias->alias_replacement);
-                char *new_arg = malloc(sizeof(char) * len_s );
+                //size_t len_s = strlen(*alias->alias_replacement);
+                char *new_arg = malloc(255);
+                //char *new_arg = malloc(sizeof(char) * len_s );
                 size_t j = 0;
                 while(*(alias->alias_replacement+j))
                 {
-                    //size_t size = strlen(new_arg);
-                    new_arg = realloc(new_arg,sizeof(char) * size + strlen(*alias->alias_replacement + j) + 1);
+                    size = strlen(new_arg);
+                    if(size > 255)
+                        new_arg = realloc(new_arg,sizeof(char) * size + strlen(*alias->alias_replacement + j) + 1);
                     char *curr = *(alias->alias_replacement + j);
                     for(size_t l = 0; *(curr + l); l++,size++)
                     {
@@ -278,9 +280,11 @@ char *get_string(char **args)
                 skip+= 1;
         }
         char *res = malloc(skip);
+        //char *res = malloc(1);
         pointer_copy(tmp,res,skip-1);
         res[skip] = '\0';
         free(tmp);
+        //tmp[skip] = '\0';
         return res;
 }
 
@@ -568,7 +572,7 @@ int valid_input(struct Token *token)
                         token->next->instruction = token->instruction;
             }
         }
-        if (token->next && token->next->type == type_command && !mystrcmp(token->param,"unalias"))
+        if (token->next && token->next->type == type_command && !mystrcmp(token->param,"unalias") && !mystrcmp(token->param,"alias"))
         {
             if (token->type != type_operators)
             {

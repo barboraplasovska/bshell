@@ -32,7 +32,7 @@
 
 # Pipes, operators & parser - Charbel
 ./bshl 'ls | cat'
-./bshl 'cat parser | grep -in parsEr'
+./bshl 'cat parser.c | grep -in parsEr'
 ./bshl 'echo -e april\nmarch\njanuary | sort -M'
 ./bshl 'cat NEWFILE && nothing || everything && rm NEWFILE'
 ./bshl cat NEWFILE

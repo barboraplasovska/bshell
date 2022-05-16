@@ -1,1 +1,1 @@
-default echo this is a default alias
+default echo 'this is a default alias'
