@@ -37,7 +37,6 @@
 ./bshl 'echo -e april\nmarch\njanuary | sort -M'
 ./bshl 'echo hi > NEWFILE && cat NEWFILE && nothing || everything && rm NEWFILE'
 ./bshl cat NEWFILE
-./bshl 'nothing || echo ho || applause'
 ./bshl 'nothing || echo ho || applause && echo hi'
 ./bshl 'cat NEWERFILE ||  echo hello > THIRDFILE'
 ./bshl 'cat THIRDFILE && nothing || rm THIRDFILE && applause'
