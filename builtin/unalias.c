@@ -6,8 +6,8 @@ int removeAlias(char** argv,  size_t argc)
     char line[BUFFER_SIZE];
     FILE *source;
     FILE *target;
-    source = fopen("aliases.txt", "r+");
-    target = fopen("temp.txt", "w+");
+    source = fopen("./builtin/aliases.txt", "r+");
+    target = fopen("./builtin/temp.txt", "w+");
 
     if (source == NULL)
             return -1;
@@ -17,7 +17,15 @@ int removeAlias(char** argv,  size_t argc)
         bool todelete = false;
         for (size_t i = 0; i < argc; i++)
         {
-            if (strcmp(line, argv[i]))
+
+            char word[strlen(line)];
+            size_t j = 0;
+            for (; j < strlen(line) && line[j] != ' '; j++)
+            {
+                word[j] = line[j];
+            }
+            word[j] = '\0';
+            if (strcmp(word,argv[i]) == 0)
             {
                 todelete = true;
                 break;
@@ -31,9 +39,9 @@ int removeAlias(char** argv,  size_t argc)
     fclose(source);
     fclose(target);
 
-    remove("aliases.txt");
-    rename("temp.txt", "aliases.txt");
 
+    remove("./builtin/aliases.txt");
+    rename("./builtin/temp.txt", "./builtin/aliases.txt");
     return 0;
 }
 

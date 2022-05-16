@@ -1,3 +1,2 @@
-sixth cat outline.txt
-sixth cat outline.txt
-sixth cat outline.txt
+one cat outline.txt
+two echo outline.txt

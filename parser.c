@@ -143,7 +143,7 @@ struct alias *extract_aliases()
     char tmp;
     while(read(fd,&tmp,1) != -1)
     {
-        if(tmp == '\n')
+        if(tmp == '\n' || tmp == EOF)
            break;
         if(tmp == ' ')
         {
@@ -183,7 +183,8 @@ struct alias *extract_aliases()
             len_curr++;
        }
     }
-    res->next = NULL;
+    if(res)
+        res->next = NULL;
     return head;
 }
 
@@ -237,6 +238,7 @@ char *get_string(char **args)
         size_t skip = 0;
         struct alias *aliases = extract_aliases();
         size_t size = 0;
+        int no_rep = 0;
         char **str_arr = args;
         if(!args[2])
         {
@@ -246,8 +248,10 @@ char *get_string(char **args)
         }
         for(; str_arr[i]; i++)
         {
+            if(mystrcmp(str_arr[i],"unalias"))
+                    no_rep = 1;
             struct alias *alias = is_alias(str_arr[i],aliases);
-            if(alias)
+            if(alias && !no_rep)
             {
                 size_t len_s = strlen(*alias->alias_replacement);
                 char *new_arg = malloc(sizeof(char) * len_s );
@@ -307,7 +311,6 @@ struct Token *seperate_options( char *param, struct Token *token,struct Token *p
     }
     return token;
 }
-
 struct Token *getParameters(const char *command)
 {
     struct Token *initialToken = NULL;
@@ -506,7 +509,10 @@ int valid_input(struct Token *token)
         {
             err = 1;
             res = 0;
-            if (token->next && token->next->type == type_command)
+            char Token_param[mystrlen(token->param) + 1];
+            strncpy(Token_param,token->param,mystrlen(token->param));
+            Token_param[mystrlen(token->param)] = '\0';
+            if (token->next && token->next->type == type_command && !mystrcmp(Token_param,"unalias"))
             {
                 err = 0;
                 printf("one command at a time\n");
@@ -562,7 +568,7 @@ int valid_input(struct Token *token)
                         token->next->instruction = token->instruction;
             }
         }
-        if (token->next && token->next->type == type_command)
+        if (token->next && token->next->type == type_command && !mystrcmp(token->param,"unalias"))
         {
             if (token->type != type_operators)
             {
@@ -785,6 +791,15 @@ int valid_input(struct Token *token)
             if (err == 1 && current_command.executed != 1)
             {
                 current_command.executed = 1;
+                if(mystrcmp(token->current_command.executable,"./unalias"))
+                {
+                    struct Token *tmp = token->next;
+                    while(tmp && tmp->type != type_operators)
+                    {
+                        token->instruction = add_string_to_array(token->instruction,tmp->param);
+                        tmp = tmp->next;
+                    }
+                }
                 res = execute(token->instruction,token->current_command,0);
                 pthread_cond_signal(&cond);
             }

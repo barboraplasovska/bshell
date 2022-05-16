@@ -27,8 +27,7 @@ void getOptions(char** argv, Options* opt, size_t argc)
         }
         else
             break;
-  }
-
+    }
   if (i < argc)
   	opt->ind = i;
 }
@@ -40,8 +39,11 @@ int printAliases(BuiltinFd* builtinFd)
 
    file = fopen("./builtin/aliases.txt", "r+");
 
-   if (file == NULL)
-        return -1;
+   if (file == NULL )//|| fgetc(file) == EOF)
+   {
+       fclose(file);
+       return -1;
+   }
 
    while ((ch = fgetc(file)) != EOF)
         fprintf(builtinFd->out, "%c", ch);
@@ -66,10 +68,13 @@ int addAlias (char* command, char* alias)
     while (fgets(line, BUFFER_SIZE, source) != NULL)
     {
         char word[strlen(line)];
-        for (size_t i = 0; i < strlen(line) && line[i] != ' '; i++)
+        size_t i = 0;
+        for (; i < strlen(line) && line[i] != ' '; i++)
             word[i] = line[i];
 
-        if (strcmp(word,command))
+
+        word[i] = '\0';
+        if (strcmp(word,command) == 0)
         {
             replaced = true;
         }

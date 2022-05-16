@@ -5,13 +5,13 @@ LDLFLAGS = -D_XOPEN_SOURCE=700 -D_POSIX_C_SOURCE
 
 OBJ = $(patsubst %.c, %.o, $(wildcard *.c))
 HEADERS = $(wildcard *.h)
-MAIN = test.o
+MAIN = bshl.o
 
-EXEC = test alias cat clear cp date echo grep head help ls mkdir mv rm rmdir sort tac tail touch cpuinfo history prockill proclist procstatus clearhistory unalias exec createanimation removeanimation listanimations clearanimations animationframecount runanimation
+EXEC = bshl alias cat clear cp date echo grep head help ls mkdir mv rm rmdir sort tac tail touch cpuinfo history prockill proclist procstatus clearhistory unalias exec createanimation removeanimation listanimations clearanimations animationframecount runanimation
 all: $(EXEC)
 
 
-test: $(MAIN) $(OBJ)
+bshl: $(MAIN) $(OBJ)
 	$(CC) $(CFLAGS) $(LDLIBS) -g -o $@ $^
 
 #BUILTIN
@@ -88,7 +88,7 @@ runanimation:
 $(OBJ): %.o: %.c $(HEADERS)
 
 clean:
-	$(RM) test *.o
+	$(RM) bshl *.o
 	$(RM) ./builtin/main ./builtin/*.o
 	$(RM) $(EXEC)
 	$(RM) myHistory.txt
