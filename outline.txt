@@ -1,27 +1,42 @@
 # Builtin commands - Barbora
+
 ./bshl help
-./bshl cat -s Makefile            (removes repeated empty lines)
-./bshl mdkir testdir1
+./bshl clear
+./bshl mkdir testdir1
+./bshl ls
 ./bshl touch file1 file2
+./bshl ls
 ./bshl cp Makefile file1
+./bshl cat file1
+./bshl clear
 ./bshl mv file1 file2 testdir1
 ./bshl ls testdir1
-./bshl rm testdir1/file2
+./bshl rm -i testdir1/file2
 ./bshl sort -o testdir1/outputfile testdir1/file1
+./bshl ls testdir1
 ./bshl grep CC testdir1/outputfile
-./bshl tail -n 3 README.md
-./bshl tail -v README.md bshl.c
+./bshl clear
+./bshl head -n 3 README.md
+./bshl clear
+./bshl tail -v README.md
+./bshl clear
 ./bshl tail -q README.md bshl.c
-./bshl head README.md bshl.c
+./bshl tail README.md bshl.c
+./bshl clear
 ./bshl alias "hello='echo hello there'"
 ./bshl alias "lost='cat builtin/help.txt'"
 ./bshl alias -p
 ./bshl unalias hello lost
 ./bshl alias -p
 
+
 # Pipes, operators & parser - Charbel
-
-
+./bshl 'ls | cat'
+./bshl 'cat parser | grep -in parsEr'
+./bshl 'echo -e april\nmarch\njanuary | sort -M'
+./bshl 'cat NEWFILE && nothing || everything && rm NEWFILE'
+./bshl cat NEWFILE
+./bshl cat NEWFILE && nothing || rm NEWFILE && applause
 
 # External commands & animations - Enrique
 

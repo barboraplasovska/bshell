@@ -62,3 +62,4 @@ The following external commands are available.
    animationframecount  Shows the number of frames in an animation            ./bshl animationframecount
    runanimation         Runs an animation. (Use -l to loop the animation)     ./bshl runanimation [option] [name]
    exec                 Executes a process or runs shell script               ./bshl exec [cmnd]
+
