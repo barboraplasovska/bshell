@@ -37,6 +37,8 @@
 ./bshl 'cat NEWFILE && nothing || everything && rm NEWFILE'
 ./bshl cat NEWFILE
 ./bshl cat NEWFILE && nothing || rm NEWFILE && applause
+./bshl cat NEWFILE && nothing || rm NEWFILE || applause
+./bshl cat NEWFILE && nothing || rm NEWFILE && applause
 
 # External commands & animations - Enrique
 
