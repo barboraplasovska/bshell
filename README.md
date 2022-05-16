@@ -1,31 +1,45 @@
-The parser and commands part can be compiled by typing the command "make" or 
-"make all" into the teminal.
+# Bshell
 
-There are two ways to use the Bshell, one of them is interactive and can be found
-in the main directory, the other takes in one command per execution and can be
-found in the test directory.
+Bshell is a simple command line with multiple ordinary and unordinary commands ready for you to use.
 
-list of commands with options for first defense:
+## Installation procedure
 
-    -ls : No options. ls: lists directory contents. Lists the current directory's
-                          content  whenever no arguments were passed
+Click on code in the right corner and then download zip. Then, you unzip the file and you will get a repository called bshell with all the libraries and source files inside.
 
-    -cat: No options. cat: prints the file's content
+```c
+unzip bshell-main.zip && clear && rm -rf bshell-main.zip
+```
 
-    -echo: [-e,-n,-E]. echo: displays a line of text.
-           The option -n removes the trailing newline.
+## Running the app
 
-    -clear: No options. No arguments either. clear: clears the terminal's screen.
+To start the app simply run the following command in the terminal
 
-    -cp: No options. cp: copy files and directories.
+```c
+make && clear && ./bshl help
+```
 
-    -touch: No options. touch: creates new files by taking their names as arguments
+In the terminal you will see the syntax and all the commands that are available in the bshell terminal. 
 
-    -mv: No options. mv: move (rename) files.
-                    case 1: mv file1 file2 : renames file1 to file2
-                    case 2: mv file1 dir1/ : moves file1 to dir1/
-                    case 3: mv dir1/ dir2/ : (if dir2/ doesn't exist) mv renames
-                                             dir1/ to dir2/
-                    case 4: mv file1 file2 ... filen dir1/: move multiple files
-                                                            to dir1/
-    -procstatus: No options.
+### Help command
+
+It allows you to see the available commands. If you have any other issues or inquiries, try checking out the project report.
+
+```
+./bshl help
+````
+
+To close the app, run the following command
+
+```c
+make clean && clear
+```
+
+## Uninstallation procedure
+
+To uninstall bshell, simply remove it by using this command
+
+```c
+rm -rf bshell-main
+```
+
+
