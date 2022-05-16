@@ -166,13 +166,13 @@ int runAnimation(char *name, bool lflag, BuiltinFd *builtinFd)
         while ((read = getline(&line, &len, fp)) != -1) 
         {
             totalLength += read;
-            total = realloc(total, totalLength);
+            total = realloc(total, totalLength + 1);
             for (size_t i = totalLength - read; i < totalLength; i++)
             {
                 total[i] = line[i - totalLength + read];
             }
         }
-        total[totalLength - 1] = '\0';
+        total[totalLength] = '\0';
         //printf("our tota length is: %zu", totalLength);
         //printf("%s", total);
         ExecuteFrame(total, builtinFd);

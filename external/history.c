@@ -69,7 +69,7 @@ int history(BuiltinFd *builtinFd)
             while (true)
             {
                 //printf("we put: %i", c);
-                printf("%s", n->array);
+                printf("%s ('u' to navigate up and 'd' to navigate down and 'return' to confirm)\n", n->array);
 
                 char *res = fgets(a, 2, builtinFd->in);
                 if (!res)
@@ -127,7 +127,7 @@ int main(int argc, char **argv)
     terminal->errNo = STDOUT_FILENO;
 
     if (argc){}
-    if (argv[0] == NULL)
+    if (*argv[0] == '\0')
     {
         history(terminal);
     }

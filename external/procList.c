@@ -90,7 +90,7 @@ int main(int argc, char **argv)
     AppendToHistory(argv, "proclist", terminal);
 
     if (argc){}
-    if (argv[0] == NULL)
+    if (*argv[0] == '\0')
     {
         char **processes = listProc(terminal);
 

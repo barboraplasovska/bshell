@@ -13,7 +13,7 @@ int main(int argc, char **argv)
     terminal->outNo = STDOUT_FILENO;
     terminal->errNo = STDOUT_FILENO;
     
-    if (argv[0] == NULL)
+    if (*argv[0] == '\0')
     {
     	remove("myHistory.txt");
     }

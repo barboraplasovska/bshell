@@ -46,14 +46,14 @@ int main(int argc, char **argv)
     AppendToHistory(argv, "procstatus", terminal);
 
     if (argc){}
-    if (argv[0] == NULL)
+    if (*argv[0] == '\0')
     {
         fprintf(terminal->out, "TEST\n");
         pid_t pid = getpid();
         char *status = get_process_status_by_pid(pid, terminal);
         fprintf(terminal->out, "%s\n", status);
     }
-    else //if (argv[0])
+    else
     {
         pid_t pid = atoi(argv[0]);
         char buffer[1024];
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 
         fprintf(terminal->out, "%s\n", status);
     }
-    /*else
+  /*  else
     {
         fprintf(terminal->err, "ProcStatus: Invalid number of arguments.\n");
         return 1;

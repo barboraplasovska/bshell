@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     terminal->errNo = STDOUT_FILENO;
     AppendToHistory(argv, "clearanimations", terminal);
 
-    if (argv[0] != NULL)
+    if (*argv[0] != '\0')
     {
         fprintf(terminal->err, "clearanimations: This function doesn't take any parameters.\n");
         return -1;

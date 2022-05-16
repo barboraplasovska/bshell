@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     AppendToHistory(argv, "cpuinfo", terminal);
 
     if (argc){}
-    if (argv[0] == NULL)
+    if (*argv[0] == '\0')
     {
         char* info = GetCPUInfo(terminal);
         fprintf(terminal->out, "%s\n", info);
