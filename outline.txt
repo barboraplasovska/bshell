@@ -55,11 +55,11 @@ cd bshell-main && make && clear && ./bshl help
 ./bshl animationframecount test
 ./bshl runanimation -l test
 ./bshl createanimation test
-./bshl animationsframecount test
+./bshl animationframecount test
 ./bshl runanimation -l test
 ./bshl removeanimation test
 ./bshl listanimations
-./bshl animationsframecount special
+./bshl animationframecount special
 ./bshl runanimation special
 ./bshl runanimation -l special
 ./bshl clearanimations
