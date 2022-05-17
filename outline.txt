@@ -64,5 +64,5 @@ cd bshell-main && make && clear && ./bshl help
 ./bshl runanimation -l special
 ./bshl clearanimations
 ./bshl listanimations
-./bshl exec something
+./bshl exec bc
 ./bshl history
