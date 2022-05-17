@@ -52,7 +52,7 @@ cd bshell-main && make && clear && ./bshl help
 # External commands & animations - Enrique
 
 ./bshl listanimations
-./bshl animationsframecount test
+./bshl animationframecount test
 ./bshl runanimation -l test
 ./bshl createanimation test
 ./bshl animationsframecount test
