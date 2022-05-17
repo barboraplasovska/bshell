@@ -1,3 +1,10 @@
+# Installation procedure - Barbora
+
+cd Downloads
+unzip bshell-main.zip && clear && rm -rf bshell-main.zip
+cd bshell-main && make && clear && ./bshl help
+
+
 # Builtin commands - Barbora
 
 ./bshl help
@@ -23,7 +30,9 @@
 ./bshl tail -q README.md bshl.c
 ./bshl tail README.md bshl.c
 ./bshl clear
+./bshl hello
 ./bshl alias "hello='echo hello there'"
+./bshl hello
 ./bshl alias "lost='cat builtin/help.txt'"
 ./bshl alias -p
 ./bshl unalias hello lost
@@ -31,7 +40,6 @@
 
 
 # Pipes, operators & parser - Charbel
-./bshl default
 ./bshl 'ls | cat'
 ./bshl 'cat parser.c | grep -in parsEr'
 ./bshl 'echo -e april\nmarch\njanuary | sort -M'
